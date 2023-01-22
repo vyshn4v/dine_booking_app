@@ -1,0 +1,37 @@
+<sectio class="search_and_filter_restaurants row w-100 ">
+    <div class="input-group mb-3 col-6 mt-5">
+        <div class="dropdown">
+            <button class="btn btn-outline-warning dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                All
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+        </div>
+    </div>
+    <form class="form-inline col-6 mt-5 just-content-end">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+</sectio>
+<section class="top-restaurants">
+    <h4>Top Restaurants</h4>
+    <div class="restaurant-cards">
+        {{#each restaurants}}
+        <a href="restaurant/{{this.id}}" style="text-decoration: none;">
+            <div class="restaurant-card shadow mt-2 text-dark">
+                <img class="card-img-top mt-3" src="/images/banner.jpg" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Card title <span class="product-cash">$2000</span></h5>
+                    <p class="card-text">@@@@@</p>
+                    <p><span>2 table</span><span>8 chair</span></p>
+                </div>
+            </div>
+        </a>
+        {{/each}}
+    </div>
+</section>
+<link rel="stylesheet" href="css/user/searchRestaurants.css">

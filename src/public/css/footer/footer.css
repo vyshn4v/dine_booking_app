@@ -1,0 +1,18 @@
+.footer{
+    height: 300px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.header{
+    font-size: 10px;
+    color: orange;
+} 
+.social-meadia>p{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

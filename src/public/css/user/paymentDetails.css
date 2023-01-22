@@ -1,0 +1,201 @@
+:root {
+    --background-box-color: rgba(170, 170, 170, 0.142)
+}
+
+.payment-details {
+    font-variant: small-caps;
+    display: grid;
+    grid-template-areas:
+        'restaurantDetails payment_card'
+        'selectedFood payment_card'
+        'selectDateTimeSeats payment_card';
+}
+
+.restaurant-details {
+    height: 300px;
+    grid-area: restaurantDetails;
+    display: flex;
+    align-items: center;
+    margin: 10px;
+}
+
+.restaurant-details>.image {
+    height: 100%;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.details {
+    height: 100%;
+    margin: 100px 0 0 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+
+}
+
+.restaurant-details>.image>img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.selected-foods {
+    grid-area: selectedFood;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin: 10px;
+    padding: 10px;
+}
+
+.selected-foods>.foods {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+
+.selected-foods>.foods>.card {
+    border: 1px solid orange;
+    max-width: 200px;
+    height: 30px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(0, 0, 0);
+    margin-left: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+
+}
+
+.selected-foods>.foods>.card:hover {
+    background-color: orange;
+    cursor: pointer;
+    color: white;
+}
+
+.select-date-time-seats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    grid-area: selectDateTimeSeats;
+    margin: 10px;
+}
+
+.table-chair {
+    display: flex;
+    justify-content: left;
+    width: 100%;
+}
+
+.table-count,
+.chair-count {
+    position: relative;
+}
+
+#table,
+#chair,
+#datepicker,
+#timepicker {
+    width: 200px;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+.date_time {
+    width: 100%;
+    display: flex;
+    justify-content: left;
+}
+
+label[for=datepicker],
+label[for=timepicker],
+label[for=table],
+label[for=chair] {
+    min-width: 50px;
+    margin-top: 30px;
+    color: black;
+    font-weight: 600;
+}
+
+.date_picker,
+.time_picker,
+.table_count,
+.chair_count {
+    margin-left: 10px;
+}
+
+.table,
+.chair {
+    font-size: 0.8rem;
+    font-weight: 400px;
+    color: red;
+    /* position: absolute; */
+}
+
+.payment-card {
+    height: 100%;
+    grid-area: payment_card;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.guest_and_payment_details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+
+}
+
+.guest_and_payment_details>h4 {
+    font-size: 1rem;
+}
+
+.guest_and_payment_details>input {
+    padding: 5px;
+    border-radius: 5px;
+    margin-top: 10px;
+    border: 1px solid black;
+}
+
+.proceed-button {
+    margin-top: 40px;
+}
+
+@media (max-width:1000px) {
+    .payment-details {
+        font-variant: small-caps;
+        display: grid;
+        grid-template-areas:
+            'restaurantDetails'
+            'selectedFood'
+            'selectDateTimeSeats'
+            'payment_card';
+    }
+}
+
+@media (max-width:470px) {
+
+    .date_time,
+    .table-chair {
+        flex-direction: column;
+    }
+
+    #table,
+    #chair,
+    #datepicker,
+    #timepicker {
+        width: 80%;
+    }
+}

@@ -13,9 +13,12 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" style="font-variant: small-caps;">
         {{>userHeader}}
-        {{{body}}}
+        <div class="mt-5 p-1">
+            {{{body}}}
+        </div>
+        {{>footer}}
     </div>
     {{!-- bootsrap cdn start--}}
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -28,7 +31,7 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
     {{!-- bootsrap cdn end --}}
-    
+
     {{!-- font awsome kit start --}}
     <script src="https://kit.fontawesome.com/0d97526b57.js" crossorigin="anonymous"></script>
     {{!-- font awsome kit end --}}

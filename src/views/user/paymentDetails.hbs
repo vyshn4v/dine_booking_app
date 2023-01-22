@@ -1,0 +1,66 @@
+<section class="payment-details">
+    <div class="restaurant-details">
+        <div class="image">
+            <img src="{{restaurant.image1}}" alt="">
+        </div>
+        <div class="details">
+            <h1 class="" style="font-variant: small-caps;">{{restaurant.name}}</h1>
+            <small>{{restaurant.address}}</small>
+            <small>{{restaurant.time}}</small>
+        </div>
+    </div>
+    <div class="selected-foods">
+        <h6 class="ml-3" style="font-variant: small-caps;">selected Foods</h6>
+        <div class="foods">
+            {{#each restaurant.items}}
+            <small href="#" class="card">{{this.name}}</small>
+            {{/each}}
+        </div>
+    </div>
+    <div class="select-date-time-seats">
+        <div class="date_time">
+            <div class="date_picker">
+                <label for="datepicker">Date</label>
+                <input type="date" id="datepicker">
+            </div>
+            <div class="time_picker">
+                <label for="timepicker">Time</label>
+                <input type="time" id="timepicker">
+            </div>
+        </div>
+        <div class="table-chair">
+            <div class="table_count">
+                <div>
+                    <label for="table">Table</label>
+                    <input type="number" id="table">
+                </div>
+                <div>
+                    <small class="table">{{restaurant.table}} Table Available</small>
+                </div>
+            </div>
+            <div class="chair_count">
+                <div>
+                    <label for="chair">Chair</label>
+                    <input type="number" id="chair">
+                </div>
+                <div>
+                    <small class="chair">{{restaurant.chair}} Chair Available</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="payment-card">
+        <div class="guest_and_payment_details">
+            <h4>Enter the details of guest </h4>
+            <input type="text" name="guestName" placeholder="Enter the name of guest">
+            <input type="number" name="guestName" placeholder="Enter the phone number of guest">
+            <big>price : <span> 1400</span></big>
+            <big>Discount : <span> 400</span></big>
+            <big>total : <span>{{restaurant.total}}</span></big>
+        </div>
+        <div class="proceed-button">
+            <input type="submit" class=" w-100 btn btn-outline-warning">
+        </div>
+    </div>
+</section>
+<link rel="stylesheet" href="/css/user/paymentDetails.css">

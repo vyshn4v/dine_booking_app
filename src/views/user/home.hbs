@@ -1,0 +1,83 @@
+<main>
+    <section class="banner w-100 d-flex align-items-center justify-content-center">
+        <form class="form-inline my-2 my-lg-0 w-75 shadow">
+            <h6 class="col-12 text-white d-flex h4 justify-content-center">searching <span
+                    class="text-warning">Restaurant?</span></h6>
+            <input class="col-9 form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="col-2 ml-1 btn btn-success text-white my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </section>
+    {{!-- top restaurants --}}
+    <section class="top-restaurants">
+        <h4>Top Restaurants</h4>
+        <div class="restaurant-cards">
+            {{#each restaurants}}
+            <a href="restaurant/{{this.id}}" style="text-decoration: none;">
+                <div class="restaurant-card shadow mt-2 text-dark">
+                    <img class="card-img-top mt-3" src="/images/banner.jpg" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title <span class="product-cash">$2000</span></h5>
+                        <p class="card-text">@@@@@</p>
+                        <p><span>2 table</span><span>8 chair</span></p>
+                    </div>
+                </div>
+            </a>
+            {{/each}}
+        </div>
+    </section>
+    {{!-- end --}}
+    <section class="restaurant-for-you">
+        <h4>Restaurants near you</h4>
+        {{!-- swiper --}}
+        <div class="swiper mySwiper ">
+            <div class="swiper-wrapper mb-1">
+                {{#each restaurants}}
+                <div class="swiper-slide slide_1 d-flex justify-content-center">
+                    <div class="restaurant-card shadow mt-2">
+                        <img class="card-img-top mt-3" src="/images/banner.jpg" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">family Restaurant <span class="product-cash">$2000</span></h5>
+                            <p class="card-text">
+                                <span class="fa fa-star checked"></span>
+                            </p>
+                            <p class="chairs"><span style="margin-right: 10px;">2 table</span><span>8 chair</span></p>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+            <div class="swiper-button-next"><i class="fa-solid fa-angle-right"></i></div>
+            <div class="swiper-button-prev"><i class="fa-solid fa-chevron-left"></i></div>
+        </div>
+        {{!-- end --}}
+    </section>
+</main>
+{{!-- swiper cdn --}}
+<link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
+<script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+{{!-- style sheet --}}
+<link rel="stylesheet" href="/css/user/Home.css">
+{{!-- swiper configuration --}}
+<script>
+    let swiper = new Swiper(".mySwiper", {
+        slidesPerView: 1,
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+        breakpoints: {
+            0: {
+                slidesPerView: 1
+            },
+            521: {
+                slidesPerView: 2
+            },
+            767: {
+                slidesPerView: 3
+            },
+            1000: {
+                slidesPerView: 4
+            }
+        }
+    });
+</script>

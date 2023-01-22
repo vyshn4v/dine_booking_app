@@ -1,0 +1,31 @@
+.signup_page {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.signup_inputs {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    width: 20rem;
+    height: 40px;
+    border: none;
+    border-bottom: 1px solid orange;
+}
+
+input:focus {
+    border-radius: 5px;
+    outline-color: orange;
+}
+
+label[for=forgot_password] {
+    margin-top: 4px;
+    text-decoration: none;
+    font-variant: normal;
+    color: black;
+}

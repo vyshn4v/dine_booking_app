@@ -1,0 +1,30 @@
+.login_page {
+    height: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login_inputs {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    width: 300px;
+    height: 40px;
+    border: none;
+    border-bottom: 1px solid orange;
+}
+
+input:focus {
+    border-radius: 5px;
+    outline-color: orange;
+}
+label[for=forgot_password]{
+    margin-top: 4px;
+    text-decoration: none;
+    font-variant: normal;
+    color: black;
+}
