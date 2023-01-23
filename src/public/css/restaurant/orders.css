@@ -1,0 +1,38 @@
+.order-card {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+}
+
+@media (max-width:791px) {
+    .order-card {
+        grid-template-columns: repeat(2, auto);
+    }
+}
+
+@media (max-width:450px) {
+    .order-card {
+        grid-template-columns: repeat(1, auto);
+    }
+}
+
+.swiper {
+    width: 20vh;
+}
+
+.buttons {
+    height: 40px;
+    width: 40px;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    display: none;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    width: 30px;
+    height: 30px;
+    background-color: #fff;
+    border-radius: 50%;
+}

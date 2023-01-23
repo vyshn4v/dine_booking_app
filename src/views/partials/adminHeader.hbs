@@ -1,0 +1,36 @@
+{{!-- nav bar source= bootsrap --}}
+<nav class="navbar fixed-top navbar-expand-md navbar-light bg-light">
+    <a class="navbar-brand font-weight-bold" href="/admin/">Food Zone</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/dash_board">Dash Board <i
+                        class="fa-sharp fa-solid fa-cart-shopping"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/all_restaurant">Restaurant <i class="fa-regular fa-heart"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/all_users">users <i class="fa-solid fa-user"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/new_restaurants">new restaurants <i class="fa-solid fa-user"></i></a>
+            </li>
+            {{#if user}}
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/admin_logout" tabindex="-1" aria-disabled="true">Logout<i
+                        class="fa-solid fa-right-to-bracket"></i></a>
+            </li>
+            {{else}}
+            <li class="nav-item d-flex align-items-center">
+                <a class="nav-link" href="/admin/admin_login" tabindex="-1" aria-disabled="true">Login<i
+                        class="ml-2 fa-solid fa-right-to-bracket"></i></a>
+            </li>
+            {{/if}}
+        </ul>
+    </div>
+</nav>

@@ -1,0 +1,30 @@
+<section class="admin_product_table table-responsive-sm">
+    <form class="form-inline my-2 my-lg-0 d-flex justify-content-end py-3">
+        <input class="form-control mr-sm-2 " type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+    <div>
+        <div class="thead-dark">
+            <h4 class="p-5">products</h4>
+        </div>
+        <div>
+            {{#each users}}
+            <div class="row p-2 w-100 d-flex justify-content-end">
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3  d-flex justify-content-center align-items-center"><img
+                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                        style="width: 100px; height: 100px; border-radius: 50%;" alt=""></div>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3  d-flex justify-content-center align-items-center">name : biriyani
+                    </div>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3  d-flex justify-content-center align-items-center">
+                    price : 120</div>
+                <div class="col-12 col-sm-6 col-md-6 col-lg-3 d-flex justify-content-end align-items-center">
+                    <a href="#" class=" w-50 text-dark btn btn-warning ml-2" style="height: 40px;">edit product</a>
+                    <a href="#" class="w-50 text-white btn btn-danger ml-2" style="height: 40px;">delete product</a>
+                </div>
+            </div>
+            <hr>
+            {{/each}}
+        </div>
+    </div>
+
+</section>

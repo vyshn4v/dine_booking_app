@@ -14,7 +14,13 @@
 
 <body>
     <div class="container" style="font-variant: small-caps;">
+        {{#if userHeader}}
         {{>userHeader}}
+        {{else if restaurantHeader}}
+        {{>restaurantHeader}}
+        {{else if adminHeader}}
+        {{>adminHeader}}
+        {{/if}}
         <div class="mt-5 p-1">
             {{{body}}}
         </div>
