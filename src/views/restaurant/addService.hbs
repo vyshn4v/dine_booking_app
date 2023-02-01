@@ -1,0 +1,91 @@
+{{!-- update tables --}}
+
+<body>
+    <div class="container tm-mt-big tm-mb-big">
+        <div class="row service">
+            <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
+                <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+                    <div class="d-flex justify-content-between align-items-center mb-">
+                        <h4 class="text-right mt-5">add service</h4>
+                    </div>
+                    <form action="/restaurant/add-service" method="post">
+                        <div class="row mt-5">
+                            <div class="col-md-12">
+                                <label class="labels">edit/add tables</label>
+                                <select id="chairType" onchange="changeChairCount()"
+                                    class="form-select form-select-lg mb-3 w-100 p-2"
+                                    aria-label=".form-select-lg example">
+                                    <option selected>add new service</option>
+                                    {{#each services}}
+                                    <option value="{{this.title}}">{{this.title}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            {{!-- <div class="col-md-6">
+                                <input type="text" class="form-control" value="" name="table_number"
+                                    placeholder="Enter your table number">
+                                <label class="labels">table number</label>
+                            </div> --}}
+                            <div class="col-md-12">
+                                <label class="labels">title</label>
+                                <input type="text" class="form-control mb-2" value="" name="title"
+                                    placeholder="title of service">
+                            </div>
+                            <div class="col-md-12">
+                                <label for="description">Description</label>
+                                <textarea name="description" class="form-control validate" rows="10"
+                                    placeholder="Enter the description about service..."></textarea>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                <input type="submit" class="mt-2 btn btn-primary form-control" value="submit">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<style>
+    .service input:not([type=submit]),
+    .service textarea {
+        color: black;
+        border-radius: 5px;
+        border: none;
+        border: 0.2px solid rgba(0, 0, 0, 0.081);
+        border-bottom: 1px solid rgba(95, 95, 95, 0.248);
+        margin-top: 20px;
+    }
+
+    .service textarea::-webkit-scrollbar {
+        display: none;
+    }
+
+    .service input:not([type=submit])::placeholder {
+        color: rgba(108, 108, 108, 0.419);
+    }
+
+    .service label:not([for="file"]) {
+        color: rgba(44, 44, 44, 0.704);
+    }
+
+    .service select {
+        color: black;
+        border-radius: 0;
+        border: 1px solid rgba(95, 95, 95, 0.248);
+        margin-top: 20px;
+    }
+
+    .service input:not([type=submit]):focus,
+    .service textarea:focus,
+    .service select:focus {
+        border-bottom: 2px solid rgba(25, 151, 0, 0.8);
+        box-shadow: none;
+        outline: 0 none;
+        background-color: transparent;
+    }
+</style>

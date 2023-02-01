@@ -1,17 +1,20 @@
 <section>
-    <div class="restaurant_login_page">
-        <div class="restaurant_login_header">
-            <h4>admin login</h4>
+    <div class="restaurant_login_page d-flex w-100 justify-content-center align-items-center" style="height: 80vh;">
+        <div class="restaurant_login_header ">
+            <div class="">
+                <h4 class=" text-center">login</h4>
+                <small class=" d-flex-column justify-content-center align-items-center">{{err}}</small>
+            </div>
         </div>
-        <form action="admin_login">
+        <form action="/admin/login" method="post">
             <div class="restaurant_login_inputs">
                 <input type="email" name="email" placeholder="Enter the restaurant email" required>
                 <label for="email">email</label>
-                <input type="password" name="password" id="" placeholder="Enter the password">
+                <input type="password" name="password" placeholder="Enter the password">
                 <label for="password">password</label>
             </div>
             <div class="restaurant_login_button">
-                <input type="submit" class="w-100 mt-2 btn btn-outline-warning" name="" id="" value="Login">
+                <input type="submit" class="w-100 mt-2 btn btn-outline-warning" value="Login">
             </div>
         </form>
     </div>

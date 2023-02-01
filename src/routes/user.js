@@ -1,33 +1,50 @@
-const { homePage, orderPage, restaurantPage, availableFood, paymentDetails, wishList, login, signup, profile, searchProducts, changePassword, otpVerification, getLogin, postLogin, getSignup, postSignup } = require('../controllers/user')
+const { getLogin, postLogin, getTwoFactor } = require('../controllers/Auth')
+const userController = require('../controllers/user')
+const { userSessionManagement, userNotLogin } = require('../middlewares/session/user')
 
 const router = require('express').Router()
 
-router.get('/', homePage)
+router.get('/', userSessionManagement, userController.homePageGet)
 
-router.get('/user_order', orderPage)
+router.get('/orders', userSessionManagement, userController.orderPageGet)
+router.get('/tables/:restaurant_id', userController.tablesPageGet)
+router.post('/book-table', userController.bookTablePost)
 
-router.get("/restaurant_details/:restaurant_id", restaurantPage)
+router.get("/restaurant-details/:restaurant_id", userSessionManagement, userController.restaurantPageGet)
 
-router.get("/restaurant_details/:restaurant_id/available_foods", availableFood)
+router.get("/restaurant-details/:restaurant_id/available-foods", userSessionManagement, userController.availableFoodGet)
 
-router.get("/order_items/:restaurant_id", paymentDetails)
+router.get("/ordered-items/:restaurant_id", userSessionManagement, userController.paymentDetailsGet)
 
-router.get("/wishlist", wishList)
+router.get("/wishlist", userSessionManagement, userController.wishListGet)
 //user login
-router.get("/user_login", getLogin)
-router.post("/user_login", postLogin)
+router.get("/login", userNotLogin, getLogin)
+router.post("/login", userNotLogin, postLogin)
 
 
 //user signup
-router.get("/user_signup", getSignup)
-router.post("/user_signup", postSignup)
+router.get("/signup", userNotLogin, userController.signupGet)
+router.post("/signup", userNotLogin, userController.signupPost)
 
-router.get("/user_profile", profile)
+router.get("/profile", userSessionManagement, userController.profileGet)
 
-router.get("/search_products", searchProducts)
+router.get("/search-products", userController.searchProductsGet)
 
-router.get("/change_password", changePassword)
+router.get("/change-password", userSessionManagement, userController.ChangePasswordGet)
 
-router.get("/otp_verification", otpVerification)
+//validate otp
+router.get("/:user_id/validate-otp", userController.otpVerificationGet)
+router.post("/:user_id/validate-otp", userController.otpVerificationPost)
+
+// forgot password
+router.get('/forgot-password', userController.ForgotPasswordGet)
+router.get('/change-password/:user_id', userController.changePasswordGet)
+router.post('/change-password/:user_id', userController.changePasswordPost)
+router.post('/verify-forgot-password', userController.verifyuserOtpPost)
+router.post('/:user_email/send-otp/:validation_type', userController.sendOtpEmailPost)
+
+//validate otp verfication
+router.get('/:user_id/validate-otp/2-factor', getTwoFactor)
+router.post('/:user_id/validate-otp/2-factor',)
 
 module.exports = router

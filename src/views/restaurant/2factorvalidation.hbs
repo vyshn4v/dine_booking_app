@@ -1,0 +1,104 @@
+<div class="container" style="height: 79vh; ">
+    <div class="row justify-content-center" style="display: flex; align-items: center;">
+        <div class="col-md-4 text-center">
+            <div class="row">
+                <div class="col-sm-12 mt-5 bgWhite">
+                    <div class="title">
+                        Verify OTP
+                    </div>
+                    <div class="">
+                        {{err}}
+                    </div>
+                    <div class="count_down">
+                        <input type="text" id="otpCounter" value="{{otpCount}}" hidden>
+                        <span id="otpCounterLive"></span>
+                    </div>
+                    <form action="/restaurant/{{restaurantId}}/validate-otp/2-factor" method="post" class="mt-5"
+                        onsubmit="return otpInputField()">
+                        <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(2)' maxlength=1>
+                        <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(3)' maxlength=1>
+                        <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(4)' maxlength=1>
+                        <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(5)' maxlength=1>
+                        <input type="text" id="otp" name="otp" hidden>
+                        <hr class="mt-4">
+                        <input id="verify_otp" class='btn btn-primary text-white btn-block mt-4 mb-4 customBtn'
+                            type="submit" value="Verify">
+                        <input id="resend_otp" class='btn btn-danger text-white btn-block mt-4 mb-4 customBtn'
+                            type="hidden" value="resend otp" onclick="resendOtpRestaurnt('{{restaurantEmail}}')">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="/css/restaurant/otpValidation.css">
+<script>
+    const otpCounterLive = document.getElementById('otpCounterLive')
+    const verifyOtp = document.querySelector('#verify_otp')
+    const resendOtp = document.querySelector('#resend_otp')
+    let otpTimer;
+    window.addEventListener('DOMContentLoaded', () => {
+        const otpCounter = document.getElementById('otpCounter').value
+        setCountDown(otpCounter)
+    })
+    function setCountDown(otpTime) {
+        otpTimer = setInterval(() => {
+            const now = new Date().getTime()
+            const date = new Date(otpTime).getTime()
+            const timeleft = date - now
+            const minute = Math.floor((timeleft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeleft % (1000 * 60)) / 1000);
+            if (minute < 0) {
+                otpCounterLive.innerText = "otp expired"
+                verifyOtp.type = "hidden"
+                resendOtp.type = "button"
+                clearInterval(otpTimer)
+            } else {
+                otpCounterLive.innerText = minute + " Minutes : " + seconds + " Seconds left"
+            }
+        }, 1000)
+    }
+    function resendOtpRestaurnt(restaurantEmail) {
+        clearInterval(otpTimer)
+        fetch(`http://localhost:3000/restaurant/${restaurantEmail}/send-verification-otp/welcome-back`, {
+            method: 'POST'
+        }).then((response) => response.json()).then((response) => {
+            if (response.status) {
+                verifyOtp.type = "submit"
+                resendOtp.type = "hidden"
+                setCountDown(response.otpTime)
+            } else {
+                alert(response.message)
+            }
+        }).catch(() => {
+            alert(response.message)
+        })
+
+    }
+    function otpInputField() {
+        const otps = document.querySelectorAll('input');
+        const otp = document.querySelector('#otp')
+        otp.value = String(otps[1].value + otps[2].value + otps[3].value + otps[4].value)
+        if (otp.value.length === 4) {
+            return true
+        } else {
+            return false
+        }
+    }
+    function digitValidate(ele) {
+        console.log(ele.value);
+        ele.value = ele.value.replace(/[^0-9]/g, '');
+    }
+    function tabChange(val) {
+        console.log("val" + val);
+        let ele = document.querySelectorAll('input');
+        console.log(ele[val - 1].value);
+        if (ele[val - 1].value != '') {
+            ele[val].focus()
+        } else if (ele[val - 1].value == '') {
+            ele[val - 2].focus()
+        }
+    }
+
+
+</script>

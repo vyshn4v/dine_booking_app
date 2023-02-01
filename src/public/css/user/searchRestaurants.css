@@ -2,8 +2,28 @@
 .restaurant-cards {
     display: grid;
     justify-content: space-evenly;
-    grid-template-columns: repeat(4, auto);
+    grid-template-columns: repeat(5, auto);
     margin: auto;
+}
+
+.restaurant_details {
+    text-decoration: none;
+    color: black;
+}
+
+.restaurant_details:hover {
+    text-decoration: none;
+    color: black;
+}
+
+.restaurant-image>img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.restauarnt-card-body {
+    width: 100%;
+    padding: 10px;
 }
 
 .restaurant-card {
@@ -12,6 +32,18 @@
     flex-direction: column;
     align-items: center;
     border-radius: 10px;
+    background-color: rgba(239, 239, 239, 0.112);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.133);
+    margin-top: 20px;
+    border-radius: 9px;
+    background: #ffffff;
+    box-shadow: 5px 5px 11px #dbdbdb,
+        -5px -5px 11px #ffffff;
+
+}
+
+.restaurant-card:hover {
+    background-color: rgba(237, 237, 237, 0.547);
 }
 
 .restaurant-card>img {
@@ -40,4 +72,28 @@
 
 .chairs {
     font-size: 12px;
+}
+
+@media (max-width:1280px) {
+    .restaurant-cards {
+        grid-template-columns: repeat(4, auto);
+    }
+}
+
+@media (max-width:1050px) {
+    .restaurant-cards {
+        grid-template-columns: repeat(3, auto);
+    }
+}
+
+@media (max-width:800px) {
+    .restaurant-cards {
+        grid-template-columns: repeat(2, auto);
+    }
+}
+
+@media (max-width:550px) {
+    .restaurant-cards {
+        grid-template-columns: repeat(1, auto);
+    }
 }

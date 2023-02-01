@@ -21,7 +21,7 @@
         {{else if adminHeader}}
         {{>adminHeader}}
         {{/if}}
-        <div class="mt-5 p-1">
+        <div class="mt-5 p-1" style=" display: flex; align-items:center; justify-content: center;">
             {{{body}}}
         </div>
         {{>footer}}
@@ -37,14 +37,22 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
     {{!-- bootsrap cdn end --}}
-
+    {{!-- toastify cdn --}}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">\
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     {{!-- font awsome kit start --}}
     <script src="https://kit.fontawesome.com/0d97526b57.js" crossorigin="anonymous"></script>
     {{!-- font awsome kit end --}}
 
 
     <style>
-        @media (max-width:1500px) {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @media (max-width:1600px) {
             .container {
                 min-width: 100% !important;
                 margin: 0px;

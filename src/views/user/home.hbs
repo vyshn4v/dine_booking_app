@@ -1,24 +1,39 @@
-<main>
+<main class="w-100">
     <section class="banner w-100 d-flex align-items-center justify-content-center">
         <form class="form-inline my-2 my-lg-0 w-75 shadow">
             <h6 class="col-12 text-white d-flex h4 justify-content-center">searching <span
                     class="text-warning">Restaurant?</span></h6>
-            <input class="col-9 form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="col-2 ml-1 btn btn-success text-white my-2 my-sm-0" type="submit">Search</button>
+            <input class="col-12 col-sm-9 form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="col-12 col-sm-2 ml-1 btn btn-success text-white my-2 my-sm-0" type="submit">Search</button>
         </form>
     </section>
+    <style>
+        .restaurant-image>img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .restauarnt-card-body {
+            width: 100%;
+            padding: 10px;
+        }
+    </style>
     {{!-- top restaurants --}}
     <section class="top-restaurants">
         <h4>Top Restaurants</h4>
         <div class="restaurant-cards">
             {{#each restaurants}}
-            <a href="restaurant_details/{{this.id}}" style="text-decoration: none;">
-                <div class="restaurant-card shadow mt-2 text-dark">
-                    <img class="card-img-top mt-3" src="/images/banner.jpg" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title <span class="product-cash">$2000</span></h5>
-                        <p class="card-text">@@@@@</p>
-                        <p><span>2 table</span><span>8 chair</span></p>
+            <a class="/restaurant-details/{{this.id}}" href="restaurant_details/{{this.id}}"
+                style="text-decoration: none;">
+                <div class="restaurant-card" style="">
+                    <div class="restaurant-image">
+                        <img src="{{this.profile_pic}}" style="" alt="">
+                    </div>
+                    <div class="restauarnt-card-body">
+                        <h6>{{this.restaurant_name}}</h6>
+                        {{!-- <span><i class="fa-solid fa-star" style="color: rgb(207, 207, 0);"></i></span> --}}
+                        {{!-- <h6><span>4</span>table<span> 2</span>chair</h6> --}}
+                        <small>{{this.address}}</small>
                     </div>
                 </div>
             </a>
@@ -33,14 +48,13 @@
             <div class="swiper-wrapper mb-1">
                 {{#each restaurants}}
                 <div class="swiper-slide slide_1 d-flex justify-content-center">
-                    <div class="restaurant-card shadow mt-2">
-                        <img class="card-img-top mt-3" src="/images/banner.jpg" alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">family Restaurant <span class="product-cash">$2000</span></h5>
-                            <p class="card-text">
-                                <span class="fa fa-star checked"></span>
-                            </p>
-                            <p class="chairs"><span style="margin-right: 10px;">2 table</span><span>8 chair</span></p>
+                    <div class="restaurant-card" style="">
+                        <div class="restaurant-image">
+                            <img src="/images/banner.jpg" style="" alt="">
+                        </div>
+                        <div class="restauarnt-card-body">
+                            <h6>restaurant <span class="product-cash">$2000</span></h6>
+                            <h6><span>4</span>table<span> 2</span>chair</h6>
                         </div>
                     </div>
                 </div>
@@ -69,14 +83,17 @@
             0: {
                 slidesPerView: 1
             },
-            521: {
+            550: {
                 slidesPerView: 2
             },
-            767: {
+            800: {
                 slidesPerView: 3
             },
-            1000: {
+            1050: {
                 slidesPerView: 4
+            },
+            1280: {
+                slidesPerView: 5
             }
         }
     });

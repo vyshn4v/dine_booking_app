@@ -1,37 +1,43 @@
 <section class="admin_dash_board row mt-5 ">
-    <div class="graph  col-lg-12 mt-5 ">
+    <div class="graph  col-lg-12 d-flex-column">
         <h4>sales summery</h4>
-        <div style="height: 100% !important;" class="">
+        <div style="
+        position: relative;
+        margin: auto;
+        height: 100%;
+        width: 80vw;
+        " class="d-flex-column">
             <canvas id="myChart"></canvas>
         </div>
     </div>
-    <div class="restaurant_user_order_status col-lg-12 row w-100 m-auto mt-5 justify-content-around">
+    <div class="restaurant_user_order_status col-lg-12 row m-auto mt-5 justify-content-around">
         <div class="card col-12 col-sm-6 col-md-4 m-2" style="max-width: 18rem;">
             <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+
+                <h5 class="card-title"><i class="fa-solid fa-user"></i></h5>
+                <h5 class="card-title">total user</h5>
+                <h5 class="card-title">2</h5>
             </div>
         </div>
         <div class="card col-12 col-sm-6 col-md-4 m-2" style="max-width: 18rem;">
             <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+                <h5 class="card-title"><i class="fa-solid fa-user"></i></h5>
+                <h5 class="card-title">users in this month</h5>
+                <h5 class="card-title">2</h5>
             </div>
         </div>
         <div class="card col-12 col-sm-6 col-md-4 m-2" style="max-width: 18rem;">
             <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+                <h5 class="card-title"><i class="fa-solid fa-cart-shopping"></i></h5>
+                <h5 class="card-title">Total orders</h5>
+                <h5 class="card-title">1</h5>
             </div>
         </div>
         <div class="card col-12 col-sm-6 col-md-4 m-2" style="max-width: 18rem;">
             <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+                <h5 class="card-title"><i class="fa-solid fa-cart-shopping"></i></h5>
+                <h5 class="card-title">Canceled orders</h5>
+                <h5 class="card-title">2</h5>
             </div>
         </div>
     </div>
@@ -43,17 +49,17 @@
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            labels: ['Jan', 'Feb', 'March', 'April', 'May', 'jun'],
             datasets: [{
-                label: '# of Votes',
+                label: 'orders',
                 data: [12, 19, 3, 5, 2, 3],
                 borderWidth: 1
-            },{
-                label: '# of Votes',
+            }, {
+                label: 'users',
                 data: [12, 19, 3, 5, 2, 3],
                 borderWidth: 1
-            },{
-                label: '# of Votes',
+            }, {
+                label: 'restaurants',
                 data: [12, 19, 3, 5, 2, 3],
                 borderWidth: 1
             }]

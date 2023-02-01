@@ -6,7 +6,12 @@
     align-items: center;
 }
 
-.restaurant_login_inputs {
+.restaurant_login_inputs,.restaurant_login_button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.restaurant_login_inputs>div{
     display: flex;
     flex-direction: column;
 }
@@ -16,6 +21,14 @@ input {
     height: 40px;
     border: none;
     border-bottom: 1px solid orange;
+    padding: 10px;
+}
+label{
+    color: black;
+}
+label>a{
+    text-decoration: none;
+    color: orange;
 }
 
 input:focus {

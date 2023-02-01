@@ -9,7 +9,60 @@
                         <div class="col">
                             <div class="media">
                                 <div class="media-body my-auto text-right">
-                                    <div class="order-card  my-auto flex-column flex-md-row">
+                                    <div class="order-card">
+                                        <div class="user_details">
+                                            <h6>vyhsnav p c</h6>
+                                            <small>vyshnavpcnaravoor@gmail.com</small>
+                                            <small>8086064478</small>
+                                        </div>
+                                        <div class="order_details">
+                                            <small>Date: <span>14/09/2023</span></small>
+                                            <small>Time: <span>12:30</span></small>
+                                        </div>
+                                        <div class="table_details">
+                                            <small>Table with 2 chair: <span>2</span></small>
+                                            <small>Table with 4 chair: <span>0</span></small>
+                                            <small>Table with 6 chair: <span>1</span></small>
+                                        </div>
+                                        <div class="ordered_items">
+                                            <small>Ordered Items</small>
+                                            <small>
+                                                <small class="show_ordered_item_button btn btn-link" type="button" data-toggle="modal"
+                                                    data-target="#exampleModalLong{{this.id}}">
+                                                    show items
+                                                </small>
+                                                <div class="modal fade" id="exampleModalLong{{this.id}}" tabindex="-1"
+                                                    role="dialog" aria-labelledby="exampleModalLongTitle"
+                                                    aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLongTitle">ordered items</h5>
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                {{#each this.items}}
+                                                                <div class="ordered_item">
+                                                                    <small>{{this.name}}</small>
+                                                                    <small>{{this.quantity}}</small>
+                                                                </div>
+                                                                {{/each}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </small>
+                                        </div>
+                                        <div class="approve_cancel_order">
+                                            <input type="button" class="btn btn-danger" value="reject">
+                                            <input type="button" class="btn btn-success" value="approve">
+                                        </div>
+                                    </div>
+                                    {{!-- <div class="order-card  my-auto flex-column flex-md-row">
                                         <div class=" my-auto flex-column align-items-center justify-content-center">
                                             <div
                                                 class="sq align-self-center d-flex justify-content-center align-items-center">
@@ -21,7 +74,8 @@
                                             <h4 class="mb-0 d-flex justify-content-center align-items-center">
                                                 {{this.user_name}}
                                             </h4>
-                                            <h6 class="mb-0 d-flex justify-content-center align-items-center">{{this.email}} </h6>
+                                            <h6 class="mb-0 d-flex justify-content-center align-items-center">
+                                                {{this.email}} </h6>
                                         </div>
                                         <div class="  my-auto flex-column align-items-center justify-content-center">
                                             <h6 class="d-flex justify-content-center align-items-center">Date:
@@ -80,7 +134,7 @@
                                                 </h6>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>

@@ -16,6 +16,7 @@ input {
     height: 40px;
     border: none;
     border-bottom: 1px solid orange;
+    padding: 10px;
 }
 
 input:focus {

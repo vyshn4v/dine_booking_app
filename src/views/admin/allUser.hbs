@@ -1,0 +1,467 @@
+<section class="admin_product_table table-responsive-sm">
+    <form class="form-inline my-lg-0 d-flex justify-content-center pr-5  py-3 row" action="" method="get">
+        <input class="form-control mr-sm-2 col-12 col-sm-3 mt-1" name="search" type="search" placeholder="Search"
+            aria-label="Search">
+        <button class="btn btn-outline-success my-sm-0 col-12 col-sm-2 mt-1" type="submit">Search</button>
+    </form>
+    <div>
+        <div class="thead-dark d-flex justify-content-around">
+            <h4 class="p-5">users</h4>
+            <div class="m-5 h-25 d-flex">
+                <a href="/admin/users" class="btn">all</a>
+                <a href="?filter=active" class="btn">active</a>
+                <a href="?filter=banned" class="btn">banned</a>
+            </div>
+            {{!-- <select class="dropdown p-5">
+                <option class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Filter
+                </option>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <a href="/admin/users" class="dropdown-item">all</a>
+                    <a href="?filter=active" class="dropdown-item">active</a>
+                    <a href="?filter=banned" class="dropdown-item">banned</a>
+                </div>
+            </select> --}}
+        </div>
+        <div class="">
+            {{#checklength users 0}}
+            {{#each users}}
+            <div class="card">
+                <div class="profile-pic">
+                    <div class="w-100 d-flex  justify-content-center">
+                        <img class="" src="{{this.profile_pic}}"
+                            style="width: 100px; height: 100px; border-radius: 50%;" alt="">
+                    </div>
+                    <h6 class="d-flex justify-content-center restaurant-name">
+                        {{this.user_name}}
+                    </h6>
+                </div>
+                <div class="profile-status-details">
+                    <div class="">
+                        <h6>
+                            {{this.email}}
+                        </h6>
+                    </div>
+                    <div class="">
+                        <h6>
+                            ph :
+                            {{#if this.phone}}
+                            {{this.phone}}
+                            {{else}}
+                            not availabe
+                            {{/if}}
+                        </h6>
+                    </div>
+                    <div>
+                        <h6>
+                            {{#if this.verified}}
+                            email verified
+                            {{else}}
+                            email not verified
+                            {{/if}}
+                        </h6>
+                    </div>
+                </div>
+                <div class="account-created-details">
+                    <div>
+                        <h6>
+                            created : {{this.request_date}}
+                        </h6>
+                    </div>
+                    <div>
+                        <h6>
+                            total orders : {{this.orders}}
+                        </h6>
+                    </div>
+                </div>
+                <div class="buttons">
+                    {{#ifEquals this.status "banned"}}
+                    <div class="col-12 col-sm-3 w-100 col-lg-3 w-100 d-flex justify-content-center align-items-center">
+                        <button type="button" class="text-white btn btn-primary ml-2" data-toggle="modal"
+                            data-target="#unban{{this._id}}">
+                            unblock
+                        </button>
+                    </div>
+                    {{/ifEquals}}
+                    {{#ifEquals this.status "active"}}
+                    <div class="col-12 col-sm-3 w-100 col-lg-3 w-100 d-flex justify-content-center align-items-center">
+                        <button type="button" class=" text-white btn btn-danger ml-2" data-toggle="modal"
+                            data-target="#ban{{this._id}}">
+                            block
+                        </button>
+                    </div>
+                    {{/ifEquals}}
+                </div>
+            </div>
+
+            <style>
+                .btn:hover {
+                    background-color: rgb(243, 243, 243);
+                }
+
+                .card {
+                    width: 100vw;
+                    display: grid;
+                    grid-template-columns: repeat(4, 25%);
+                    justify-content: flex-end;
+                    align-items: center;
+                    padding: 20px;
+                    margin-top: 10px;
+                }
+
+                .card:hover {
+                    background-color: rgba(237, 237, 237, 0.307);
+                    cursor: pointer;
+                }
+
+                .card>div {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    min-width: 100%;
+                }
+
+                .buttons {
+                    display: flex;
+                    align-items: center;
+                    grid-column-start: 0;
+                }
+
+                @media (max-width:900px) {
+                    .card {
+                        grid-template-columns: repeat(3, 33.3%);
+                    }
+
+                    .buttons {
+                        grid-column-start: 3;
+                    }
+                }
+
+                @media (max-width:670px) {
+                    .card {
+                        grid-template-columns: repeat(1, 100%);
+                    }
+                    .buttons {
+                        grid-column-start: auto;
+                    }
+                }
+            </style>
+            {{!-- <div class="row p-2 ">
+                <div class="col-12 col-sm-3 d-flex-column justify-content-center align-items-center">
+                    <div class="w-100 d-flex  justify-content-center">
+                        <img class="" src="{{this.profile_pic}}"
+                            style="width: 100px; height: 100px; border-radius: 50%;" alt="">
+                    </div>
+                    <h6 class="d-flex justify-content-center restaurant-name">
+                        {{this.user_name}}
+                    </h6>
+                </div>
+                <div class="col-12 col-sm-3  m-auto">
+                    <div class="">
+                        <h6>
+                            {{this.email}}
+                        </h6>
+                    </div>
+                    <div class="">
+                        <h6>
+                            ph :
+                            {{#if this.phone}}
+                            {{this.phone}}
+                            {{else}}
+                            not availabe
+                            {{/if}}
+                        </h6>
+                    </div>
+                    <div>
+                        <h6>
+                            {{#if this.verified}}
+                            email verified
+                            {{else}}
+                            email not verified
+                            {{/if}}
+                        </h6>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-3 w-100 justify-content-start m-auto">
+                    <div>
+                        <h6>
+                            created : {{this.request_date}}
+                        </h6>
+                    </div> --}}
+                    {{!-- <div>
+                        <h6>
+                            {{#if this.profile_completed}}
+                            profile completed
+                            {{else}}
+                            profile not completed
+                            {{/if}}
+                        </h6>
+                    </div> --}}
+
+                    {{!-- <div>
+                        <h6>
+                            total orders : {{this.orders}}
+                        </h6>
+                    </div> --}}
+
+                    {{!--
+                </div>
+                {{#ifEquals this.status "banned"}}
+                <div class="col-12 col-sm-3 w-100 col-lg-3 w-100 d-flex justify-content-center align-items-center">
+                    <button type="button" class="w-50 text-white btn btn-warning ml-2" style="height: 40px;"
+                        data-toggle="modal" data-target="#unban{{this._id}}">
+                        unban user
+                    </button>
+                </div>
+                {{/ifEquals}}
+                {{#ifEquals this.status "active"}}
+                <div class="col-12 col-sm-3 w-100 col-lg-3 w-100 d-flex justify-content-center align-items-center">
+                    <button type="button" class="w-50 text-white btn btn-danger ml-2" style="height: 40px;"
+                        data-toggle="modal" data-target="#ban{{this._id}}">
+                        ban
+                    </button>
+                </div>
+                {{/ifEquals}}
+            </div> --}}
+            <!-- Modal services -->
+            <div class="modal fade" id="services{{this._id}}" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">confirm</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            {{#if this.service}}
+                            {{#each this.services}}
+                            <h6>{{this.title}}</h6>
+                            <p>{{this.description}}</p>
+                            {{/each}}
+                            {{else}}
+                            No service available now
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal table restaurant -->
+            <div class="modal fade" id="tables{{this._id}}" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">confirm</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="seats">
+                                {{#if this.tables}}
+                                {{#each this.tables}}
+                                <div class="row">
+                                    <small class="col-12 col-lg-6">table Number : <span>
+                                            {{this.table_number}}
+                                        </span>
+                                    </small>
+                                    <small class="col-12 col-lg-6">category : <span>
+                                            {{this.category}}
+                                        </span>
+                                    </small>
+                                    <small class="col-12 col-lg-6">tables : <span>
+                                            {{this.total_table}}
+                                        </span>
+                                    </small>
+                                    <small class="col-12 col-lg-6">chairs : <span>
+                                            {{this.total_chair}}
+                                        </span>
+                                    </small>
+                                </div>
+                                {{/each}}
+                                {{else}}
+                                No tables available now
+                                {{/if}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal dishes restaurant-->
+            <div class="modal fade" id="dishes{{this._id}}" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">confirm</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            {{#if this.menu}}
+                            {{#each this.menu}}
+                            <div class="seat">
+                                <small>product name : <span>
+                                        {{this.product_name}}
+                                    </span>
+                                </small>
+                                <small>price : <span>
+                                        {{this.price}}
+                                    </span>
+                                </small>
+                                <small>price : <span>
+                                        {{this.stock}}
+                                    </span>
+                                </small>
+                                <small>price : <span>
+                                        {{this.description}}
+                                    </span>
+                                </small>
+                            </div>
+                            {{/each}}
+                            {{else}}
+                            no dishes availabe
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal ban user -->
+            <div class="modal fade" id="ban{{this._id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">confirm</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h6>approve this restaurant</h6>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">cancel</button>
+                            <button type="button" class="btn btn-primary"
+                                onclick="banUser('{{this._id}}')">confirm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{!-- unban user --}}
+            <div class="modal fade" id="unban{{this._id}}" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">confirm</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h6>approve this restaurant</h6>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">cancel</button>
+                            <button type="button" class="btn btn-primary"
+                                onclick="unbanUser('{{this._id}}')">confirm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+            {{else}}
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="d-flex justify-content-center align-items-center w-75 alert alert-warning" role="alert">
+                    no users found
+                </div>
+            </div>
+            {{/checklength}}
+        </div>
+    </div>
+
+</section>
+<style>
+    .seats {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .restaurant-details:hover {
+        background-color: rgba(239, 239, 239, 0.444);
+        cursor: pointer;
+    }
+
+    .seat {
+        width: max-content;
+        background-color: rgba(237, 237, 237, 0.411);
+        padding: 10px;
+        border-radius: 5px;
+        margin-left: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-top: 10px;
+        box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.182);
+    }
+
+    .seat>small {
+        font-size: small;
+    }
+
+    small {
+        font-size: medium;
+    }
+</style>
+<script>
+    const baseUrl = window.location.origin
+    function banUser(userId) {
+        fetch(`${baseUrl}/admin/ban-user/${userId}`, {
+            method: "POST"
+        }).then((response) => response.json()).then((response) => {
+            new Toastify({
+                text: response.message,
+                duration: 500,
+                gravity: "top", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: "orange",
+                },
+            }).showToast();
+            setTimeout(() => {
+                location.reload()
+            }, 700)
+        }).catch(() => {
+            alert("user not deleted")
+        })
+    }
+    function unbanUser(userId) {
+        fetch(`${baseUrl}/admin/unban-user/${userId}`, {
+            method: "POST"
+        }).then((response) => response.json()).then((response) => {
+            console.log(response)
+            new Toastify({
+                text: response.message,
+                duration: 500,
+                gravity: "top", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: "orange",
+                },
+            }).showToast();
+            setTimeout(() => {
+                location.reload()
+            }, 700)
+        }).catch(() => {
+            alert("user not deleted")
+        })
+    }
+</script>

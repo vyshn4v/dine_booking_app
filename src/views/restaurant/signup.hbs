@@ -1,24 +1,63 @@
-<section>
+<section style="height: 90vh; display: flex; justify-content: center; align-items: center;">
     <div class="signup_page">
-        <div class="signup_header">
-            <h4>signup</h4>
+        <div class="signup_header d-flex-column ">
+            <h4 class="d-flex justify-content-center align-items-center">signup</h4>
+            {{#if err}}
+            <small style="font-size: large;"
+                class="text-danger d-flex justify-content-center align-items-center">{{err}}</small>
+            {{/if}}
+            <small id="error" style="font-size: large;"
+                class="text-danger d-flex justify-content-center align-items-center">{{err}}</small>
         </div>
-        <form action="restaurant_signup" method="post">
+        <form action="signup" method="post">
             <div class="signup_inputs">
                 <input type="text" name="restaurant_name" placeholder="Enter the name">
                 <label for="name">name</label>
                 <input type="email" name="email" placeholder="Enter the Email address">
                 <label for="email">Email</label>
-                <input type="password" name="password" id="" placeholder="Enter the password">
+                <input type="password" name="password" placeholder="Enter the password">
                 <label for="password">password</label>
-                <input type="password" name="confirm_password" id="" placeholder="Confirm password">
+                <input type="password" name="confirm_password" placeholder="Confirm password">
                 <label for="password">Confirm password</label>
             </div>
             <div class="signup_button">
-                <input type="submit" class="w-100 mt-2 btn btn-outline-warning" name="" id="" value="signup">
-                <label for="forgot_password">Already have an account? <a href="restaurant_login" class="" >Login</a></label>
+                <input type="submit" class="w-100 mt-2 btn btn-outline-warning" value="signup">
+                <label for="forgot_password">Already have an account? <a href="/restaurant/restaurant_login"
+                        class="">Login</a></label>
             </div>
         </form>
     </div>
 </section>
 <link rel="stylesheet" href="/css/restaurant/signup.css">
+<script>
+    const form = document.querySelector('form')
+    const inputs = document.getElementsByTagName("input")
+    const error = document.getElementById('error')
+    form.addEventListener("submit", (e) => {
+        if (inputs[0].value <= 0) {
+            e.preventDefault()
+            error.innerText = 'enter the name'
+            return false
+        }
+        if (inputs[1].value <= 0) {
+            e.preventDefault()
+            error.innerText = 'enter the email'
+            return false
+        }
+        if (inputs[2].value <= 0) {
+            e.preventDefault()
+            error.innerText = 'enter the password'
+            return false
+        }
+        if (inputs[3].value <= 0) {
+            e.preventDefault()
+            error.innerText = 'enter the confirm password'
+            return false
+        }
+        if (!inputs[3].value.match(inputs[2].value)) {
+            e.preventDefault()
+            error.innerText = 'enter correct password'
+            return false
+        }
+    })
+</script>

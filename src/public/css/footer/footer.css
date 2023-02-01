@@ -5,6 +5,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: rgba(239, 239, 239, 0.485);
 }
 .header{
     font-size: 10px;

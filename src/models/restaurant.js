@@ -8,14 +8,18 @@ const Otp_schema = new Schema({
 })
 const Restaurant_Schema = new Schema({
     restaurant_name: String,
-    email: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     address: String,
+    profile_pic: String,
+    phone: Number,
     pincode: Number,
-    table: Number,
-    verified: {type:Boolean,default:false},
-    status: { type: String, default: "active" },
-    chair: String,
+    profile_completed: { type: Boolean, default: false },
+    description: String,
+    gst_number: String,
+    pan_number: String,
+    verified: { type: Boolean, default: false },
+    status: { type: String, default: "pending" },
     location: {
         type: String,
         coordiantes: [{
@@ -36,6 +40,10 @@ const Restaurant_Schema = new Schema({
         product_image: String,
         description: String
     }],
+    tables: [{
+        chair:Number,
+        table:Number
+    }],
     review: [{
         user_id: Schema.Types.ObjectId,
         review: String,
@@ -43,6 +51,6 @@ const Restaurant_Schema = new Schema({
         likes: Array,
         dislikes: Array,
     }]
-})
+}, { timestamps: true })
 
 module.exports = mongoose.model('restaurant', Restaurant_Schema)

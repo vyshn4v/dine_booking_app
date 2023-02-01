@@ -1,4 +1,4 @@
-<sectio class="search_and_filter_restaurants row w-100 ">
+<section class="search_and_filter_restaurants row w-100 ">
     <div class="input-group mb-3 col-6 mt-5">
         <div class="dropdown">
             <button class="btn btn-outline-warning dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -16,18 +16,22 @@
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
-</sectio>
+</section>
 <section class="top-restaurants">
     <h4>Top Restaurants</h4>
     <div class="restaurant-cards">
         {{#each restaurants}}
-        <a href="restaurant/{{this.id}}" style="text-decoration: none;">
-            <div class="restaurant-card shadow mt-2 text-dark">
-                <img class="card-img-top mt-3" src="/images/banner.jpg" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">Card title <span class="product-cash">$2000</span></h5>
-                    <p class="card-text">@@@@@</p>
-                    <p><span>2 table</span><span>8 chair</span></p>
+        <a class="restaurant_details" href="restaurant/{{this.id}}" style="text-decoration: none;">
+            <div class="swiper-slide slide_1 d-flex justify-content-center">
+                <div class="restaurant-card" style="">
+                    <div class="restaurant-image">
+                        <img src="/images/banner.jpg" style="" alt="">
+                    </div>
+                    <div class="restauarnt-card-body">
+                        <h6>restaurant <span class="product-cash">$2000</span></h6>
+                        <span>XXXXX</span>
+                        <h6><span>4</span>table<span> 2</span>chair</h6>
+                    </div>
                 </div>
             </div>
         </a>

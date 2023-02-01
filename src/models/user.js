@@ -1,6 +1,11 @@
-const mongoose=require('mongoose')
+const mongoose = require('mongoose')
 const { Schema } = mongoose;
+const Otp_schema = new Schema({
+    createdAt: Date,
+    expiredAt: Date,
+    otp: String,
 
+})
 const Users_Schema = new Schema({
     username: { type: String, required: true },
     email: { type: String, required: true, unique: true },
@@ -9,18 +14,7 @@ const Users_Schema = new Schema({
     profile_pic: { type: String, default: null },
     verified: { type: Boolean, default: false },
     status: { type: String, default: "active" },
-});
+    otp: { type: Otp_schema },
+}, { timestamps: true });
 
 module.exports = mongoose.model('users', Users_Schema)
-// orders: [
-//     {
-//         restaurant_id: ObjectId,
-//         profucts: [{
-//             quantity: Number,
-//             product_id: ObjectId
-//         }],
-//         table: Number,
-//         chair: Number,
-//         status: String
-//     }
-// ]
