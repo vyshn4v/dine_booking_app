@@ -3,8 +3,31 @@
         <div class="card w-100">
             <div class="card-body ">
                 <h4>home/wishlist</h4>
-                {{#each cart}}
-                <div class="row">
+                {{#each wishlistData}}
+                <div class="card">
+                    <div class="card-body row">
+                        <div class=" my-auto col-md-4 flex-column align-items-center justify-content-center">
+                            <div class="sq align-self-center d-flex justify-content-center align-items-center">
+                                <img style="border-radius: 6px;" class="img-fluid align-self-center"
+                                    src="{{this.restaurant.profile_pic.0.url}}" width="135" height="135" />
+                            </div>
+                        </div>
+                        <div class=" col-md-4 sq align-self-center d-flex justify-content-center align-items-center">
+                            <p>{{this.restaurant.restaurant_name}}<br>{{this.restaurant.email}}
+                                <br>PH : {{this.restaurant.phone}}
+                            </p>
+                        </div>
+                        <div class="col-md-4 sq align-self-center d-flex justify-content-center align-items-center row">
+                            <a href="restaurant-details/{{this.restaurant._id}}" class="col-12">
+                                <button type="button" class="btn btn-primary w-100">show more</button>
+                            </a>
+                            <a href="restaurant-details/{{this.restaurant._id}}" class="col-12">
+                                <button type="button" class="btn btn-danger mt-1 w-100">remove</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {{!-- <div class="row">
                     <div class="col">
                         <div class="media">
                             <div class="media-body my-auto text-right">
@@ -25,10 +48,12 @@
                                             &#8377;{{this.price}}</h6>
                                     </div>
                                     <div class="  my-auto flex-column align-items-center justify-content-center">
-                                        <h6 class="d-flex justify-content-center align-items-center text-success">open now</h6>
+                                        <h6 class="d-flex justify-content-center align-items-center text-success">open
+                                            now</h6>
 
                                         <h6 class="d-flex justify-content-center align-items-center">Time:
-                                            <span>{{this.time}} </span></h6>
+                                            <span>{{this.time}} </span>
+                                        </h6>
 
                                         <h6 class="d-flex justify-content-center align-items-center">Tables: <span>2
                                             </span></h6>
@@ -45,22 +70,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <hr>
                 {{/each}}
-                <div class="row">
-                    <div class="col">
-                        <div class="media">
-                            <div class="media-body my-auto text-right">
-                                <div class="  my-auto flex-column flex-md-row d-flex justify-content-center">
-                                    <div class="total w-75 d-flex justify-content-end">
-                                        <span>Total:{{total}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

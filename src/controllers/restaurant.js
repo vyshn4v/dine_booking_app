@@ -1,16 +1,40 @@
 const restaurant = require("../models/restaurant")
 const bcrypt = require('bcrypt')
-const SALT_ROUND = require("../config/bcrypt")
 
 const sendOtpViaMail = require("../helpers/sendOtpMail");
 const generateRestaurantOtp = require("../helpers/generatOtpRestaurant");
 const { sample } = require("../sampledata/sample");
-const fs = require('fs')
+const fs = require('fs');
+const user = require("./user");
+const category = require("../models/category");
+const { dataUri } = require("../helpers/imagepload");
+const { uploader } = require("../config/cloudinary");
+const { default: mongoose } = require("mongoose");
 // const { promisfy } = require('util')
 // const unlinkAsync = promisfy(fs.unlink)
 module.exports = {
     viewOrdersGet: (req, res) => {
-        res.render("restaurant/orders", { restaurantHeader: true, title: "orders", cart: sample, restaurant: true })
+        restaurant.aggregate([
+            { $match: { _id: mongoose.Types.ObjectId(req.session.restaurant.restaurantId) } },
+            { $unwind: "$menu" }, {
+                $lookup: {
+                    from: 'categories',
+                    localField: "menu.category",
+                    foreignField: "_id",
+                    as: "category"
+                }
+            },
+            { $unwind: "$category" },
+            {
+                $project: {
+                    menu: 1,
+                    category: 1
+                }
+            }
+        ]).then((dishes) => {
+            console.log(dishes);
+            res.render("restaurant/products", { restaurantHeader: true, title: "orders", cart: sample, restaurant: true, products: dishes })
+        })
     }
 
     ,
@@ -78,6 +102,7 @@ module.exports = {
     showProfileGet: (req, res) => {
         console.log(req.session.restaurant.restaurantId);
         restaurant.findById({ _id: req.session.restaurant.restaurantId }).then((restaurantData) => {
+            console.log(restaurantData);
             const data = {
                 restaurantHeader: true,
                 restaurant: restaurantData,
@@ -87,36 +112,52 @@ module.exports = {
             res.render("restaurant/profile", data)
         })
     },
+    tableManagementGet: (req, res) => {
+        console.log(req.session.restaurant.restaurantId);
+        restaurant.findById({ _id: req.session.restaurant.restaurantId }, { tables: 1 }).then((tables) => {
+            const data = {
+                restaurantHeader: true,
+                tables: tables.tables,
+                err: req.session?.err
+            }
+            req.session.err = null
+            res.render("restaurant/tables", data)
+        })
+    },
     saveProfilePost: (req, res) => {
         const { password, ...rest } = req.body
-        restaurant.findById({ _id: req.session.restaurant.restaurantId }).then((restaurantData) => {
-            bcrypt.compare(password, restaurantData.password).then((status) => {
-                if (status) {
-                    let restauranProfile;
-                    if (req.file) {
-                        restauranProfile = {
-                            ...rest, profile_pic: "/images/" + req.file.filename
-                        }
-                    } else {
-                        restauranProfile = {
-                            ...rest
-                        }
-                    }
-                    restaurant.findByIdAndUpdate({ _id: req.session.restaurant.restaurantId }, { $set: { ...restauranProfile } }).then(async (updatedData) => {
-                        if (req.file) {
-                            const filePath = updatedData.profile_pic
-                            await fs.unlink(__dirname + "../../public" + filePath, (err) => {
+        // console.log(req.body);
+        try {
 
-                            })
-                            res.redirect("/restaurant/profile")
+            restaurant.findById({ _id: req.session.restaurant.restaurantId }).then((restaurantData) => {
+                bcrypt.compare(password, restaurantData.password).then(async (status) => {
+                    if (status) {
+                        let image = []
+                        if (req.files) {
+                            for (let i = 0; i < req.files.length; i++) {
+                                const file = await dataUri(req.files[i]).content
+                                await uploader.upload(file).then(async (result) => {
+                                    await restaurant.findByIdAndUpdate({ _id: req.session.restaurant.restaurantId }, { $push: { profile_pic: { "public_id": result.public_id, "url": result.url } } })
+                                })
+                            }
                         }
-                    })
-                } else {
-                    req.session.err = "password is not matched"
-                    res.redirect("/restaurant/profile")
-                }
+                        restaurant.findByIdAndUpdate({ _id: req.session.restaurant.restaurantId }, { $set: { ...rest, profile_completed: true } }).then(async (updatedData) => {
+                            if (req.files) {
+                                if (restaurantData.profile_pic?.public_key) {
+                                    await uploader.destroy(restaurantData.profile_pic?.public_key)
+                                }
+                            }
+                            res.redirect("/restaurant/profile")
+                        })
+                    } else {
+                        req.session.err = "password is not matched"
+                        res.redirect("/restaurant/profile")
+                    }
+                })
             })
-        })
+        } catch (err) {
+            res.send(err)
+        }
     },
     saveTablePost: (req, res) => {
         console.log(req.body);
@@ -135,13 +176,12 @@ module.exports = {
             bcrypt.compare(req.body.password, restaurantDetails.password).then((status) => {
                 if (status) {
                     restaurantDetails.tables?.map((table, index) => {
-                        if (table.chair === parseInt(req.body.total_chair)) {
+                        if (table.chair === req.body.total_chair) {
                             flag = 1
-                            tableId = table._id
                         }
                     })
                     if (flag === 1) {
-                        restaurant.updateOne({ _id: req.session.restaurant.restaurantId, "tables.chair": parseInt(req.body.total_chair) }, { $set: { "tables.$.table": parseInt(req.body.total_table) } }).then((restaurantnew) => {
+                        restaurant.updateOne({ _id: req.session.restaurant.restaurantId, "tables.chair": parseInt(req.body.total_chair) }, { $set: { "tables.$.table": parseInt(req.body.total_table) } }, { new: true }).then((restaurantnew) => {
                             res.redirect("/restaurant/profile")
                         })
                     } else {
@@ -173,17 +213,44 @@ module.exports = {
         //     console.log(restaurantData);
         // })
     },
-    addProductGet: (req, res) => {
-        console.log(req.body);
-        res.render("restaurant/addProduct", { restaurantHeader: true, restaurant: true })
+    deleteTablePost: (req, res) => {
+        console.log(req.params);
+        restaurant.updateOne({ "_id": req.session.restaurant.restaurantId }, { $pull: { "tables": { "_id": req.params.table_id } } }).then((response) => {
+            if (response.modifiedCount > 0) {
+                res.json({ status: true, message: "table deleted successfully" })
+            } else {
+                res.json({ status: false, message: "table not deleted" })
+            }
+        }).catch(() => {
+            res.json({ status: false, message: "table not deleted" })
+        })
     },
-    addProductPost: (req, res) => {
+    addProductGet: async (req, res) => {
+        const Category = await category.find()
         console.log(req.body);
+        res.render("restaurant/addProduct", { restaurantHeader: true, restaurant: true, Category })
+    },
+    addProductPost: async (req, res) => {
+        try {
+            const file = await dataUri(req.file).content
+            await uploader.upload(file).then((result) => {
+                req.body.category = mongoose.Types.ObjectId(req.body.category)
+                let productData = {
+                    ...req.body, product_image: result.url
+                }
+                restaurant.findByIdAndUpdate({ _id: req.session.restaurant.restaurantId }, { $push: { menu: { ...productData } } }).then(() => {
+                    res.redirect('/restaurant/add-products');
+                }).catch(() => {
+                    res.redirect('/restaurant/add-products');
+                })
+            })
+        } catch (err) {
+            console.log(err.message);
+        }
     },
     addServiceGet: (req, res) => {
         console.log(req.body);
         restaurant.find({ _id: req.session.restaurant.restaurantId }, { services: 1 }).then((services) => {
-            console.log(services);
             res.render("restaurant/addService", { restaurantHeader: true, restaurant: true, services: services[0].services })
         })
     },
@@ -221,13 +288,32 @@ module.exports = {
         res.render('restaurant/changePassword', { restaurantHeader: true, restaurantId: req.params.restaurant_id, restaurant: true })
     },
     changePasswordPost: (req, res) => {
-        bcrypt.hash(req.body.password, SALT_ROUND).then((hashedPassword) => {
+        bcrypt.hash(req.body.password, process.env.SALT_ROUND).then((hashedPassword) => {
             restaurant.findByIdAndUpdate({ _id: req.params.restaurant_id }, { $set: { "password": hashedPassword } }).then(() => {
-                req.session.err="password changed successfully"
+                req.session.err = "password changed successfully"
                 res.redirect("/restaurant/login")
             })
         }).catch((err) => {
             console.log("err");
+        })
+    },
+    changePasswordviaProfilePost: (req, res) => {
+        console.log(req.body);
+        restaurant.findById({ _id: req.session.restaurant.restaurantId }).then((restaurantDetails) => {
+            bcrypt.compare(req.body.currentPassword, restaurantDetails.password).then((status) => {
+                if (status) {
+                    bcrypt.hash(req.body.newPassword, Number(process.env.process.env.SALT_ROUND)).then((hashedPassword) => {
+                        console.log(hashedPassword);
+                        restaurant.findByIdAndUpdate({ _id: req.params.restaurant_id }, { $set: { "password": hashedPassword } }).then(() => {
+                            req.session.err = "password changed successfully"
+                            req.session.restaurant = null;
+                            res.redirect("/restaurant/login")
+                        })
+                    }).catch((err) => {
+                        console.log("err");
+                    })
+                }
+            })
         })
     },
     restaurantLogout: (req, res) => {

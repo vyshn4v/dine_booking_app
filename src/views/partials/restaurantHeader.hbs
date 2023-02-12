@@ -1,5 +1,5 @@
 {{!-- nav bar source = bootsrap --}}
-<nav class="navbar fixed-top navbar-expand-sm navbar-light bg-light">
+<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand font-weight-bold" href="/restaurant/view-orders">Food Zone <small
             style="font-size: 10px; ">Restaurants</small></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -13,21 +13,33 @@
                         class="fa-sharp fa-solid fa-cart-shopping"></i></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/restaurant/add-service">add service 
-                {{!-- <i class="fa-regular fa-heart"></i> --}}
+                <a class="nav-link" href="/restaurant/add-service">add service
+                    <i class="fa-solid fa-briefcase"></i>
+                    {{!-- <i class="fa-regular fa-heart"></i> --}}
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/restaurant/add-products">add products 
-                {{!-- <i class="fa-regular fa-heart"></i> --}}
+                <a class="nav-link" href="/restaurant/add-products">add products
+                    {{!-- <i class="fa-regular fa-heart"></i> --}}
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/restaurant/view-products">products <i class="fa-regular fa-heart"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/restaurant/profile">Profile <i class="fa-solid fa-user"></i></a>
-            </li>
+            <div class="dropdown show mt-2  ">
+                <a class=" dropdown-toggle " style="border:none; color: black; text-decoration: none;" href="#"
+                    role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    more option
+                </a>
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="nav-link" href="/restaurant/table-management">tables <i
+                            class="fa-solid fa-table-list"></i></a>
+                    <a class="nav-link" href="/restaurant/profile">Profile <i class="fa-solid fa-user"></i></a>
+                    <a class="nav-link" href="/restaurant/manage-services">services <i
+                            class="fa-solid fa-briefcase"></i></a>
+                    <a class="nav-link" href="/restaurant/view-products">products <i
+                            class="fa-duotone fa-pot-food"></i></a>
+                </div>
+            </div>
             {{#if restaurant}}
             <li class="nav-item">
                 <a class="nav-link" href="/restaurant/logout" tabindex="-1" aria-disabled="true">Logout<i
@@ -40,7 +52,7 @@
             </li>
             {{/if}}
 
-            
+
         </ul>
     </div>
 </nav>

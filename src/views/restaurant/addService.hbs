@@ -1,18 +1,18 @@
 {{!-- update tables --}}
 
 <body>
-    <div class="container tm-mt-big tm-mb-big">
+    <div class="container-fluid tm-mt-big tm-mb-big">
         <div class="row service">
             <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
                 <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
-                    <div class="d-flex justify-content-between align-items-center mb-">
-                        <h4 class="text-right mt-5">add service</h4>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="text-right mt-5">edit/add service</h4>
                     </div>
-                    <form action="/restaurant/add-service" method="post">
+                    <form id="add_service" action="/restaurant/add-service" method="post">
                         <div class="row mt-5">
                             <div class="col-md-12">
                                 <label class="labels">edit/add tables</label>
-                                <select id="chairType" onchange="changeChairCount()"
+                                <select id="chairType" onchange="Services('{{this._id}}')"
                                     class="form-select form-select-lg mb-3 w-100 p-2"
                                     aria-label=".form-select-lg example">
                                     <option selected>add new service</option>
@@ -26,18 +26,18 @@
                                     placeholder="Enter your table number">
                                 <label class="labels">table number</label>
                             </div> --}}
-                            <div class="col-md-12">
-                                <label class="labels">title</label>
-                                <input type="text" class="form-control mb-2" value="" name="title"
-                                    placeholder="title of service">
+                            <div class="col-md-12 d-flex-column">
+                                <input id="title" type="text" class="form-control mb-2" value="" name="title"
+                                    placeholder="enter the title">
+                                <small id="titleError" class="w-100" style="height: 10px; color: red;"></small>
+                                <label class="labels w-100">title</label>
                             </div>
                             <div class="col-md-12">
-                                <label for="description">Description</label>
-                                <textarea name="description" class="form-control validate" rows="10"
+                                <textarea id="description" name="description" class="form-control validate" rows="4"
                                     placeholder="Enter the description about service..."></textarea>
+                                <small id="descriptionError" style="height: 10px; color: red;"></small>
+                                <label for="description" class="labels w-100">Description</label>
                             </div>
-                        </div>
-                        <div class="row mt-2">
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-12">
@@ -50,6 +50,26 @@
         </div>
     </div>
 </body>
+<script>
+    const input = document.getElementsByTagName('input'),
+        description = document.getElementById('description')
+    const form = document.getElementById('add_service')
+    form.addEventListener('submit', (e) => {
+        if (input[0].value.length <= 0) {
+            e.preventDefault()
+            document.querySelector('#titleError').innerText = "please enter the title"
+            return false
+        }
+        if (trimfield(description.value) == "") {
+            e.preventDefault()
+            document.querySelector('#descriptionError').innerText = "please enter the description"
+            return false
+        }
+    })
+    function trimfield(str) {
+        return str.replace(/^\s+|\s+$/g, '');
+    }
+</script>
 <style>
     .service input:not([type=submit]),
     .service textarea {

@@ -6,13 +6,22 @@ const Otp_schema = new Schema({
     otp: String,
 
 })
+const profile_image = new Schema({
+    url: String,
+    public_key: String
+})
 const Restaurant_Schema = new Schema({
     restaurant_name: String,
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     address: String,
-    profile_pic: String,
-    phone: Number,
+    profile_pic: [
+        {
+            public_id: { type: String },
+            url: { type: String }
+        }
+    ],
+    phone: { type: String, default: null },
     pincode: Number,
     profile_completed: { type: Boolean, default: false },
     description: String,
@@ -33,16 +42,15 @@ const Restaurant_Schema = new Schema({
     }],
     otp: { type: Otp_schema },
     menu: [{
-        product_name: String,
-        categories: Array,
+        product_name: { type: String },
+        category: Schema.Types.ObjectId,
         price: Number,
         stock: Number,
         product_image: String,
-        description: String
     }],
     tables: [{
-        chair:Number,
-        table:Number
+        chair: Number,
+        table: Number
     }],
     review: [{
         user_id: Schema.Types.ObjectId,

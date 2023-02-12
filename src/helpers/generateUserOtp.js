@@ -1,6 +1,5 @@
 const sendOtpViaMail = require("./sendOtpMail")
 const bcrypt = require('bcrypt');
-const SALT_ROUND = require("../config/bcrypt");
 const user = require("../models/user");
 const generateUserOtp = (userId) => {
     console.log("userId" + userId);

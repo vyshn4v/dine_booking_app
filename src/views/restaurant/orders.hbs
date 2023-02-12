@@ -1,11 +1,30 @@
-<section class="all_orders">
+<section class="all_orders container-fluid">
     <section class="order-history">
         <div class="container-fluid my-5  d-flex  justify-content-center">
             <div class="card w-100">
                 <div class="card-body ">
                     <h4>restaurant/orders</h4>
-                    {{#each cart}}
-                    <div class="row">
+                    <table id="table_id" class="display">
+                        <thead>
+                            <tr>
+                                <th>Column 1</th>
+                                <th>Column 2</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each cart}}
+                            <tr>
+                                <td>Row 1 Data 1</td>
+                                <td>Row 1 Data 2</td>
+                            </tr>
+                            <tr>
+                                <td>Row 2 Data 1</td>
+                                <td>Row 2 Data 2</td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                    {{!-- <div class="row">
                         <div class="col">
                             <div class="media">
                                 <div class="media-body my-auto text-right">
@@ -27,8 +46,8 @@
                                         <div class="ordered_items">
                                             <small>Ordered Items</small>
                                             <small>
-                                                <small class="show_ordered_item_button btn btn-link" type="button" data-toggle="modal"
-                                                    data-target="#exampleModalLong{{this.id}}">
+                                                <small class="show_ordered_item_button btn btn-link" type="button"
+                                                    data-toggle="modal" data-target="#exampleModalLong{{this.id}}">
                                                     show items
                                                 </small>
                                                 <div class="modal fade" id="exampleModalLong{{this.id}}" tabindex="-1"
@@ -37,7 +56,8 @@
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title" id="exampleModalLongTitle">ordered items</h5>
+                                                                <h5 class="modal-title" id="exampleModalLongTitle">
+                                                                    ordered items</h5>
                                                                 <button type="button" class="close" data-dismiss="modal"
                                                                     aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
@@ -62,7 +82,7 @@
                                             <input type="button" class="btn btn-success" value="approve">
                                         </div>
                                     </div>
-                                    {{!-- <div class="order-card  my-auto flex-column flex-md-row">
+                                    <div class="order-card  my-auto flex-column flex-md-row">
                                         <div class=" my-auto flex-column align-items-center justify-content-center">
                                             <div
                                                 class="sq align-self-center d-flex justify-content-center align-items-center">
@@ -134,22 +154,28 @@
                                                 </h6>
                                             </div>
                                         </div>
-                                    </div> --}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <hr>
-                    {{/each}}
                 </div>
             </div>
         </div>
     </section>
-    {{!-- swiper cdn --}}
-    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
-    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
     {{!-- css file --}}
     <link rel="stylesheet" href="/css/restaurant/orders.css">
     {{!-- js file --}}
     <script src="/js/order.js"></script>
 </section>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#table_id').DataTable({
+
+        });
+    });
+
+</script>

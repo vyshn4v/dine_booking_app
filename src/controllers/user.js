@@ -5,11 +5,12 @@ const user = require('../models/user')
 
 //
 const bcrypt = require('bcrypt')
-const SALT_ROUND = require('../config/bcrypt')
 const generateUserOtp = require('../helpers/generateUserOtp')
 const otpTextGenerator = require('../helpers/generateOtpText')
 const sendOtpViaMail = require('../helpers/sendOtpMail')
 const restaurant = require('../models/restaurant')
+const wishlist = require('../models/wishlist')
+const { Schema, Mongoose } = require('mongoose')
 //pages
 const pages = {
     USER_HOME_PAGE: "user/home",
@@ -29,15 +30,25 @@ const pages = {
 ///GET - Home page
 module.exports = {
     homePageGet: (req, res) => {
-        restaurant.find({}).then((restaurants) => {
+        restaurant.find({ profile_completed: { $ne: false } }).then((restaurants) => {
+            console.log(restaurants);
             if (restaurants) {
                 let data = {
+                    user: req.session?.user ? true : false,
                     userHeader: true,
                     title: "home",
                     restaurants
                 }
-                res.render(pages.USER_HOME_PAGE, data)
+                res.render("user/home", data)
             }
+        })
+    },
+    buyProductGet: (req, res) => {
+        restaurant.findById({ _id: req.params.restaurant_id }).then((restaurant) => {
+            let data = {
+                menu: restaurant.menu
+            }
+            res.render('user/products', data)
         })
     },
     ///GET - Order Page
@@ -58,8 +69,10 @@ module.exports = {
         console.log(req.body);
     },
     restaurantPageGet: (req, res) => {
-        let restaurant = sample.filter((restaurant) => restaurant.id == req.params.restaurant_id)[0]
-        res.render(pages.RESTAURANT_PAGE, { userHeader: true, title: "restaurant", restaurant })
+        restaurant.find({ _id: req.params.restaurant_id }).then((restaurantDetails) => {
+            console.log(restaurantDetails);
+            res.render("user/restaurantNew", { userHeader: true, title: "restaurant", restaurantDetails: restaurantDetails[0] })
+        })
     },
 
     availableFoodGet: (req, res) => {
@@ -74,22 +87,80 @@ module.exports = {
     },
 
     wishListGet: (req, res) => {
-        res.render(pages.WISHLIST_PAGE, { userHeader: true, title: "wishlist", cart: sample })
+        try {
+
+
+            wishlist.aggregate([{
+                $unwind: "$products"
+            },
+            {
+                $project: {
+                    "products": {
+                        "$toObjectId": "$products"
+                    },
+                    "user_id": {
+                        "$toObjectId": "$user_id"
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'restaurants',
+                    localField: "products",
+                    foreignField: '_id',
+                    as: "restaurant"
+                }
+            },
+            {
+                $unwind: "$restaurant"
+            }
+            ]).then((data) => {
+                console.log(data);
+                res.render(pages.WISHLIST_PAGE, { userHeader: true, title: "wishlist", wishlistData: data })
+            })
+
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     ,
+    wishListPost: (req, res) => {
+        console.log(req.params);
+        try {
 
-
-
+            wishlist.find({ user_id: req.session.user.userId, products: { $eq: req.params.product_id } }).count().then((result) => {
+                console.log(result);
+                if (result <= 0) {
+                    wishlist.findOneAndUpdate({ user_id: req.session.user.userId }, { $push: { products: req.params.product_id } }, { upsert: true }).then(() => {
+                        res.json({ stauts: true, message: "wish list success fully updated" })
+                    }).catch((err) => {
+                        res.json({ stauts: false, message: "failed to update wishlist" })
+                    })
+                } else {
+                    res.json({ stauts: false, message: "item already in wish list" })
+                }
+            })
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    ,
+    checkOutGet: (req, res) => {
+        console.log(req.query);
+    }
+    ,
     signupGet: (req, res) => {
-        res.render(pages.SIGNUP_PAGE, { userHeader: true, title: "user signup", })
+        res.render('user/signup', { userHeader: true, title: "user signup", err: req.session.err })
     },
     signupPost: async (req, res) => {
+        console.log(req.body);
         try {
-            const userStatus = user.find({ email: req.body?.email }).count()
+            const userStatus = (await user.find({ email: req.body?.email })).length
+            console.log(userStatus == 0);
             if (userStatus == 0) {
                 const { confirm_password, ...rest } = req.body
-                rest.password = await bcrypt.hash(req.body.password, SALT_ROUND)
+                rest.password = await bcrypt.hash(req.body.password, pocess.env.SALT_ROUND)
                 const User = new user(rest)
                 const savedUser = await User.save()
                 generateUserOtp(savedUser._id).then((user) => {
@@ -119,7 +190,14 @@ module.exports = {
 
 
     profileGet: (req, res) => {
-        res.render(pages.PROFILE_PAGE, { userHeader: true, title: "Profile", })
+        user.findById({ _id: req.session.user.userId }).then((userDetails) => {
+            res.render("user/profile", { userHeader: true, title: "Profile", userId: req.session.user.userId, userDetails })
+        })
+    },
+    profilePost: (req, res) => {
+        console.log(req.body);
+        console.log(req.file);
+        // user.findOneAndUpdate({ _id: req.params.user_id }, { $set: {...req.body} })
     },
     searchProductsGet: (req, res) => {
         res.render(pages.SEARCH_PRODUCTS, { restaurants: sample })
@@ -161,7 +239,7 @@ module.exports = {
         res.render("user/changePassword", { userId: req.params.user_id })
     },
     changePasswordPost: (req, res) => {
-        bcrypt.hash(req.body.password, SALT_ROUND).then((hashedPassword) => {
+        bcrypt.hash(req.body.password, pocess.env.SALT_ROUND).then((hashedPassword) => {
             user.findByIdAndUpdate({ _id: req.params.user_id }, { $set: { "password": hashedPassword } }).then(() => {
                 res.redirect("/login")
             })

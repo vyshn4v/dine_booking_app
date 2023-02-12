@@ -5,13 +5,27 @@ const restaurant = require("../../models/restaurant")
 //check restaurant is logged in
 const restaurantSessionManagement = (req, res, next) => {
     if (req.session?.restaurant) {
-        next()//if logged in next 
+        next()
     } else {
         res.redirect("/restaurant/login") //other wise redirect
     }
 }
+const sessionProfileVerified = (req, res, next) => {
+    if (!req.session.restaurant?.profile_verified) {
+        res.redirect('/restaurant/profile')
+    } else {
+        next()//if logged in next 
+    }
+}
 const restaurantAuthManagement = (req, res, next) => {
     if (req.session?.restaurant) {
+        res.redirect("/restaurant/view-orders")
+    } else {
+        next()
+    }
+}
+const restaurantOtpManagement = (req, res, next) => {
+    if (req.session?.restaurant.validate_profile) {
         res.redirect("/restaurant/view-orders")
     } else {
         next()
@@ -43,5 +57,7 @@ const validateUserAlreadySignup = (req, res, next) => {
 module.exports = {
     restaurantSessionManagement,
     validateUserAlreadySignup,
-    restaurantAuthManagement
+    restaurantAuthManagement,
+    restaurantOtpManagement,
+    sessionProfileVerified
 }

@@ -1,157 +1,100 @@
-<section class="admin_product_table table-responsive-sm">
-    <form class="form-inline my-2 my-lg-0 d-flex justify-content-end py-3">
-        <input class="form-control mr-sm-2 " type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
-    <div>
+<section class="admin_product_table container-fluid">
+    <div style="width: 100%;">
         <div class="thead-dark">
             <h4 class="p-5">banned Restaurants</h4>
         </div>
-        <div class="" style="width: 90vw;">
+        <div>
             {{#checklength restaurants 0}}
-
-            {{#each restaurants}}
-            <div class="row p-2 d-flex-column justify-content-center align-items-center restaurant-details">
-                <div class="col-12 col-sm-12 col-lg-2 d-flex-column justify-content-center align-items-center">
-                    <div class="w-100 d-flex  justify-content-center">
-                        <img class="" src="{{this.profile_pic}}"
-                            style="width: 100px; height: 100px; border-radius: 50%;" alt="">
-                    </div>
-                    <h6 class="d-flex justify-content-center restaurant-name">
-                        {{this.restaurant_name}}
-                    </h6>
-                </div>
-                <div class="col-12 col-sm-12 col-lg-2 w-100 d-flex-column justify-content-center align-items-center m-auto">
-                    <div class="">
-                        <h6>
-                            {{this.email}}
-                        </h6>
-                    </div>
-                    <div class="">
-                        <h6>
-                            {{#if this.phone}}
-                            ph : {{this.phone}}
-                            {{else}}
-                            not availabe
-                            {{/if}}
-                        </h6>
-                    </div>
-                    <div>
-                        <h6>
-                            {{#if this.address}}
+            <table class="table-responsive-md mt-5" id="myTable">
+                <thead class="thead-dark">
+                    <tr >
+                        <th scope="col">No</th>
+                        <th scope="col">name</th>
+                        <th scope="col">email address</th>
+                        <th scope="col">profile</th>
+                        <th scope="col">email</th>
+                        <th scope="col">profile status</th>
+                        <th scope="col">address</th>
+                        <th scope="col">gst</th>
+                        <th scope="col">pan</th>
+                        <th scope="col">phone</th>
+                        <th scope="col">actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each restaurants}}
+                    <tr>
+                        <th>{{inc @index 1}}</th>
+                        <td>{{this.restaurant_name}}</td>
+                        <td>{{this.email}}</td>
+                        <td>{{#if this.profile_completed}}completed{{else}}not completed{{/if}}</td>
+                        <td>{{#if this.verified}}verified{{else}}not verified{{/if}}</td>
+                        <td>{{this.status}}</td>
+                        <td>{{#if this.address}}
                             {{this.address}}
                             {{else}}
-                            not availabe
+                            not available
                             {{/if}}
-                        </h6>
-                    </div>
-                    <div>
-                        <h6>
-                            GSTIN :
+                        </td>
+                        <td>
                             {{#if this.gst_number}}
                             {{this.gst_number}}
                             {{else}}
-                            not availabe
+                            not available
                             {{/if}}
-                        </h6>
-                    </div>
-                    <div>
-                        <h6>
-                            PAN :
+                        </td>
+                        <td>
                             {{#if this.pan_number}}
                             {{this.pan_number}}
                             {{else}}
-                            not availabe
+                            not available
                             {{/if}}
-                        </h6>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-12 col-lg-2 w-100 justify-content-start m-auto">
-                    <div>
-                        <h6>
-                            request date : {{this.request_date}}
-                        </h6>
-                    </div>
-                    <div>
-                        <h6>
-                            {{#if this.verified}}
-                            email verified
+                        </td>
+                        <td>
+                            {{#if this.phone}}
+                            {{this.phone}}
                             {{else}}
-                            email not verified
+                            not available
                             {{/if}}
-                        </h6>
-                    </div>
-                    <div>
-                        <h6>
-                            {{#if this.profile_completed}}
-                            profile completed
-                            {{else}}
-                            profile not completed
-                            {{/if}}
-                        </h6>
-                    </div>
-
-                    <div>
-                        <h6>
-                            total tables : {{this.tables.length}}
-                        </h6>
-                    </div>
-
-                </div>
-
-                <div class="col-12 col-sm-12 w-100 col-lg-3 w-100 d-flex justify-content-center align-items-center">
-                    <button type="button" class="w-50 text-white btn btn-primary ml-2" style="height: 40px;"
-                        data-toggle="modal" data-target="#approve{{this._id}}">
-                        approve
-                    </button>
-                </div>
-            </div>
-            <hr>
-            <!-- Modal approve restaurant -->
-            <div class="modal fade" id="approve{{this._id}}" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">confirm</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                        </td>
+                        <td>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#approve{{this._id}}">
+                                approve
                             </button>
-                        </div>
-                        <div class="modal-body">
-                            <h6>approve this restaurant</h6>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">cancel</button>
-                            <button type="button" class="btn btn-primary"
-                                onclick="approveRestaurant('{{this._id}}')">confirm</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Modal reject restaurant -->
-            <div class="modal fade" id="reject{{this._id}}" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">confirm</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <h6>reject this restaurant</h6>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">cancel</button>
-                            <button type="button" class="btn btn-primary"
-                                onclick="rejectRestaurant('{{this._id}}')">confirm</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{/each}}
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="approve{{this._id}}" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">confirm</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            approve restaurant <b>
+                                                {{this.restaurant_name}}
+                                            </b>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary"
+                                                onclick="approveRestaurant('{{this._id}}')">confirm</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+
             {{else}}
             <div class="d-flex justify-content-center align-items-center">
                 <div class="d-flex justify-content-center align-items-center w-75 alert alert-warning" role="alert">
@@ -161,45 +104,22 @@
             {{/checklength}}
         </div>
     </div>
-
 </section>
 <style>
-    .seats {
-        display: flex;
-        flex-wrap: wrap;
-    }
 
-    .seat {
-        width: max-content;
-        background-color: rgba(237, 237, 237, 0.411);
-        padding: 10px;
-        border-radius: 5px;
-        margin-left: 10px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        margin-top: 10px;
-        box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.182);
-    }
-
-    .seat>small {
-        font-size: small;
-    }
-
-    small {
-        font-size: medium;
-    }
 </style>
 <script>
+    $(document).ready(function () {
+        $('#myTable').dataTable();
+    });
     const baseUrl = window.location.origin
     function approveRestaurant(restaurantId) {
         fetch(`${baseUrl}/admin/approve-restaurant/${restaurantId}`, {
             method: "POST"
         }).then((response) => response.json()).then(() => {
-            alert('RESTAURANT APPROVED')
             location.reload()
         }).catch(() => {
-            alert("user not deleted")
+            alert("not approved")
         })
     }
     function rejectRestaurant(restaurantId) {

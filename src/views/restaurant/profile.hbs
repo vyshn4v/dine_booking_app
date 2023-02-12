@@ -3,15 +3,37 @@
     <div class="container rounded bg-white mt-5 mb-5">
         <div class="row">
             <div class="col-12 border-right ">
-                <div class="p-3 py-5 ">
+                <div class="p-3 py-5 w-100">
                     {{!-- user profile --}}
-                    <form action="/restaurant/profile/save-details" method="post" enctype="multipart/form-data">
-                        <div class="row mt-2">
-                            <div class="col-md-12 d-flex justify-content-center align-items-center">
-                                <label class="labels">{{err}}</label>
-                            </div>
+                    <div class=" row mt-2">
+                        <div class=" col-md-12 d-flex justify-content-center align-items-center">
+                            <label class="labels">{{err}}</label>
                         </div>
-                        <div class="mt-2 d-flex justify-content-center align-items-center">
+                    </div>
+                    <form action="/restaurant/profile/save-details" method="post" enctype="multipart/form-data">
+                        {{!-- profile swiper --}}
+                        <div class="swiper mySwiper">
+                            <div class="swiper-wrapper mb-1">
+                                {{#each restaurant.profile_pic}}
+                                <div class="swiper-slide slide_1 d-flex justify-content-center">
+                                    <img height="300" src="{{this.url}}" alt="">
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-primary "
+                                        style="height: 40px; width: 70px; position: absolute; bottom: 0;"
+                                        data-toggle="modal" data-target="#delete{{this._id}}">
+                                        Launch demo modal
+                                    </button>
+                                </div>
+                                {{/each}}
+                            </div>
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
+                        </div>
+                        <div class="image-input w-100">
+                            <input type="file" class="w-100" name="profile_pic" multiple>
+                        </div>
+                        {{!-- profile swiper --}}
+                        {{!-- <div class="mt-5 pt-4 d-flex justify-content-center align-items-center">
                             <div class="d-flex-column ">
                                 <div class="profile-pic ">
                                     <label class="-label" for="file">
@@ -19,7 +41,7 @@
                                         <span>Change Image</span>
                                     </label>
                                     <input id="file" name="profile_pic" type="file" onchange="loadFile(event)" />
-                                    <img src="{{restaurant.profile_pic}}" alt="" id="output" width="200" />
+                                    <img src="{{restaurant.profile_pic.url}}" id="output" width="200" />
                                 </div>
                                 <div class="d-flex-column justify-content-center align-items-center">
                                     <h6 class="font-weight-bold d-flex justify-content-center align-items-center">
@@ -28,42 +50,44 @@
                                 </div>
 
                             </div>
-                        </div>
+                        </div> --}}
+                        {{!-- profile --}}
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h4 class="text-right">restaurant profile</h4>
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
-                                <input type="text" name="restaurant_name" class="form-control"
+                                <input required type="text" name="restaurant_name" class="form-control"
                                     placeholder="restaurant name" value="{{restaurant.restaurant_name}}">
                                 <label class="labels">name</label>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" name="email" class="form-control" value="{{restaurant.email}}"
-                                    placeholder="email">
+                                <input required type="text" name="email" class="form-control"
+                                    value="{{restaurant.email}}" placeholder="email">
                                 <label class="labels">email</label>
                             </div>
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
-                                <input type="text" name="address" class="form-control" placeholder="restaurant name"
-                                    value="{{restaurant.address}}">
+                                <input required type="text" name="address" class="form-control"
+                                    placeholder="restaurant name" value="{{restaurant.address}}">
                                 <label class="labels">address</label>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" name="pincode" class="form-control" placeholder="restaurant name"
-                                    value="{{restaurant.pincode}}">
+                                <input required type="text" name="pincode" class="form-control"
+                                    placeholder="restaurant name" value="{{restaurant.pincode}}">
                                 <label class="labels">pincode</label>
                             </div>
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
-                                <input type="tel" name="phone" class="form-control" id="phone"
+
+                                <input required type="tel" name="phone" class="form-control" id="phone"
                                     placeholder="enter the phone number" value="{{restaurant.phone}}">
                                 <label class="labels">phone</label>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" value="{{restaurant.gst_number}}"
+                                <input required type="text" class="form-control" value="{{restaurant.gst_number}}"
                                     name="gst_number" placeholder="GST identification number of restaurant ">
                                 <label class="labels">gst in</label>
                             </div>
@@ -77,19 +101,32 @@
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
-                                <input type="text" name="pan_number" class="form-control"
+                                <input required type="time" name="opening_time" class="form-control"
+                                    value="{{restaurant.pan_number}}" placeholder="table">
+                                <label class="labels">opening time</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input required type="time" name="closing_time" class="form-control" value=""
+                                    placeholder="confirm your password">
+                                <label class="labels">closing time</label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-6">
+                                <input required type="text" name="pan_number" class="form-control"
                                     value="{{restaurant.pan_number}}" placeholder="table">
                                 <label class="labels">pancard</label>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" name="password" class="form-control" value=""
+                                <input required type="password" name="password" class="form-control" value=""
                                     placeholder="confirm your password">
                                 <label class="labels">password</label>
                             </div>
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
-                                <input type="submit" class="mt-2 btn btn-primary form-control" value="save details">
+                                <input required type="submit" class="mt-2 btn btn-outline-primary form-control"
+                                    value="save details">
                             </div>
                         </div>
                     </form>
@@ -99,6 +136,7 @@
                     </div>
 
 
+
                     {{!-- update tables --}}
                     <form action="/restaurant/profile/update-tables" method="post">
                         <div class="row mt-5">
@@ -106,29 +144,26 @@
                                 <select name="category" id="chairType" onchange="changeChairCount()"
                                     class="form-select form-select-lg mb-3 w-100 p-2"
                                     aria-label=".form-select-lg example">
-                                    <option selected>update tables</option>
+                                    <option selected>available tables</option>
                                     {{#each restaurant.tables}}
                                     <option value="{{this.chair}}">{{this.chair}} chair</option>
                                     {{/each}}
                                 </select>
                                 <label class="labels">update/add tables</label>
                             </div>
-                            {{!-- <div class="col-md-6">
-                                <input type="text" class="form-control" value="" name="table_number"
-                                    placeholder="Enter your table number">
-                                <label class="labels">table number</label>
-                            </div> --}}
+
                             <div class="col-md-6">
-                                <input type="text" id="chair" class="form-control" value="" name="total_chair"
+                                <input required type="text" id="chair" class="form-control" value="" name="total_chair"
                                     placeholder="chair for one table">
                                 <label class="labels">chair</label>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" value="" name="total_table" placeholder="table">
+                                <input required type="text" class="form-control" value="" name="total_table"
+                                    placeholder="table">
                                 <label class="labels">table</label>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" name="password" class="form-control" value=""
+                                <input required type="text" name="password" class="form-control" value=""
                                     placeholder="confirm your password">
                                 <label class="labels">password</label>
                             </div>
@@ -137,67 +172,76 @@
                         </div>
                         <div class="row mt-2">
                             {{!-- <div class="col-md-6">
-                                <input type="submit" class="mt-2 btn btn-success form-control" value="add table">
+                                <input required type="submit" class="mt-2 btn btn-success form-control"
+                                    value="add table">
                             </div> --}}
                             <div class="col-md-6">
-                                <input type="submit" class="mt-2 btn btn-primary form-control" value="save tables">
+                                <input required type="submit" class="mt-2 btn btn-outline-primary form-control"
+                                    value="save tables">
                             </div>
                         </div>
                     </form>
                     {{!-- change password --}}
-                    <form action="">
+                    <form action="/restaurant/update-password/{{restaurant._id}}" method="post">
                         <div class="mt-4 d-flex justify-content-between align-items-center mb-3">
                             <h4 class="text-right">change password</h4>
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
-                                <input type="text" class="form-control " placeholder="enter your current password"
-                                    value="">
+                                <input required type="password" class="form-control " name="currentPassword"
+                                    placeholder="enter your current password" value="">
                                 <label class="labels">current password</label>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" value="" placeholder="enter new password">
+                                <input required type="password" class="form-control" value="" name="newPassword"
+                                    placeholder="enter new password">
                                 <label class="labels">new password</label>
                             </div>
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
-                                <input type="text" class="form-control" placeholder="confirm new password" value="">
+                                <input required type="password" class="form-control" name="confirmNewPassword"
+                                    placeholder="confirm new password" value="">
                                 <label class="labels">confirm new password</label>
                             </div>
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6 mt-2">
-                                <input type="submit" class=" btn btn-primary form-control" value="save details">
+                                <input required type="submit" class=" btn btn-outline-primary form-control"
+                                    value="change password">
                             </div>
                         </div>
                         <div class="mt-4 d-flex justify-content-between align-items-center mb-3">
                             <h4 class="text-right">delete account</h4>
                         </div>
-                        <form action="/{{this._id}}/delete-account">
-                            <div class="row mt-2">
-                                <div class="col-md-6 d-flex-column">
-                                    <small class="text-danger">Deleting your account is a permanent action
-                                        and cannot be undone. If you are sure you
-                                        <label class="labels">confirm password</label><br>
-                                        want to delete your account, select the button
-                                        below.</small>
-                                    <input type="text" class="form-control" placeholder="Confirrm Password" value="">
-                                </div>
+                    </form>
+                    <form action="/{{this._id}}/delete-account">
+                        <div class="row mt-2">
+                            <div class="col-md-6 d-flex-column">
+                                <small class="text-danger">Deleting your account is a permanent action
+                                    and cannot be undone. If you are sure you
+                                    <label class="labels">confirm password</label><br>
+                                    want to delete your account, select the button
+                                    below.</small>
+                                <input required type="text" class="form-control" placeholder="Confirrm Password"
+                                    value="">
                             </div>
-                            <div class="row mt-2">
-                                <div class="col-md-6 mt-2">
-                                    <input type="submit" class=" btn btn-primary form-control" placeholder="first name"
-                                        value="save details">
-                                </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-6 mt-2">
+                                <input required type="submit" class=" btn btn-outline-primary form-control"
+                                    placeholder="first name" value="confirm delete">
                             </div>
-                        </form>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </section>
+{{!-- swiper cdn --}}
+<link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
+<script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
 {{!-- telephone country code cdn --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"
     integrity="sha512-+gShyB8GWoOiXNwOlBaYXdLTiZt10Iy6xjACGadpqMs20aJOoh+PJt3bwUVA6Cefe7yF7vblX6QwyXZiVwTWGg=="
@@ -208,15 +252,37 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
     integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{{!--
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> --}}
 <script>
     var input = document.querySelector("#phone");
-    window.intlTelInput(input, {
-        // any initialisation options go here
-        hiddenInput: true,
-        utilsScript: "../../build/js/utils.js?1638200991544"
-    });
+    const form = document.querySelector('form')
+    const iti = window.intlTelInput(input, {
+        utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.min.js'
+    })
+
+    input.addEventListener('countrychange', (e) => {
+        e.preventDefault()
+        const phone = iti.getNumber();
+        input.value = phone
+        console.log(phone)
+
+    })
 </script>
 <script>
+    function deleteTable(tableId) {
+        const div = document.getElementById("table" + tableId)
+        const url = window.location.origin
+        fetch(`${url}/restaurant/profile/delete-tables/${tableId}`, {
+            method: "POST"
+        }).then((res) => res.json()).then((response) => {
+            if (response.status) {
+                div.remove()
+            } else {
+                alert(response.message)
+            }
+        })
+    }
     function changeChairCount() {
         const chairType = document.querySelector('#chairType')
         const chairCount = document.querySelector('#chair')
@@ -228,9 +294,28 @@
         var image = document.getElementById("output");
         image.src = URL.createObjectURL(event.target.files[0]);
     };
-
+    let swiper = new Swiper(".mySwiper", {
+        slidesPerView: 1,
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        }
+    });
 </script>
 <style>
+    .table {
+        width: 150px;
+        font-size: 10px;
+    }
+
+    .table span {
+        font-size: 10px;
+    }
+
+    .table h6 {
+        font-size: 12px;
+    }
+
     .iti {
         width: 100%;
         margin-top: 20px;
@@ -272,8 +357,6 @@
         outline: 0 none;
         background-color: transparent;
     }
-
-
 
     .profile-pic {
         color: transparent;

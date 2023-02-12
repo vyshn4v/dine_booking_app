@@ -1,36 +1,42 @@
-<div class="container" style="height: 79vh; ">
-    <div class="row justify-content-center" style="display: flex; align-items: center;">
-        <div class="col-md-4 text-center">
-            <div class="row">
-                <div class="col-sm-12 mt-5 bgWhite">
-                    <div class="title">
-                        Verify OTP
+<section class="d-flex justify-content-center align-items-center" style="height: 79vh; width: 100%; ">
+    <div class="container" >
+        <div class="row justify-content-center" style="display: flex; align-items: center;">
+            <div class="col-md-4 text-center">
+                <div class="row">
+                    <div class="col-sm-12 mt-5 bgWhite">
+                        <div class="title">
+                            Verify OTP
+                        </div>
+                        <div class="">
+                            {{err}}
+                        </div>
+                        <div class="count_down">
+                            <input type="text" id="otpCounter" value="{{otpCount}}" hidden>
+                            <span id="otpCounterLive"></span>
+                        </div>
+                        <form action="/restaurant/{{restaurantId}}/validate-otp/2-factor" method="post" class="mt-5"
+                            onsubmit="return otpInputField()">
+                            <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(2)'
+                                maxlength=1>
+                            <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(3)'
+                                maxlength=1>
+                            <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(4)'
+                                maxlength=1>
+                            <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(5)'
+                                maxlength=1>
+                            <input type="text" id="otp" name="otp" hidden>
+                            <hr class="mt-4">
+                            <input id="verify_otp" class='btn btn-primary text-white btn-block mt-4 mb-4 customBtn'
+                                type="submit" value="Verify">
+                            <input id="resend_otp" class='btn btn-danger text-white btn-block mt-4 mb-4 customBtn'
+                                type="hidden" value="resend otp" onclick="resendOtpRestaurnt('{{restaurantEmail}}')">
+                        </form>
                     </div>
-                    <div class="">
-                        {{err}}
-                    </div>
-                    <div class="count_down">
-                        <input type="text" id="otpCounter" value="{{otpCount}}" hidden>
-                        <span id="otpCounterLive"></span>
-                    </div>
-                    <form action="/restaurant/{{restaurantId}}/validate-otp/2-factor" method="post" class="mt-5"
-                        onsubmit="return otpInputField()">
-                        <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(2)' maxlength=1>
-                        <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(3)' maxlength=1>
-                        <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(4)' maxlength=1>
-                        <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(5)' maxlength=1>
-                        <input type="text" id="otp" name="otp" hidden>
-                        <hr class="mt-4">
-                        <input id="verify_otp" class='btn btn-primary text-white btn-block mt-4 mb-4 customBtn'
-                            type="submit" value="Verify">
-                        <input id="resend_otp" class='btn btn-danger text-white btn-block mt-4 mb-4 customBtn'
-                            type="hidden" value="resend otp" onclick="resendOtpRestaurnt('{{restaurantEmail}}')">
-                    </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 <link rel="stylesheet" href="/css/restaurant/otpValidation.css">
 <script>
     const otpCounterLive = document.getElementById('otpCounterLive')

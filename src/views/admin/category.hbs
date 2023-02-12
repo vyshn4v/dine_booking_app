@@ -1,7 +1,7 @@
 {{!-- update tables --}}
 
-<body>
-    <div class="container tm-mt-big tm-mb-big">
+<body class="container-fluid w-100">
+    <div class="container tm-mt-big tm-mb-big" style="min-height: 85vh;">
         <div class="row service">
             <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
                 <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
@@ -16,28 +16,34 @@
                                         placeholder="Enter the category">
                                 </div>
                                 <div class="col-md-3">
-                                    <input type="submit" class=" btn btn-primary form-control w-100 m-3"
+                                    <input type="submit" class="btn btn-primary form-control w-100 m-3"
                                         value="add category">
                                 </div>
                             </div>
                         </div>
                     </form>
 
-                    <table class="table mt-5 " >
-                        <thead class="thead-dark">
+                    <table class="table-responsive-md" id="myTable">
+                        <thead class="thead-dark mt-5">
                             <tr>
-                                <th class="col-3" scope="col">No</th>
-                                <th class="col-3" scope="col">category</th>
-                                <th class="col-3" scope="col">visibility</th>
-                                <th class="col-3" scope="col">Handle</th>
+                                <th>No</th>
+                                <th>category</th>
+                                <th>visibility</th>
+                                <th>Handle</th>
                             </tr>
                         </thead>
                         <tbody class="">
                             {{#each categories}}
-                            <tr id="category{{this._id}}" class=" " >
+                            <tr id="category{{this._id}}" class=" ">
                                 <th scope="row">{{inc @index}}</th>
                                 <td>{{this.category}}</td>
-                                <td>{{this.visibility}}</td>
+                                <td id="visibility{{this._id}}">
+                                    {{#if this.visibility}}
+                                    visible
+                                    {{else}}
+                                    hidden
+                                    {{/if}}
+                                </td>
                                 <td class="d-flex">
                                     <div id="visibility_button{{this._id}}">
                                         {{#if this.visibility}}
@@ -65,16 +71,6 @@
         </div>
     </div>
 </body>
-<!-- choose a theme file -->
-<link rel="stylesheet" href="/path/to/theme.default.css">
-<!-- load jQuery and tablesorter scripts -->
-<script type="text/javascript" src="/path/to/jquery-latest.js"></script>
-<script type="text/javascript" src="/path/to/jquery.tablesorter.js"></script>
-
-<!-- tablesorter widgets (optional) -->
-<script type="text/javascript" src="/path/to/jquery.tablesorter.widgets.js"></script>
-
-
 <script>
 
     function showCategory(id) {
@@ -105,7 +101,7 @@
                     `<div class="mr-5" style="cursor: pointer;" onclick="hideCategory('${id}')">
                         <i class="fa-solid fa-eye"></i>
                     </div>`
-
+                document.getElementById('visibility' + id).innerHTML = "visible"
             }, 550)
         })
     }
@@ -137,7 +133,7 @@
                     `<div class="mr-5" style="cursor: pointer;" onclick="showCategory('${id}')">
                         <i class="fa-regular fa-eye-slash"></i>
                     </div>`
-
+                document.getElementById('visibility' + id).innerHTML = "hidden"
             }, 550)
 
         })
@@ -159,48 +155,14 @@
                 },
             }).showToast();
             setTimeout(() => {
-                location.reload()
+                document.getElementById('category' + id).remove()
             }, 500)
 
         })
     }
 </script>
-<style>
-    .service input:not([type=submit]),
-    .service textarea {
-        color: black;
-        border-radius: 5px;
-        border: none;
-        border: 0.2px solid rgba(0, 0, 0, 0.081);
-        border-bottom: 1px solid rgba(95, 95, 95, 0.248);
-        margin-top: 20px;
-    }
-
-    .service textarea::-webkit-scrollbar {
-        display: none;
-    }
-
-    .service input:not([type=submit])::placeholder {
-        color: rgba(108, 108, 108, 0.419);
-    }
-
-    .service label:not([for="file"]) {
-        color: rgba(44, 44, 44, 0.704);
-    }
-
-    .service select {
-        color: black;
-        border-radius: 0;
-        border: 1px solid rgba(95, 95, 95, 0.248);
-        margin-top: 20px;
-    }
-
-    .service input:not([type=submit]):focus,
-    .service textarea:focus,
-    .service select:focus {
-        border-bottom: 2px solid rgba(25, 151, 0, 0.8);
-        box-shadow: none;
-        outline: 0 none;
-        background-color: transparent;
-    }
-</style>
+<script>
+    $(document).ready(function () {
+        $('#myTable').dataTable();
+    });
+</script>

@@ -1,0 +1,69 @@
+<section style="min-height: 75vh;" class="w-75 mt-5 d-flex-column justify-content-center align-items-center">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="text-right">services</h4>
+    </div>
+    <div class="w-100">
+        <button></button>
+    </div>
+    <table class="table w-100 d-flex-column justify-content-center align-items-center" id="myTable">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">No</th>
+                <th scope="col">title</th>
+                <th scope="col">Handle</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each services}}
+            <tr id="table{{this._id}}">
+                <th scope="row">{{inc @index 1 }}</th>
+                <td>{{this.title}}</td>
+                <td>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-danger d-flex justify-content-center align-items-center"
+                        style="height: 30px; width: 80px;" data-toggle="modal" data-target="#servicesModal{{this._id}}">
+                        Delete
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal unfade" id="servicesModal{{this._id}}" tabindex="-1" role="dialog"
+                        aria-labelledby="tableModal{{this._id}}" aria-hidden="false">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    ...
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary"
+                                        onclick="deleteService('{{this._id}}')">delete service</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</section>
+<script>
+    $(document).ready(function () {
+        $('#myTable').dataTable();
+    });
+    function deleteService(id) {
+        const url = window.location.origin
+        fetch(url + "/restaurant/delete-service/" + id, {
+            method: "DELETE"
+        }).then((res) => res.json()).then((response) => {
+            location.reload()
+        }).catch((response) => {
+            alert("err")
+        })
+    }
+</script>

@@ -3,208 +3,71 @@
     <div class="container rounded bg-white mt-5 mb-5">
         <div class="row">
             <div class="col-12 border-right ">
-                <div class="p-3 py-5 ">
+                <div class="p-3 py-5 w-100">
                     {{!-- user profile --}}
-                    <form action="/restaurant/profile/save-details" method="post" enctype="multipart/form-data">
-                        <div class="row mt-2">
-                            <div class="col-md-12">
-                                <label class="labels">{{err}}</label>
-                            </div>
+                    <div class=" row mt-2">
+                        <div class=" col-md-12 d-flex justify-content-center align-items-center">
+                            <label class="labels">{{err}}</label>
                         </div>
-                        <div class="mt-2 d-flex justify-content-center align-items-center">
-                            <div class="">
-                                <div class="profile-pic">
+                    </div>
+                    <form action="/update-profile/{{userId}}" method="post" enctype="multipart/form-data">
+                        {{!-- profile --}}
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="text-right">user profile</h4>
+                        </div>
+                        {{!-- profile swiper --}}
+                        <div class="mt-5 pt-4 d-flex justify-content-center align-items-center">
+                            <div class="d-flex-column ">
+                                <div class="profile-pic ">
                                     <label class="-label" for="file">
                                         <span class="glyphicon glyphicon-camera"></span>
                                         <span>Change Image</span>
                                     </label>
                                     <input id="file" name="profile_pic" type="file" onchange="loadFile(event)" />
-                                    <img src="{{restaurant.profile_pic}}" alt="" id="output" width="200" />
+                                    <img src="{{userDetails.profile_pic}}" id="output" width="200" />
                                 </div>
                                 <div class="d-flex-column justify-content-center align-items-center">
-                                    <h6 class="font-weight-bold">{{restaurant.restaurant_name}}</h6>
-                                    <h6 class="text-black-50">{{restaurant.email}}</h6>
+                                    <h6 class="font-weight-bold d-flex justify-content-center align-items-center">
+                                        {{userDetails.user_name}}</h6>
+                                    <h6 class="text-black-50">{{userDetails.email}}</h6>
                                 </div>
 
                             </div>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="text-right">restaurant profile</h4>
-                        </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
-                                <input type="text" name="restaurant_name" class="form-control"
-                                    placeholder="restaurant name" value="{{restaurant.restaurant_name}}">
+                                <input required type="text" name="username" class="form-control" placeholder="user name"
+                                    value="{{userDetails.user_name}}">
                                 <label class="labels">name</label>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" name="email" class="form-control" value="{{restaurant.email}}"
-                                    placeholder="email">
+                                <input required type="text" name="email" class="form-control"
+                                    value="{{userDetails.email}}" placeholder="email">
                                 <label class="labels">email</label>
                             </div>
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
-                                <input type="text" name="address" class="form-control" placeholder="restaurant name"
-                                    value="{{restaurant.address}}">
-                                <label class="labels">address</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" name="pincode" class="form-control" placeholder="restaurant name"
-                                    value="{{restaurant.pincode}}">
-                                <label class="labels">pincode</label>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                <input type="tel" name="phone" class="form-control" id="phone"
-                                    placeholder="enter the phone number" value="{{restaurant.phone}}">
+                                <input required type="tel" name="phone" class="form-control" id="phone"
+                                    placeholder="enter the phone number" value="{{userDetails.phone}}">
                                 <label class="labels">phone</label>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" value="{{restaurant.gst_number}}"
-                                    name="gst_number" placeholder="GST identification number of restaurant ">
-                                <label class="labels">gst in</label>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-12 form-group mb-3">
-                                <textarea name="description" class="form-control validate" rows="10"
-                                    placeholder="enter description...">{{restaurant.description}}
-                                </textarea>
-                                <label for="description">Description</label>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                <input type="text" name="pan_number" class="form-control"
-                                    value="{{restaurant.pan_number}}" placeholder="table">
-                                <label class="labels">pancard</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" name="password" class="form-control" value=""
-                                    placeholder="confirm your password">
+                                <input required type="tel" name="password" class="form-control" id="phone"
+                                    placeholder="enter the phone number" value="">
                                 <label class="labels">password</label>
                             </div>
                         </div>
+
                         <div class="row mt-2">
                             <div class="col-md-6">
-                                <input type="submit" class="mt-2 btn btn-primary form-control" value="save details">
+                                <input required type="submit" class="mt-2 btn btn-outline-primary form-control"
+                                    value="save details">
                             </div>
                         </div>
                     </form>
-                    {{!-- table details --}}
-                    <div class="d-flex justify-content-between align-items-center mt-5">
-                        <h4 class="text-right">tables details</h4>
-                    </div>
-                    <small>available tables</small>
-                    <div class="col-12 my-5" id="tables">
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-link" data-toggle="modal"
-                            data-target="#exampleModalCenter">
-                            table 34
-                        </button>
-
-                        <!-- Modal -->
-                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLongTitle">table 34</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        4 chair
-                                        3 table
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary">Save changes</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{!-- update tables --}}
-                    <form action="/restaurant/profile/update-tables" method="post">
-                        <div class="row mt-5">
-                            <div class="col-md-6">
-                                <select name="category" id="chairType" onchange="changeChairCount()"
-                                    class="form-select form-select-lg mb-3 w-100 p-2"
-                                    aria-label=".form-select-lg example">
-                                    <option selected>update tables</option>
-                                    {{#each restaurant.tables}}
-                                    <option value="{{this.chair}}">{{this.chair}} chair</option>
-                                    {{/each}}
-                                </select>
-                                <label class="labels">update/add tables</label>
-                            </div>
-                            {{!-- <div class="col-md-6">
-                                <input type="text" class="form-control" value="" name="table_number"
-                                    placeholder="Enter your table number">
-                                <label class="labels">table number</label>
-                            </div> --}}
-                            <div class="col-md-6">
-                                <input type="text" id="chair" class="form-control" value="" name="total_chair"
-                                    placeholder="chair for one table">
-                                <label class="labels">chair</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" value="" name="total_table" placeholder="table">
-                                <label class="labels">table</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" name="password" class="form-control" value=""
-                                    placeholder="confirm your password">
-                                <label class="labels">password</label>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                <input type="submit" class="mt-2 btn btn-success form-control" value="add table">
-                            </div>
-                            <div class="col-md-6">
-                                <input type="submit" class="mt-2 btn btn-primary form-control" value="save tables">
-                            </div>
-                        </div>
-                    </form>
-                    {{!-- change password --}}
-                    <form action="/admin/update-products">
-                        <div class="mt-4 d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="text-right">change password</h4>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                <input type="text" class="form-control " placeholder="enter your current password"
-                                    value="">
-                                <label class="labels">current password</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" value="" placeholder="enter new password">
-                                <label class="labels">new password</label>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" placeholder="confirm new password" value="">
-                                <label class="labels">confirm new password</label>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6 mt-2">
-                                <input type="submit" class=" btn btn-primary form-control" value="save details">
-                            </div>
-                        </div>
-                        <div class="mt-4 d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="text-right">delete account</h4>
-                        </div>
+                    {{!-- delete account --}}
+                    <form action="/{{this._id}}/delete-account">
                         <div class="row mt-2">
                             <div class="col-md-6 d-flex-column">
                                 <small class="text-danger">Deleting your account is a permanent action
@@ -212,60 +75,14 @@
                                     <label class="labels">confirm password</label><br>
                                     want to delete your account, select the button
                                     below.</small>
-                                <input type="text" class="form-control" placeholder="Confirrm Password" value="">
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6 mt-2">
-                                <input type="submit" class=" btn btn-primary form-control" placeholder="first name"
-                                    value="save details">
-                            </div>
-                        </div>
-                    </form>
-                    {{!-- change password --}}
-                    <form action="">
-                        <div class="mt-4 d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="text-right">change password</h4>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                <input type="text" class="form-control " placeholder="enter your current password"
+                                <input required type="text" class="form-control" placeholder="Confirrm Password"
                                     value="">
-                                <label class="labels">current password</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" value="" placeholder="enter new password">
-                                <label class="labels">new password</label>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" placeholder="confirm new password" value="">
-                                <label class="labels">confirm new password</label>
                             </div>
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6 mt-2">
-                                <input type="submit" class=" btn btn-primary form-control" value="save details">
-                            </div>
-                        </div>
-                        <div class="mt-4 d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="text-right">delete account</h4>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6 d-flex-column">
-                                <small class="text-danger">Deleting your account is a permanent action
-                                    and cannot be undone. If you are sure you
-                                    <label class="labels">confirm password</label><br>
-                                    want to delete your account, select the button
-                                    below.</small>
-                                <input type="text" class="form-control" placeholder="Confirrm Password" value="">
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6 mt-2">
-                                <input type="submit" class=" btn btn-primary form-control" placeholder="first name"
-                                    value="save details">
+                                <input required type="submit" class=" btn btn-outline-primary form-control"
+                                    placeholder="first name" value="confirm delete">
                             </div>
                         </div>
                     </form>
@@ -274,6 +91,9 @@
         </div>
     </div>
 </section>
+{{!-- swiper cdn --}}
+<link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
+<script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
 {{!-- telephone country code cdn --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"
     integrity="sha512-+gShyB8GWoOiXNwOlBaYXdLTiZt10Iy6xjACGadpqMs20aJOoh+PJt3bwUVA6Cefe7yF7vblX6QwyXZiVwTWGg=="
@@ -284,15 +104,37 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
     integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{{!--
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> --}}
 <script>
     var input = document.querySelector("#phone");
-    window.intlTelInput(input, {
-        // any initialisation options go here
-        hiddenInput: true,
-        utilsScript: "../../build/js/utils.js?1638200991544"
-    });
+    const form = document.querySelector('form')
+    const iti = window.intlTelInput(input, {
+        utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.min.js'
+    })
+
+    input.addEventListener('countrychange', (e) => {
+        e.preventDefault()
+        const phone = iti.getNumber();
+        input.value = phone
+        console.log(phone)
+
+    })
 </script>
 <script>
+    function deleteTable(tableId) {
+        const div = document.getElementById("table" + tableId)
+        const url = window.location.origin
+        fetch(`${url}/restaurant/profile/delete-tables/${tableId}`, {
+            method: "POST"
+        }).then((res) => res.json()).then((response) => {
+            if (response.status) {
+                div.remove()
+            } else {
+                alert(response.message)
+            }
+        })
+    }
     function changeChairCount() {
         const chairType = document.querySelector('#chairType')
         const chairCount = document.querySelector('#chair')
@@ -304,9 +146,28 @@
         var image = document.getElementById("output");
         image.src = URL.createObjectURL(event.target.files[0]);
     };
-
+    let swiper = new Swiper(".mySwiper", {
+        slidesPerView: 1,
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        }
+    });
 </script>
 <style>
+    .table {
+        width: 150px;
+        font-size: 10px;
+    }
+
+    .table span {
+        font-size: 10px;
+    }
+
+    .table h6 {
+        font-size: 12px;
+    }
+
     .iti {
         width: 100%;
         margin-top: 20px;
@@ -348,8 +209,6 @@
         outline: 0 none;
         background-color: transparent;
     }
-
-
 
     .profile-pic {
         color: transparent;

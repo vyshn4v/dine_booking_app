@@ -6,15 +6,17 @@ const {
     postSendOtpEmail,
     getOtpPage,
     getOtpTwoFactorPage,
-    postverifyRestaurantOtp, 
-    deleteAccount} = require('../controllers/Auth')
+    postverifyRestaurantOtp,
+    deleteAccount } = require('../controllers/Auth')
 const restaurantController = require('../controllers/restaurant')
+const serviceController = require('../controllers/service')
 const {
     restaurantSessionManagement,
     validateUserAlreadySignup,
     restaurantAuthManagement,
-    restaurantProfileVerfication } = require('../middlewares/session/restaurant')
-const profilePic = require('../helpers/restaurantProfilePic')
+    restaurantProfileVerfication, 
+    sessionProfileVerified} = require('../middlewares/session/restaurant')
+const imagepload = require('../helpers/imagepload')
 const router = require('express').Router()
 
 //restaurant login
@@ -23,39 +25,49 @@ router.post('/login', restaurantAuthManagement, postRestaurantLogin)
 
 router.get('/logout', restaurantController.restaurantLogout)
 //view orders
-router.get('/view-orders', restaurantSessionManagement, restaurantController.viewOrdersGet)
+router.get('/view-orders', restaurantSessionManagement,sessionProfileVerified, restaurantController.viewOrdersGet)
 
 //restaurant signup
 router.get('/signup', restaurantAuthManagement, getRestaurantSignup)
 router.post('/signup', restaurantAuthManagement, validateUserAlreadySignup, postRestaurantSignup)
 
-//view products
-router.get('/view-products', restaurantSessionManagement, restaurantController.viewOrdersGet)
 
 //profile
 router.get('/profile', restaurantSessionManagement, restaurantController.showProfileGet)
-router.post('/profile/save-details', profilePic.single('profile_pic'), restaurantController.saveProfilePost)
-router.post('/profile/update-tables', restaurantController.saveTablePost)
+router.post('/profile/save-details', imagepload.multer.array('profile_pic', 10), restaurantController.saveProfilePost)
 
-//add product
-router.get('/add-products', restaurantSessionManagement, restaurantController.addProductGet)
-router.post('/add-products', restaurantSessionManagement, restaurantController.addProductPost)
-//add  service
-router.get('/add-service', restaurantSessionManagement, restaurantController.addServiceGet)
+// table management
+router.get('/table-management', restaurantSessionManagement,sessionProfileVerified, restaurantController.tableManagementGet)
+router.post('/profile/update-tables', restaurantController.saveTablePost)
+router.post('/profile/delete-tables/:table_id', restaurantController.deleteTablePost)
+
+// service management
+router.get('/manage-services', restaurantSessionManagement,sessionProfileVerified, serviceController.serviceManagementGet)
+router.get('/add-service', restaurantSessionManagement,sessionProfileVerified, restaurantController.addServiceGet)
 router.post('/add-service', restaurantSessionManagement, restaurantController.addServicePost)
+router.delete('/delete-service/:service_id', restaurantSessionManagement, serviceController.deleteServicePost)
+
+//product
+router.get('/view-products', restaurantSessionManagement,sessionProfileVerified, restaurantController.viewOrdersGet)
+router.get('/add-products', restaurantSessionManagement,sessionProfileVerified, restaurantController.addProductGet)
+router.post('/add-products', restaurantSessionManagement, imagepload.multer.single('product_image'), restaurantController.addProductPost)
 
 //forgot password 
 router.get('/forgot-password', restaurantController.forgotPasswordGet)
-router.get('/change-password/:restaurant_id', restaurantController.changePasswordGet)
 router.post('/verify-forgot-password', postverifyRestaurantOtp)
+router.get('/change-password/:restaurant_id', restaurantController.changePasswordGet)
 router.post('/change-password/:restaurant_id', restaurantController.changePasswordPost)
 
+// change password
+router.post('/update-password/:restaurant_id', restaurantController.changePasswordviaProfilePost)
+
 //validate otp verification
-router.get('/:restaurant_id/validate-otp/2-factor', getOtpTwoFactorPage)
+router.get('/:restaurant_id/validate-otp/2-factor', restaurantAuthManagement, getOtpTwoFactorPage)
 router.get('/:restaurant_id/validate-otp/verify-profile', getOtpPage)
 router.post('/:restaurant_id/validate-otp/:validation_type', restaurantController.OtpVerificationPost)
 router.post('/:restaurant_email/send-verification-otp/:validation_type', postSendOtpEmail)
+
 // delete account
-router.post('/delete-account/:restaurant_id', deleteAccount)
+router.delete('/delete-account/:restaurant_id', deleteAccount)
 
 module.exports = router

@@ -23,20 +23,24 @@
         <h4>Top Restaurants</h4>
         <div class="restaurant-cards">
             {{#each restaurants}}
-            <a class="/restaurant-details/{{this.id}}" href="restaurant_details/{{this.id}}"
-                style="text-decoration: none;">
-                <div class="restaurant-card" style="">
-                    <div class="restaurant-image">
-                        <img src="{{this.profile_pic}}" style="" alt="">
-                    </div>
-                    <div class="restauarnt-card-body">
-                        <h6>{{this.restaurant_name}}</h6>
-                        {{!-- <span><i class="fa-solid fa-star" style="color: rgb(207, 207, 0);"></i></span> --}}
-                        {{!-- <h6><span>4</span>table<span> 2</span>chair</h6> --}}
-                        <small>{{this.address}}</small>
-                    </div>
+            <div class="restaurant-card" style="">
+                <div class="restaurant-image">
+                    <img src="{{this.profile_pic.0.url}}" style="" alt="">
                 </div>
-            </a>
+                <div class="restauarnt-card-body">
+                    <h6>{{this.restaurant_name}}</h6>
+                    {{!-- <span><i class="fa-solid fa-star" style="color: rgb(207, 207, 0);"></i></span> --}}
+                    {{!-- <h6><span>4</span>table<span> 2</span>chair</h6> --}}
+                    <small>{{this.address}}</small>
+                </div>
+                <div class="restauarnt-card-body w-100">
+                    <button onclick="addTowishlist('{{this._id}}')" type=" button"
+                        class="w-100 btn btn-outline-warning text-dark">add to wishlist</button>
+                    <a class="" href="restaurant-details/{{this._id}}" style="text-decoration: none; color: black;">
+                        <button type=" button" class="w-100 btn btn-primary mt-2">show details</button>
+                    </a>
+                </div>
+            </div>
             {{/each}}
         </div>
     </section>
@@ -48,15 +52,24 @@
             <div class="swiper-wrapper mb-1">
                 {{#each restaurants}}
                 <div class="swiper-slide slide_1 d-flex justify-content-center">
-                    <div class="restaurant-card" style="">
-                        <div class="restaurant-image">
-                            <img src="/images/banner.jpg" style="" alt="">
+                    <a class="" href="restaurant-details/{{this.id}}" style="text-decoration: none; color: black;">
+                        <div class="restaurant-card" style="">
+                            <div class="restaurant-image">
+                                <img src="{{this.profile_pic.0.url}}" style="" alt="">
+                            </div>
+                            <div class="restauarnt-card-body">
+                                <h6>{{this.restaurant_name}}</h6>
+                                {{!-- <span><i class="fa-solid fa-star" style="color: rgb(207, 207, 0);"></i></span>
+                                --}}
+                                {{!-- <h6><span>4</span>table<span> 2</span>chair</h6> --}}
+                                <small>{{this.address}}</small>
+                            </div>
+                            <div class="restauarnt-card-body w-100">
+                                <button type=" button" class="w-100 btn btn-outline-warning">add to wishlist</button>
+                                <button type=" button" class="w-100 btn btn-primary mt-2">show details</button>
+                            </div>
                         </div>
-                        <div class="restauarnt-card-body">
-                            <h6>restaurant <span class="product-cash">$2000</span></h6>
-                            <h6><span>4</span>table<span> 2</span>chair</h6>
-                        </div>
-                    </div>
+                    </a>
                 </div>
                 {{/each}}
             </div>
@@ -72,6 +85,15 @@
 {{!-- style sheet --}}
 <link rel="stylesheet" href="/css/user/Home.css">
 {{!-- swiper configuration --}}
+<script>
+    function addTowishlist(id) {
+        const url = window.location.origin
+        console.log(url);
+        fetch(`${url}/add-to-wishlist/${id}`).then((res) => res.json()).then((response) => {
+            alert(response.message)
+        })
+    }
+</script>
 <script>
     let swiper = new Swiper(".mySwiper", {
         slidesPerView: 1,
