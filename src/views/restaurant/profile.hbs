@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="path/to/intlTelInput.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 <section class="profile">
     <div class="container rounded bg-white mt-5 mb-5">
         <div class="row">
@@ -10,72 +11,56 @@
                             <label class="labels">{{err}}</label>
                         </div>
                     </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="text-right">restaurant profile</h4>
+                    </div>
                     <form action="/restaurant/profile/save-details" method="post" enctype="multipart/form-data">
                         {{!-- profile swiper --}}
                         <div class="swiper mySwiper">
                             <div class="swiper-wrapper mb-1">
                                 {{#each restaurant.profile_pic}}
-                                <div class="swiper-slide slide_1 d-flex justify-content-center">
-                                    <img height="300" src="{{this.url}}" alt="">
-                                    <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-primary "
-                                        style="height: 40px; width: 70px; position: absolute; bottom: 0;"
-                                        data-toggle="modal" data-target="#delete{{this._id}}">
-                                        Launch demo modal
-                                    </button>
+                                <div class="swiper-slide slide_1 w-100 d-flex justify-content-center"
+                                    style="height: 300px;">
+                                    <img class="img-fluid" src="{{this.url}}" alt="">
                                 </div>
                                 {{/each}}
                             </div>
                             <div class="swiper-button-next"></div>
                             <div class="swiper-button-prev"></div>
                         </div>
-                        <div class="image-input w-100">
-                            <input type="file" class="w-100" name="profile_pic" multiple>
-                        </div>
-                        {{!-- profile swiper --}}
-                        {{!-- <div class="mt-5 pt-4 d-flex justify-content-center align-items-center">
-                            <div class="d-flex-column ">
-                                <div class="profile-pic ">
-                                    <label class="-label" for="file">
-                                        <span class="glyphicon glyphicon-camera"></span>
-                                        <span>Change Image</span>
-                                    </label>
-                                    <input id="file" name="profile_pic" type="file" onchange="loadFile(event)" />
-                                    <img src="{{restaurant.profile_pic.url}}" id="output" width="200" />
-                                </div>
-                                <div class="d-flex-column justify-content-center align-items-center">
-                                    <h6 class="font-weight-bold d-flex justify-content-center align-items-center">
-                                        {{restaurant.restaurant_name}}</h6>
-                                    <h6 class="text-black-50">{{restaurant.email}}</h6>
-                                </div>
-
+                        <div class="image-input row w-100">
+                            <div class="col-md-12">
+                                <input type="file" class="w-100" name="profile_pic" multiple>
+                                <label class="labels">images</label>
                             </div>
-                        </div> --}}
-                        {{!-- profile --}}
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="text-right">restaurant profile</h4>
+                            {{!-- <div class="col-md-6 w-100 mt-1 ">
+                                <a href="/restaurant/edit-picures/{{restaurant._id}}" class="w-100 btn btn-success">edit
+                                    pictures</a>
+                            </div> --}}
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
                                 <input required type="text" name="restaurant_name" class="form-control"
-                                    placeholder="restaurant name" value="{{restaurant.restaurant_name}}">
+                                    placeholder="restaurant name" id="restaurant_name"
+                                    value="{{restaurant.restaurant_name}}">
                                 <label class="labels">name</label>
                             </div>
                             <div class="col-md-6">
                                 <input required type="text" name="email" class="form-control"
-                                    value="{{restaurant.email}}" placeholder="email">
+                                    value="{{restaurant.email}}" id="restaurant_email" placeholder="email">
                                 <label class="labels">email</label>
                             </div>
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
                                 <input required type="text" name="address" class="form-control"
-                                    placeholder="restaurant name" value="{{restaurant.address}}">
+                                    placeholder="restaurant name" id="restaurant_address"
+                                    value="{{restaurant.address}}">
                                 <label class="labels">address</label>
                             </div>
                             <div class="col-md-6">
                                 <input required type="text" name="pincode" class="form-control"
-                                    placeholder="restaurant name" value="{{restaurant.pincode}}">
+                                    placeholder="restaurant name" id="restaurant_name" value="{{restaurant.pincode}}">
                                 <label class="labels">pincode</label>
                             </div>
                         </div>
@@ -101,13 +86,13 @@
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
-                                <input required type="time" name="opening_time" class="form-control"
-                                    value="{{restaurant.pan_number}}" placeholder="table">
+                                <input required type="text" name="opening_time" id="opening_time" class="form-control"
+                                    value="{{restaurant.opening_time}}" placeholder="opening time">
                                 <label class="labels">opening time</label>
                             </div>
                             <div class="col-md-6">
-                                <input required type="time" name="closing_time" class="form-control" value=""
-                                    placeholder="confirm your password">
+                                <input required type="text" name="closing_time" id="closing_time" class="form-control"
+                                    value="{{restaurant.closing_time}}" placeholder="closing Time">
                                 <label class="labels">closing time</label>
                             </div>
                         </div>
@@ -162,13 +147,12 @@
                                     placeholder="table">
                                 <label class="labels">table</label>
                             </div>
-                            <div class="col-md-6">
-                                <input required type="text" name="password" class="form-control" value=""
-                                    placeholder="confirm your password">
-                                <label class="labels">password</label>
-                            </div>
+                            
                         </div>
-                        <div class="row mt-2">
+                        <div class="col-md-6">
+                            <input required type="text" name="password" class="form-control" value=""
+                                placeholder="confirm your password">
+                            <label class="labels">password</label>
                         </div>
                         <div class="row mt-2">
                             {{!-- <div class="col-md-6">
@@ -252,9 +236,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
     integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{{!-- time --}}
+<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 {{!--
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> --}}
 <script>
+    $(document).ready(function () {
+        $('#closing_time').timepicker();
+    });
     var input = document.querySelector("#phone");
     const form = document.querySelector('form')
     const iti = window.intlTelInput(input, {

@@ -8,5 +8,15 @@ const dataUri = file => {
         file.buffer);
 }
 module.exports = {
-    multer: multer({ storage: storage }), dataUri
+    multer: multer({
+        storage: storage,
+        fileFilter: function (req, file, cb) {
+            console.log(file.mimetype);
+            if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
+                cb(null, true)
+            } else {
+                return cb(new Error('Wrong file type'))
+            }
+        }
+    }), dataUri
 }

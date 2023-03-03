@@ -2,114 +2,142 @@
     <link rel='stylesheet' href='https://sachinchoolur.github.io/lightslider/dist/css/lightslider.css'>
     <div class="container-fluid mt-2 mb-3">
         <div class="row no-gutters">
-            <div class="col-md-5 pr-2">
-                <div class="card w-100">
-                    <div class="demo">
-                        <ul id="lightSlider">
-                            {{#each restaurantDetails.profile_pic}}
-                            <li class="image-fluid" data-thumb="{{this.url}}"> <img class="image-fuid"
-                                    src="{{this.url}}" /> </li>
-                            {{/each}}
-                        </ul>
-                    </div>
-                </div>
-                <div class="card mt-2">
-                    <h6>Reviews</h6>
-
-                    <div class="comment-section">
-                        {{#each restaurantDetails.review}}
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex flex-row align-items-center"> <img src="https://i.imgur.com/o5uMfKo.jpg"
-                                    class="rounded-circle profile-image">
-                                <div class="d-flex flex-column ml-1 comment-profile">
-                                    <div class="comment-ratings"> <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                                    </div> <span class="username">Lori Benneth</span>
+            <div class="col-md-6 pr-2">
+                <div class="card ">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-md-10">
+                            <div class="card">
+                                <div>
+                                    <div class="">
+                                        <div class="images">
+                                            <div class="zoom text-center pb-1 d-flex justify-content-center">
+                                                <img src="{{restaurantDetails.profile_pic.0.url}}" id="main-image"
+                                                    class="ml-1"
+                                                    style="min-width: 100%; height: 300px; object-fit: cover;">
+                                            </div>
+                                            <div class="thumbnail text-center d-flex justify-content-center">
+                                                {{#each restaurantDetails.profile_pic}}
+                                                <img class="ml-1" style="width: 80px; cursor: pointer;"
+                                                    onclick="change_image(this)" src="{{this.url}}">
+                                                {{/each}}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="date"> <span class="text-muted">2 May</span> </div>
                         </div>
-                        <hr>
-                        {{/each}}
                     </div>
                 </div>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-6">
                 <div class="card">
                     <div class="about"> <span class="font-weight-bold">{{restaurantDetails.restaurant_name}}</span>
                     </div>
                     <div class="product-description">
-                        {{!-- <div><span class="font-weight-bold">Color:</span><span> blue</span></div> --}}
-                        {{!-- <div class="my-color"> <label class="radio"> <input type="radio" name="gender"
-                                    value="MALE" checked> <span class="red"></span> </label> <label class="radio">
-                                <input type="radio" name="gender" value="FEMALE"> <span class="blue"></span> </label>
-                            <label class="radio"> <input type="radio" name="gender" value="FEMALE"> <span
-                                    class="green"></span> </label> <label class="radio"> <input type="radio"
-                                    name="gender" value="FEMALE"> <span class="orange"></span> </label>
-                        </div> --}}
-                        <div class="mt-2"> <span class="font-weight-bold">Description</span>
-                            <p>{{restaurantDetails.description}}d!</p>
+                        <div class="mt-2">
+                            <span class="font-weight-bold">Opening Time</span>
+                            <p>{{restaurantDetails.opening_time}}</p>
+                            <span class="font-weight-bold">Closing Time</span>
+                            <p>{{restaurantDetails.closing_time}}</p>
+                            <span class="font-weight-bold">Description</span>
+                            <p>{{restaurantDetails.description}}</p>
                             <div class="bullets">
                                 {{#each restaurantDetails.services}}
                                 <div class="d-flex align-items-center"> <span class="dot"></span> <span
                                         class="bullet-text">{{this.title}}</span> </div>
                                 {{/each}}
-                                {{!-- <div class="d-flex align-items-center"> <span class="dot"></span> <span
-                                        class="bullet-text">Anti-creak joinery</span> </div>
-                                <div class="d-flex align-items-center"> <span class="dot"></span> <span
-                                        class="bullet-text">Sturdy laminate surfaces</span> </div>
-                                <div class="d-flex align-items-center"> <span class="dot"></span> <span
-                                        class="bullet-text">Relocation friendly design</span> </div>
-                                <div class="d-flex align-items-center"> <span class="dot"></span> <span
-                                        class="bullet-text">High gloss, high style</span> </div>
-                                <div class="d-flex align-items-center"> <span class="dot"></span> <span
-                                        class="bullet-text">Easy-access hydraulic storage</span> </div> --}}
                             </div>
                         </div>
                     </div>
                     <div class="buttons">
-                        {{!-- <button class="btn btn-outline-warning btn-long cart">Add to Wishlist</button> --}}
                         <a href="/{{restaurantDetails._id}}/buy-products">
                             <button class="btn btn-warning btn-long buy w-100">Buy</button>
                         </a>
                     </div>
                     <hr>
                 </div>
-                <div class="card mt-2">
-                    <h6>Reviews</h6>
-
-                    <div class="comment-section">
-                        <form onsubmit="updateReview('{{this._id}}')">
-                            <div class="form-group">
-                                <label for="exampleInputPassword1">review</label>
-                                <textarea type="password" class="form-control" id="exampleInputPassword1"
-                                    placeholder="share your experience" cols="4"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </form>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 
-    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script>
     <script src='https://sachinchoolur.github.io/lightslider/dist/js/lightslider.js'></script>
-    <script>
-
-    </script>
     <script type='text/javascript'
         src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js'></script>
-    <script type='text/javascript' src=''></script>
-    <script type='text/javascript' src=''></script>
-    <script type='text/Javascript'></script>
 </body>
 <script>
     function updateReview(id) {
-        
+        const baseUrl = window.location.origin;
+        const review = document.getElementById('#review')
+        fetch(baseUrl + '/update-review', {
+            method: "PUT",
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8'
+            },
+            body: JSON.stringify(review.innerText)
+        })
+        return false
     }
 </script>
 <style>
+    .zoom,
+    .original {
+        position: relative;
+    }
+
+    .zoom {
+        display: inline-block;
+    }
+
+    .original {
+        cursor: crosshair;
+    }
+
+    #target {}
+
+    .zoom .viewer {
+        position: absolute;
+        top: 0;
+        left: 100%;
+        width: 100px;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .zoom .viewer img {
+        z-index: 999;
+        position: absolute;
+    }
+
+    .original:hover~div {
+        display: block;
+    }
+
+    .original::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+    }
+
+    .magnifier {
+        position: absolute;
+        background: #000;
+        opacity: 0.7;
+        top: 0;
+        left: 0;
+    }
+
+    .magnifier,
+    .viewer {
+        display: none;
+    }
+
+
+
+
     @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap");
 
     body {
@@ -347,8 +375,87 @@
     .card-body {
         padding: 0.3rem 0.3rem 0.2rem
     }
+
+
+
+    .card {
+        border: none
+    }
+
+
+    .brand {
+        font-size: 13px
+    }
+
+    .act-price {
+        color: red;
+        font-weight: 700
+    }
+
+    .dis-price {
+        text-decoration: line-through
+    }
+
+    .about {
+        font-size: 14px
+    }
+
+    .color {
+        margin-bottom: 10px
+    }
+
+    label.radio {
+        cursor: pointer
+    }
+
+    label.radio input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        visibility: hidden;
+        pointer-events: none
+    }
+
+    label.radio span {
+        padding: 2px 9px;
+        border: 2px solid #ff0000;
+        display: inline-block;
+        color: #ff0000;
+        border-radius: 3px;
+        text-transform: uppercase
+    }
+
+    label.radio input:checked+span {
+        border-color: #ff0000;
+        background-color: #ff0000;
+        color: #fff
+    }
+
+    .btn-danger {
+        background-color: #ff0000 !important;
+        border-color: #ff0000 !important
+    }
+
+    .btn-danger:hover {
+        background-color: #da0606 !important;
+        border-color: #da0606 !important
+    }
+
+    .btn-danger:focus {
+        box-shadow: none
+    }
+
+    .cart i {
+        margin-right: 10px
+    }
 </style>
 <script>
+    function change_image(image) {
+        var container = document.getElementById("main-image");
+        container.src = image.src;
+    }
+    document.addEventListener("DOMContentLoaded", function (event) {
+    });
     $('#lightSlider').lightSlider({
         gallery: true,
         item: 1,
@@ -356,4 +463,12 @@
         slideMargin: 0,
         thumbItem: 6
     });
+</script>
+<script>
+
+</script>
+<script src="/js/zoom.js"></script>
+<script>
+    let z = $('#target').zoom(5);
+    z.setZoom(5);
 </script>

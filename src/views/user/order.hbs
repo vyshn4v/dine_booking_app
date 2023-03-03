@@ -1,9 +1,10 @@
-<section class="order-history">
+<section class="order-history" style="height: 85vh; width: 100%;">
     <div class="container-fluid my-5  d-flex  justify-content-center">
         <div class="card w-100">
             <div class="card-body ">
                 <h4>home/order</h4>
-                {{#each cart}}
+                {{#checklength orders 0}}
+                {{#each orders}}
                 <div class="row">
                     <div class="col">
                         <div class="media">
@@ -12,22 +13,27 @@
                                     <div class=" my-auto flex-column align-items-center justify-content-center">
                                         <div
                                             class="sq align-self-center d-flex justify-content-center align-items-center">
-                                            <img class="img-fluid  align-self-center" src="{{this.image2}}" width="135"
-                                                height="135" />
+                                            <img class="img-fluid  align-self-center"
+                                                src="{{this.restaurant.profile_pic.0.url}}" width="135" height="135" />
                                         </div>
                                     </div>
                                     <div class=" my-auto flex-column align-items-center justify-content-center">
-                                        <h4 class="mb-0 d-flex justify-content-center align-items-center">{{this.name}}
+                                        <h4 class="mb-0 d-flex justify-content-center align-items-center">
+                                            {{this.restaurant.restaurant_name}}
                                         </h4>
-                                        <h6 class="mb-0 d-flex justify-content-center align-items-center"><a
-                                                class="label" href="http://maps.google.com?q={{this.location.x}},{{this.location.y}}" target="_blank">location</a> </h6>
+
                                     </div>
                                     <div class="  my-auto flex-column align-items-center justify-content-center">
+                                        <h6 class="d-flex justify-content-center align-items-center">status:
+                                            <span>{{this.status}} </span>
+                                        </h6>
                                         <h6 class="d-flex justify-content-center align-items-center">Date:
-                                            <span>{{this.date}} </span></h6>
+                                            <span>{{ this.date}} </span>
+                                        </h6>
 
                                         <h6 class="d-flex justify-content-center align-items-center">Time:
-                                            <span>{{this.time}} </span></h6>
+                                            <span>{{dateFormat this.time}} </span>
+                                        </h6>
 
                                         <h6 class="d-flex justify-content-center align-items-center">Tables: <span>2
                                             </span></h6>
@@ -40,10 +46,10 @@
                                         <h6 class="swiper d-flex justify-content-center align-items-center">
                                             <div class="swiper mySwiper ">
                                                 <div class="swiper-wrapper">
-                                                    {{#each this.items}}
+                                                    {{#each this.menu}}
                                                     <div
                                                         class="swiper-slide d-flex justify-content-center align-items-center">
-                                                        <p class="text-primary">{{this.name}}<span
+                                                        <p class="text-primary">{{this.product_name}}<span
                                                                 class="badge text-danger">{{this.quantity}}</span></p>
                                                         <br>
                                                     </div>
@@ -60,9 +66,15 @@
                                             </div>
                                         </h6>
                                         <h6 class="mb-0 d-flex justify-content-center align-items-center">
-                                            &#8377;{{this.price}}</h6>
-                                        <h6 class="mt-4 d-flex justify-content-center align-items-center "><a href=""
-                                                class="text-danger">cancel this order</a></h6>
+                                            &#8377;{{this.total_price}}</h6>
+                                        {{#ifEquals status "canceled"}}
+                                        <h6 class="mt-4 d-flex justify-content-center align-items-center "><a
+                                                href="/cancel-order/{{this._id}}" class="text-danger">cancel this
+                                                order</a></h6>
+                                        {{else}}
+                                        <h6 class="mt-4 d-flex text-danger justify-content-center align-items-center ">
+                                            Refund is started,<br> please wait for 3-5 <br>working days</h6>
+                                        {{/ifEquals}}
                                     </div>
                                 </div>
                             </div>
@@ -71,6 +83,13 @@
                 </div>
                 <hr>
                 {{/each}}
+                {{else}}
+                <hr>
+                <div class="w-100 alert alert-warning" role="alert">
+                    No orders found!
+                </div>
+                <hr>
+                {{/checklength}}
             </div>
         </div>
     </div>

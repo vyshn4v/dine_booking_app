@@ -6,9 +6,11 @@
         </div>
         <form action="/login" method="post">
             <div class="login_inputs">
-                <input type="email" name="email" placeholder="Enter the email">
+                <input type="email" name="email" id="email" onkeyup="emailValidation(this.value)"
+                    placeholder="Enter the email">
                 <label for="name">name</label>
-                <input type="password" name="password" id="" placeholder="Enter the password">
+                <input type="password" name="password" id="" onkeyup="passwordValidation()"
+                    placeholder="Enter the password">
                 <label for="password">password</label>
                 <label for="forgot_password"><a href="/forgot-password" class="">Forgot password?</a></label>
                 <label for="forgot_password"><a href="/login-with-otp" class="">login with otp</a></label>
@@ -26,19 +28,52 @@
     const inputs = document.getElementsByTagName("input")
     const error = document.getElementById("error")
     const form = document.querySelector("form")
-    console.log(inputs[0].value)
+
     form.addEventListener("submit", (e) => {
-        if (input[0].value <= 0) {
-            if (inputs[0].value?.length <= 0) {
-                e.preventDefault()
-                error.innerText = "enter the email"
-                return false
-            }
+        if (inputs[0].value?.length <= 0) {
+            e.preventDefault()
+            error.innerText = "enter the email"
+            return false
+        }
+        const regx = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/
+        if (!regx.test(inputs[0].value)) {
+            e.preventDefault()
+            error.innerText = "enter valid email"
+            return false
         }
         if (inputs[1].value?.length <= 0) {
             e.preventDefault()
             error.innerText = "enter the password"
             return false
         }
+        if ((inputs[1].value?.length >= 10) || (inputs[1].value?.length <= 5)) {
+            e.preventDefault()
+            error.innerText = "enter the password between 5 - 10"
+            return false
+        }
     })
+    function emailValidation(email) {
+        console.log(email)
+        if (email?.length <= 0) {
+            error.innerText = "enter the email"
+            return
+        }
+        const regx = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/
+        if (!regx.test(email)) {
+            error.innerText = "enter the valid email"
+            return
+        }
+        error.innerText = ""
+    }
+    function passwordValidation() {
+        if (inputs[1].value?.length <= 0) {
+            error.innerText = "enter the password"
+            return
+        }
+        if ((inputs[1].value?.length >= 10) || (inputs[1].value?.length <= 5)) {
+            error.innerText = "enter the password between 5 - 10"
+            return false
+        }
+        error.innerText = ""
+    }
 </script>

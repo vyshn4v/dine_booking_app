@@ -8,13 +8,15 @@ const order_Schema = new Schema({
         quantity: Number,
         product_id: mongoose.Schema.Types.ObjectId
     }],
-    tables: [
-        {
-            tables_count: Number,
-            table_id: mongoose.Schema.Types.ObjectId
-        }
-    ],
-    status: String
-})
+    table: String,
+    chair: String,
+    date: Date,
+    time: Date,
+    guestName: String,
+    guestPhone: String,
+    status: { type: String, default: "pending" },
+    total_price: Number,
+    razor_pay_order_id: String
+}, { timestamps: true })
 
 module.exports = mongoose.model('orders', order_Schema)

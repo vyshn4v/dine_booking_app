@@ -1,66 +1,221 @@
-<section class="payment-details">
-    <div class="restaurant-details">
-        <div class="image">
-            <img src="{{restaurant.image1}}" alt="">
-        </div>
-        <div class="details">
-            <h1 class="" style="font-variant: small-caps;">{{restaurant.name}}</h1>
-            <small>{{restaurant.address}}</small>
-            <small>{{restaurant.time}}</small>
-        </div>
-    </div>
-    <div class="selected-foods">
-        <h6 class="ml-3" style="font-variant: small-caps;">selected Foods</h6>
-        <div class="foods">
-            {{#each restaurant.items}}
-            <small href="#" class="card">{{this.name}}</small>
-            {{/each}}
-        </div>
-    </div>
-    <div class="select-date-time-seats">
-        <div class="date_time">
-            <div class="date_picker">
-                <label for="datepicker">Date</label>
-                <input type="date" id="datepicker">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+<form>
+    <section class="payment-details">
+        <div class="restaurant-details">
+            <div class="image">
+                <img src="{{restaurant.profile_pic.0.url}}" alt="">
             </div>
-            <div class="time_picker">
-                <label for="timepicker">Time</label>
-                <input type="time" id="timepicker">
+            <div class="details">
+                <input type="text" id="restaurant_id" name="restaurant_id" value="{{restaurant._id}}" hidden>
+                <h6 class="" style="font-variant: small-caps;">{{restaurant.restaurant_name}}</h6>
+                <small>{{restaurant.address}}</small>
+                <small>opening Time {{restaurant.closing_time}}</small>
+                <small>closing Time {{restaurant.opening_time}}</small>
             </div>
         </div>
-        <div class="table-chair">
-            <div class="table_count">
-                <div>
-                    <label for="table">Table</label>
-                    <input type="number" id="table">
+        <div class="selected-foods">
+            <h6 class="ml-3" style="font-variant: small-caps;">selected Foods</h6>
+            <div class="foods">
+                <div id="products" style="display: none;" data-json="{{products}}" onload="setJson('{{products}}')">
                 </div>
-                <div>
-                    <small class="table">{{restaurant.table}} Table Available</small>
-                </div>
-            </div>
-            <div class="chair_count">
-                <div>
-                    <label for="chair">Chair</label>
-                    <input type="number" id="chair">
-                </div>
-                <div>
-                    <small class="chair">{{restaurant.chair}} Chair Available</small>
-                </div>
+                <input type="hidden" value="">
+                {{#each products}}
+                {{!-- <input type="text" name="quantity" value="{{this.quantity}}" hidden>
+                <input type="text" name="product_name" value="{{this.quantity}}" hidden> --}}
+                <input type="text" name="price" value="{{this.price}}" hidden>
+                <small class="card">{{this.product_name}} {{this.quantity}}</small>
+                {{/each}}
             </div>
         </div>
-    </div>
-    <div class="payment-card">
-        <div class="guest_and_payment_details">
-            <h4>Enter the details of guest </h4>
-            <input type="text" name="guestName" placeholder="Enter the name of guest">
-            <input type="number" name="guestName" placeholder="Enter the phone number of guest">
-            <big>price : <span> 1400</span></big>
-            <big>Discount : <span> 400</span></big>
-            <big>total : <span>{{restaurant.total}}</span></big>
+        <div class="select-date-time-seats">
+            <div class="date_time">
+                <div class="date_picker">
+                    <label for="datepicker">Date</label>
+                    <input type="text" name="date" id="datePicker" value="" hidden>
+                    <input type="text" name="datepicker" class="datepicker" id="datepicker">
+                </div>
+                <div class="time_picker">
+                    <label for="timepicker">Time</label>
+                    <input type="text" id="timePicker" name="" value="" hidden>
+                    <input type="text" name="timepicker" id="timepicker">
+                </div>
+            </div>
+            <div class="table-chair">
+                <div class="table_count">
+                    <div>
+                        <label for="table">chair</label>
+                        <input type="text" value="{{restaurant.tables}}" id="tableData" hidden>
+                        <select class="form-select" id="chair" onchange="changeTable(this.value)">
+                            <option value="" selected>select chair type</option>
+                            {{#each restaurant.tables}}
+                            <option value="{{this._id}}">{{this.chair}} chair</option>
+                            {{/each}}
+                        </select>
+                        <div>
+                            <small class="table">chair for one table</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="chair_count">
+                    <div>
+                        <label for="chair">table</label>
+                        <input type="text" id="selectedChair" hidden>
+                        <input type="text" id="table">
+                    </div>
+                    <div>
+                        <small class="chair" id="table-count"></small>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="proceed-button">
-            <input type="submit" class=" w-100 btn btn-outline-warning">
+        <div class="payment-card">
+            <div class="guest_and_payment_details">
+                <h4>Enter the guest details</h4>
+                <input type="text" id="guestName" name="guestName" placeholder="Enter the guest name">
+                <input name="guestPhone" id="guestPhone" placeholder="Enter the phone number">
+                <big>price : <span id="total-amount"> {{totalProductPrice}}</span></big>
+                <big>Discount : <span id="discount">0</span></big>
+                <big>total : <span id="total-billing-amount"></span></big>
+            </div>
+            <div class="proceed-button">
+                {{!-- <input type="submit" class=" w-100 btn btn-outline-warning"> --}}
+                <button id="rzp-button1" class=" w-100 btn btn-outline-warning">Pay</button>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+</form>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('total-billing-amount').innerText = document.getElementById('total-amount').innerText
+    })
+    function sumbitForm(e) {
+        console.log("hello")
+        console.log(e)
+    }
+    document.querySelector('form').onsubmit = (e) => {
+        e.preventDefault()
+        const restaurant_id = document.querySelector('#restaurant_id').value
+        const date = document.getElementById('datePicker').value
+        const time = document.querySelector('#timePicker').value
+        const table = document.querySelector('#selectedChair').value
+        const chair = document.querySelector('#table').value
+        const guestName = document.querySelector('#guestName').value
+        const guestPhone = document.querySelector('#guestPhone').value
+        const total = Number(document.getElementById('total-billing-amount').innerText)
+        if (total,
+            date,
+            time,
+            table,
+            chair) {
+            fetch('/order', {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    amount: total
+                })
+            }).then((res) => res.json()).then((res) => {
+                var options =
+                {
+                    "key": "rzp_test_s95DAqTWX9T5DX", // Enter the Key ID generated from the Dashboard 
+                    "name": "Test Company",
+                    "amount": res.order.amount,
+                    "order_id": res.order.id, // For one time payment
+                    "handler": function (response) {
+                        confirmOrder(response)
+                    },
+                };
+                var rzp1 = new Razorpay(options);
+                rzp1.on('payment.failed', function (response) {
+                    new sweet({
+                        title: "payment failed"
+                    })
+                    alert(response.error.code);
+                    alert(response.error.description);
+                    alert(response.error.source);
+                    alert(response.error.step);
+                    alert(response.error.reason);
+                    alert(response.error.metadata.order_id);
+                    alert(response.error.metadata.payment_id);
+                })
+                rzp1.open();
+            })
+            async function confirmOrder(response) {
+                await fetch('/confirm-order', {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        amount: total,
+                        restaurant_id,
+                        date,
+                        time,
+                        table,
+                        chair,
+                        response,
+                        guestName,
+                        guestPhone
+                    })
+                }).then((res) => res.json()).then((res) => {
+                    if (res.status) {
+                        location.replace("/order-success")
+                    } else {
+                        location.replace("/order-failed")
+                    }
+                })
+            }
+        } else {
+            new swal({
+                title: "Enter the field",
+                icon: "warning",
+            })
+        }
+    }
+    function setJson(products) {
+        console.log(products)
+    }
+
+</script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+{{!-- css --}}
 <link rel="stylesheet" href="/css/user/paymentDetails.css">
+<script>
+    $(document).ready(function () {
+        $('#timepicker').timepicker({
+            timeFormat: "h:mm p",
+            change: function (time) {
+                console.log(time)
+                document.querySelector('#timePicker').value = time
+            }
+        });
+        let datepicker = $('#datepicker').datepicker({
+            dateFormat: "yy-m-d",
+            onSelect: function (dateText, inst) {
+                console.log("dateText" + dateText)
+                document.getElementById('datePicker').value = dateText
+            }
+        });
+    });
+
+</script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('table-count').innerText = document.getElementById('chair').value
+    })
+    function changeTable(table_id) {
+        let tableData = document.getElementById('chair').value
+        const restaurant_id = document.querySelector('#restaurant_id').value
+        fetch('/table-details/' + restaurant_id + "/" + table_id, {
+            method: "get"
+        }).then((res) => res.json()).then((data) => {
+            document.getElementById('table-count').innerText = data.selectedTable.table + "table Available"
+            document.querySelector('#selectedChair').value = data.selectedTable.chair
+        })
+    }
+</script>

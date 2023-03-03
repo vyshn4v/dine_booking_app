@@ -27,10 +27,23 @@
                         <td>{{this.menu.price}}</td>
                         <td>{{this.menu.stock}}</td>
                         <td>{{this.category.category}}</td>
-                        <td>
-                            <button type="button" class=" text-white btn btn-danger w-75  ml-2" style="height: 40px;"
-                                data-toggle="modal" onclick="banRestaurant('{{this._id}}')">
+                        <td class="">
+                            <a href="/restaurant/edit-product/{{this.menu._id}}">
+                                <button type="button" class=" text-white btn btn-warning  ml-2"
+                                    style="width: 100px; height: 40px;" data-toggle="modal"
+                                    onclick="banRestaurant('{{this._id}}')">
+                                    edit
+                                </button>
+                            </a>
+                            <button type="button" class=" text-white btn btn-warning  ml-2"
+                                style="width: 100px; height: 40px;" data-toggle="modal"
+                                onclick="banRestaurant('{{this._id}}')">
                                 ban
+                            </button>
+                            <button type="button" class=" text-white btn btn-danger  ml-2"
+                                style="width: 100px; height: 40px;" data-toggle="modal"
+                                onclick="deleteRestaurant('{{this._id}}')">
+                                delete
                             </button>
                         </td>
                     </tr>
@@ -41,6 +54,9 @@
     </div>
 </section>
 <script>
+    function banProduct(productId) {
+
+    }
     $(document).ready(function () {
         $('#myTable').dataTable();
     });

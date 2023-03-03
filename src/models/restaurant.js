@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const { Schema } = require('mongoose')
+const mongoosePaginate = require('mongoose-paginate-v2');
+
 const Otp_schema = new Schema({
     createdAt: Date,
     expiredAt: Date,
@@ -27,6 +29,8 @@ const Restaurant_Schema = new Schema({
     description: String,
     gst_number: String,
     pan_number: String,
+    opening_time: String,
+    closing_time: String,
     verified: { type: Boolean, default: false },
     status: { type: String, default: "pending" },
     location: {
@@ -37,8 +41,7 @@ const Restaurant_Schema = new Schema({
         }]
     },
     services: [{
-        title: { type: String },
-        description: { type: String }
+        title: { type: String, unique: true },
     }],
     otp: { type: Otp_schema },
     menu: [{
@@ -51,14 +54,7 @@ const Restaurant_Schema = new Schema({
     tables: [{
         chair: Number,
         table: Number
-    }],
-    review: [{
-        user_id: Schema.Types.ObjectId,
-        review: String,
-        star: Number,
-        likes: Array,
-        dislikes: Array,
     }]
 }, { timestamps: true })
-
+Restaurant_Schema.plugin(mongoosePaginate)
 module.exports = mongoose.model('restaurant', Restaurant_Schema)

@@ -11,28 +11,28 @@
 
                 <h5 class="card-title"><i class="fa-solid fa-user"></i></h5>
                 <h5 class="card-title">total user</h5>
-                <h5 class="card-title">2</h5>
+                <h5 class="card-title">{{totalUsers}}</h5>
             </div>
         </div>
         <div class="card col-12 col-sm-6 col-md-4 m-2" style="max-width: 18rem;">
             <div class="card-body">
                 <h5 class="card-title"><i class="fa-solid fa-user"></i></h5>
                 <h5 class="card-title">users in this month</h5>
-                <h5 class="card-title">2</h5>
+                <h5 class="card-title">{{totalUsersInMonth}}</h5>
             </div>
         </div>
         <div class="card col-12 col-sm-6 col-md-4 m-2" style="max-width: 18rem;">
             <div class="card-body">
                 <h5 class="card-title"><i class="fa-solid fa-cart-shopping"></i></h5>
-                <h5 class="card-title">Total orders</h5>
-                <h5 class="card-title">1</h5>
+                <h5 class="card-title">Total restaurant</h5>
+                <h5 class="card-title">{{totalRestaurants}}</h5>
             </div>
         </div>
         <div class="card col-12 col-sm-6 col-md-4 m-2" style="max-width: 18rem;">
             <div class="card-body">
                 <h5 class="card-title"><i class="fa-solid fa-cart-shopping"></i></h5>
-                <h5 class="card-title">Canceled orders</h5>
-                <h5 class="card-title">2</h5>
+                <h5 class="card-title">restaurants in this month</h5>
+                <h5 class="card-title">{{totalRestaurantsInMonth}}</h5>
             </div>
         </div>
     </div>
@@ -40,32 +40,42 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const ctx = document.getElementById('myChart');
-
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Jan', 'Feb', 'March', 'April', 'May', 'jun'],
-            datasets: [{
-                label: 'orders',
-                data: [12, 19, 3, 5, 2, 3],
-                borderWidth: 1
-            }, {
-                label: 'users',
-                data: [12, 19, 3, 5, 2, 3],
-                borderWidth: 1
-            }, {
-                label: 'restaurants',
-                data: [12, 19, 3, 5, 2, 3],
-                borderWidth: 1
-            }]
-        },
-        responsive: true,
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+    window.addEventListener('DOMContentLoaded', () => {
+        fetch('/admin/get-month-wise-data').then((res) => res.json()).then((chartData) => {
+            console.log(chartData.orderChart[0].data)
+            const ordersKeys = Object.keys(chartData.orderChart[0].data)
+            const ordersData = ordersKeys.map((key, index) => chartData.orderChart[0].data[key])
+            const usersKeys = Object.keys(chartData.userChart[0].data)
+            const usersData = usersKeys.map((key, index) => chartData.userChart[0].data[key])
+            const restaurantKeys = Object.keys(chartData.restaurantChart[0].data)
+            const restaurantData = restaurantKeys.map((key, index) => chartData.restaurantChart[0].data[key])
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ordersKeys,
+                    datasets: [{
+                        label: 'orders',
+                        data: ordersData,
+                        borderWidth: 1
+                    }, {
+                        label: 'users',
+                        data: usersData,
+                        borderWidth: 1
+                    }, {
+                        label: 'restaurants',
+                        data: restaurantData,
+                        borderWidth: 1
+                    }]
+                },
+                responsive: true,
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
                 }
-            }
-        }
-    });
+            });
+        })
+    })
 </script>

@@ -12,8 +12,10 @@
                         <div class="card w-100">
                             <div class="card-body row ">
                                 <div class="col-md-8 ">
-                                    <input type="text" class="form-control m-3" value="" name="category"
+                                    <input type="text" class="form-control m-3" value=""
+                                        onkeyup="validateCategory(this.value)" id="category" name="category"
                                         placeholder="Enter the category">
+                                    <p style="color: red;" id="error"></p>
                                 </div>
                                 <div class="col-md-3">
                                     <input type="submit" class="btn btn-primary form-control w-100 m-3"
@@ -72,10 +74,29 @@
     </div>
 </body>
 <script>
-
+    const form = document.querySelector('form')
+    form.onsubmit = (e) => {
+        const value = document.getElementById('category').value
+        const status = validateCategory(value)
+        console.log(status)
+        if (!status) {
+            e.preventDefault()
+        } else {
+            form.submit()
+        }
+    }
+    function validateCategory(value) {
+        const regx = /[a-zA-Z]+[a-zA-Z ]+[a-zA-Z]$/;
+        if (!regx.test(value)) {
+            document.getElementById('error').innerText = "enter the category properly eg:veg biriyani"
+            return false
+        } else {
+            document.getElementById('error').innerText = ""
+            return true
+        }
+    }
     function showCategory(id) {
         const url = window.location.origin;
-        console.log(url)
         fetch(`${url}/admin/categories/change-visibility/${id}`, {
             method: 'PUT',
             headers: {
@@ -88,7 +109,7 @@
         }).then((res) => res.json()).then((response) => {
             new Toastify({
                 text: response.message,
-                duration: 800,
+                duration: 500,
                 gravity: "top", // `top` or `bottom`
                 position: "right", // `left`, `center` or `right`
                 stopOnFocus: true, // Prevents dismissing of toast on hover
@@ -141,23 +162,21 @@
     function delteCategory(id) {
         const url = window.location.origin;
         console.log(url)
-        fetch(`${url}/admin/categories/delete-category/${id}`, {
-            method: "DELETE"
-        }).then((res) => res.json()).then((response) => {
-            new Toastify({
-                text: response.message,
-                duration: 500,
-                gravity: "top", // `top` or `bottom`
-                position: "right", // `left`, `center` or `right`
-                stopOnFocus: true, // Prevents dismissing of toast on hover
-                style: {
-                    background: "orange",
-                },
-            }).showToast();
-            setTimeout(() => {
-                document.getElementById('category' + id).remove()
-            }, 500)
-
+        swal({
+            title: "Delete Category",
+            text: "are you sure",
+            icon: "warning",
+            buttons: ["cancel", "confirm"]
+        }).then((status) => {
+            if (status) {
+                fetch(`${url}/admin/categories/delete-category/${id}`, {
+                    method: "DELETE"
+                }).then((res) => res.json()).then((response) => {
+                    setTimeout(() => {
+                        document.getElementById('category' + id).remove()
+                    }, 500)
+                })
+            }
         })
     }
 </script>

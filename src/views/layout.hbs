@@ -18,10 +18,12 @@
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     {{!-- bootsrap cdn end--}}
+    {{!-- sweet alert --}}
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 
 <body>
-    <div class="container" style="font-variant: small-caps;">
+    <div class="container-fluid" style="font-variant: small-caps;">
         {{#if userHeader}}
         {{>userHeader}}
         {{else if restaurantHeader}}
@@ -29,13 +31,14 @@
         {{else if adminHeader}}
         {{>adminHeader}}
         {{/if}}
-        <div class="mt-5 p-1" style=" display: flex; align-items:center; justify-content: center;">
+        <div class="mt-5 p-1" style=" display: flex;  align-items:center; justify-content: center;">
             {{{body}}}
         </div>
         {{>footer}}
     </div>
-    
-    {{!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+
+    {{!--
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script> --}}
     {{!-- data table cdn --}}
@@ -56,11 +59,11 @@
         crossorigin="anonymous"></script>
     {{!-- bootsrap cdn end --}}
     {{!-- toastify cdn --}}
-    
+
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     {{!-- font awsome kit start --}}
-    
+
     <script src="https://kit.fontawesome.com/0d97526b57.js" crossorigin="anonymous"></script>
     {{!-- font awsome kit end --}}
 

@@ -6,6 +6,8 @@
                     <div class="row">
                         <div class="col-12">
                             <h2 class="tm-block-title d-inline-block">Add Product</h2>
+                            <div id="err" class="w-100"></div>
+
                         </div>
                     </div>
                     <form action="/restaurant/add-products" method="post" enctype="multipart/form-data">
@@ -14,8 +16,8 @@
                                 <div class="form-group mb-3">
                                     <label for="name">Product Name
                                     </label>
-                                    <input id="name" name="product_name" type="text" class="form-control validate"
-                                        required />
+                                    <input id="name" onkeyup="validateName(this.value)" name="product_name" type="text"
+                                        class="form-control validate" required />
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="category">Category</label>
@@ -30,23 +32,24 @@
                                     <div class="form-group mb-3 col-xs-12 col-sm-12">
                                         <label for="expire_date">stock
                                         </label>
-                                        <input id="expire_date" name="stock" type="text" class="form-control validate"
-                                            data-large-mode="true" />
+                                        <input id="stock" onkeyup="validateStock(this.value)" name="stock" type="number"
+                                            class="form-control validate" data-large-mode="true" />
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group mb-3 col-xs-12 col-sm-12">
                                         <label for="expire_date">price
                                         </label>
-                                        <input id="expire_date" name="price" type="number" class="form-control validate"
-                                            data-large-mode="true" />
+                                        <input id="expire_date" onkeyup="validatePrice(this.value)" name="price"
+                                            type="number" class="form-control validate" data-large-mode="true" />
                                     </div>
                                 </div>
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 mx-auto mb-4">
 
                                 <div class="custom-file mt-3 mb-3">
-                                    <input id="fileInput" name="product_image" type="file" />
+                                    <input id="file" onchange="imageValidation(this)" name="product_image"
+                                        type="file" />
 
                                 </div>
                             </div>
@@ -61,3 +64,85 @@
         </div>
     </div>
 </body>
+
+<script>
+    const err = document.getElementById('err')
+    let nameStatus = false
+    let stocktatus = false
+    let priceStatus = false
+    let imageStatus = false
+    function validateName(name) {
+        if (name.length <= 0) {
+            const html = ` <div  class="alert alert-warning" role="alert">
+                          Enter the product name      
+                            </div>`
+            err.innerHTML = html
+            nameStatus = false
+        }
+        err.innerHTML = ""
+        nameStatus = true
+    }
+    function validateStock(Stock) {
+        console.log(Stock)
+        if (Stock.length <= 0) {
+            const html = ` <div  class="alert alert-warning" role="alert">
+                          Enter the stock      
+                            </div>`
+            err.innerHTML = html
+            stocktatus = false
+        }
+        err.innerHTML = ""
+        stocktatus = true
+    }
+    function validatePrice(price) {
+        if (price.length <= 0) {
+            const html = ` <div  class="alert alert-warning" role="alert">
+                          Enter the price      
+                            </div>`
+            err.innerHTML = html
+            priceStatus = false
+        }
+        err.innerHTML = ""
+        priceStatus = true
+    }
+    function imageValidation() {
+        var fileInput =
+            document.getElementById('file');
+        console.log(fileInput)
+
+        var filePath = fileInput.value;
+
+        // Allowing file type
+        var allowedExtensions =
+            /^.*\.(jpg|JPG|png|PNG|jpeg|JPEG)$/;
+
+        if (!allowedExtensions.exec(filePath)) {
+            const html = ` <div  class="alert alert-warning" role="alert">
+                          Invalid file type   
+                            </div>`
+            err.innerHTML = html
+            fileInput.value = '';
+            imageStatus = false
+        }
+        err.innerHTML = ""
+        imageStatus = true
+    }
+    const form = document.querySelector('form')
+    form.onsubmit = (e) => {
+        e.preventDefault()
+        console.log(nameStatus , stocktatus , imageStatus , priceStatus)
+        if (nameStatus && stocktatus && imageStatus && priceStatus) {
+            form.submit()
+        } else {
+            new swal({
+                title: "Fill all Inputs",
+                text: "confirm!",
+                icon: "warning",
+            })
+        }
+    }
+    function validateProducts() {
+        const productName = document.getElementById('name').value
+
+    }
+</script>

@@ -6,7 +6,7 @@ const Otp_schema = new Schema({
     otp: String,
 
 })
-const profile_image = new Schema({
+const Profile_pic = new Schema({
     url: String,
     public_key: String
 })
@@ -15,7 +15,7 @@ const Users_Schema = new Schema({
     email: { type: String, required: true, unique: true },
     phone: { type: Number, require: true, default: null },
     password: { type: String, require: true },
-    profile_pic: { type: profile_image },
+    profile_pic: { type: Profile_pic },
     verified: { type: Boolean, default: false },
     status: { type: String, default: "active" },
     otp: { type: Otp_schema },

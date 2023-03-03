@@ -24,11 +24,11 @@
                                         <span>Change Image</span>
                                     </label>
                                     <input id="file" name="profile_pic" type="file" onchange="loadFile(event)" />
-                                    <img src="{{userDetails.profile_pic}}" id="output" width="200" />
+                                    <img src="{{userDetails.profile_pic.url}}" id="output" width="200" />
                                 </div>
                                 <div class="d-flex-column justify-content-center align-items-center">
                                     <h6 class="font-weight-bold d-flex justify-content-center align-items-center">
-                                        {{userDetails.user_name}}</h6>
+                                        {{userDetails.username}}</h6>
                                     <h6 class="text-black-50">{{userDetails.email}}</h6>
                                 </div>
 
@@ -36,25 +36,25 @@
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
-                                <input required type="text" name="username" class="form-control" placeholder="user name"
-                                    value="{{userDetails.user_name}}">
+                                <input required type="text" name="username" class="form-control" placeholder="Enter the user name"
+                                    value="{{userDetails.username}}">
                                 <label class="labels">name</label>
                             </div>
                             <div class="col-md-6">
                                 <input required type="text" name="email" class="form-control"
-                                    value="{{userDetails.email}}" placeholder="email">
+                                    value="{{userDetails.email}}" placeholder="Email" readonly>
                                 <label class="labels">email</label>
                             </div>
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
                                 <input required type="tel" name="phone" class="form-control" id="phone"
-                                    placeholder="enter the phone number" value="{{userDetails.phone}}">
+                                    placeholder="Enter the phone number" value="+{{userDetails.phone}}">
                                 <label class="labels">phone</label>
                             </div>
                             <div class="col-md-6">
                                 <input required type="tel" name="password" class="form-control" id="phone"
-                                    placeholder="enter the phone number" value="">
+                                    placeholder="Enter the password" value="">
                                 <label class="labels">password</label>
                             </div>
                         </div>

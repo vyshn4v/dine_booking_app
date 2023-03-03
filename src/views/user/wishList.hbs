@@ -1,4 +1,4 @@
-<section class="order-history">
+<section class="order-history" style="height: 85vh;width: 100%;">
     <div class="container-fluid my-5  d-flex  justify-content-center">
         <div class="card w-100">
             <div class="card-body ">
@@ -17,60 +17,17 @@
                                 <br>PH : {{this.restaurant.phone}}
                             </p>
                         </div>
-                        <div class="col-md-4 sq align-self-center d-flex justify-content-center align-items-center row">
-                            <a href="restaurant-details/{{this.restaurant._id}}" class="col-12">
-                                <button type="button" class="btn btn-primary w-100">show more</button>
+                        <div class="col-md-4 sq align-self-center d-flex justify-content-center align-items-center">
+                            <a style="max-width: 200px;" href="restaurant-details/{{this.restaurant._id}}" class="col w-25 btn btn-primary">
+                                show more
                             </a>
-                            <a href="restaurant-details/{{this.restaurant._id}}" class="col-12">
-                                <button type="button" class="btn btn-danger mt-1 w-100">remove</button>
-                            </a>
+                            {{!-- <a href="whishlist/{{this._id}}/{{this.restaurant._id}}/remove" class="col-12"> --}}
+                                <button style="max-width: 200px;" onclick="removeFromWishlist('{{this._id}}','{{this.restaurant._id}}')"
+                                    type="button" class="ml-1 col btn btn-danger mt-1">remove</button>
+                                {{!-- </a> --}}
                         </div>
                     </div>
                 </div>
-                {{!-- <div class="row">
-                    <div class="col">
-                        <div class="media">
-                            <div class="media-body my-auto text-right">
-                                <div class="order-card  my-auto flex-column flex-md-row">
-                                    <div class=" my-auto flex-column align-items-center justify-content-center">
-                                        <div
-                                            class="sq align-self-center d-flex justify-content-center align-items-center">
-                                            <img class="img-fluid  align-self-center" src="{{this.image2}}" width="135"
-                                                height="135" />
-                                        </div>
-                                    </div>
-                                    <div class=" my-auto flex-column align-items-center justify-content-center">
-                                        <h4 class="mb-0 d-flex justify-content-center align-items-center">{{this.name}}
-                                        </h4>
-                                        <small class="mb-0 d-flex justify-content-center align-items-center"><a
-                                                class="label" href="">location</a> </small>
-                                        <h6 class="mb-0 d-flex justify-content-center align-items-center">price :
-                                            &#8377;{{this.price}}</h6>
-                                    </div>
-                                    <div class="  my-auto flex-column align-items-center justify-content-center">
-                                        <h6 class="d-flex justify-content-center align-items-center text-success">open
-                                            now</h6>
-
-                                        <h6 class="d-flex justify-content-center align-items-center">Time:
-                                            <span>{{this.time}} </span>
-                                        </h6>
-
-                                        <h6 class="d-flex justify-content-center align-items-center">Tables: <span>2
-                                            </span></h6>
-                                        <h6 class="d-flex justify-content-center align-items-center">Chairs: <span>4
-                                            </span></h6>
-                                    </div>
-                                    <div class="  my-auto">
-                                        <h6 class="mt-4 d-flex justify-content-center align-items-center "><a href=""
-                                                class="text-danger">remove from wishlist</a></h6>
-                                        <h6 class="mt-4 d-flex justify-content-center align-items-center "><a href=""
-                                                class="text-dark">show more details</a></h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
                 <hr>
                 {{/each}}
             </div>
@@ -82,3 +39,24 @@
 <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
 <link rel="stylesheet" href="/css/user/wishlist.css">
 <script src="js/wishlist.js"></script>
+<script>
+    function removeFromWishlist(wishlistId, restaurantId) {
+        new swal({
+            text: "Remove restaurant from",
+            icon: "warning",
+            buttons: ['cancel', 'confirm']
+        }).then((status) => {
+            if (status) {
+                fetch('/whishlist/' + wishlistId + '/' + restaurantId + '/remove').then(() => {
+                    new swal({
+                        text: "Restaurant removed from wishlist",
+                        icon: "warning",
+                    }).then((status) => {
+                        location.reload()
+                    })
+                })
+            }
+        })
+
+    }
+</script>

@@ -44,7 +44,7 @@ hbs.registerHelper("inc", function (value, options) {
     return parseInt(value) + 1;
 });
 hbs.registerHelper('ifEquals', function (arg1, arg2, options) {
-    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+    return (arg1 != arg2) ? options.inverse(this) : options.fn(this);
 });
 hbs.registerHelper('checklength', function (v1, v2, options) {
     if (v1.length > v2) {
@@ -52,6 +52,18 @@ hbs.registerHelper('checklength', function (v1, v2, options) {
     }
     return options.inverse(this);
 });
+hbs.registerHelper('prettifyDate', function(timestamp) {
+    const date=new Date(timestamp)
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+    return strTime
+});
+hbs.registerHelper('dateFormat', require('handlebars-dateformat'));
 // cache control
 app.use(noCache())
 
@@ -63,7 +75,14 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/restaurant', restaurantRoute)
 app.use('/admin', adminRoute)
 app.use('/', userRoute)
-
+app.use(function (req, res, next) {
+    res.status(404);
+    res.render('404');
+});
+app.use((err, req, res, next) => {
+    console.error(err.stack)
+    res.status(500).render('internalError')
+})
 // port
 app.listen(process.env.PORT || port, () => {
     console.log("server started on port number " + port);

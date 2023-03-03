@@ -3,6 +3,7 @@
     display: grid;
     justify-content: space-evenly;
     grid-template-columns: repeat(5, auto);
+    grid-gap: 10px;
     margin: auto;
 }
 

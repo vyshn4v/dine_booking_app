@@ -7,14 +7,18 @@ const user = require("../models/user");
 const generateUserOtp = require("../helpers/generateUserOtp");
 //admin authentication
 const
-    adminLoginGet = (req, res) => {
-        res.render("admin/login", { adminHeader: true, err: req.session.err })
-        req.session.err = null
+    adminLoginGet = (req, res, next) => {
+        try {
+            res.render("admin/login", { adminHeader: true, err: req.session.err })
+            req.session.err = null
+        } catch (err) {
+            next(err)
+        }
     },
     adminLoginPost = (req, res) => {
         const Admin = {
-            email: "admin@gmail.com",
-            password: "123456"
+            email: process.env.ADMIN_EMAIL,
+            password: process.env.ADMIN_PASSWORD
         }
         console.log(req.body);
         if (req.body.email === Admin.email && req.body.password === Admin.password) {
@@ -32,15 +36,11 @@ const
         req.session.admin = null
         res.redirect("/admin/login")
     },
-
-    //restaurant Authentication
-
-    //login
     getRestaurantLogin = (req, res) => {
         res.render("restaurant/login", { restaurantHeader: true, err: req.session.err })
     }
     ,
-    postRestaurantLogin = (req, res) => {
+    postRestaurantLogin = (req, res, next) => {
         try {
             console.log(req.body);
             restaurant.findOne({ email: req.body.email }).then((restaurantData) => {
@@ -50,7 +50,6 @@ const
                             generateRestaurantOtp(restaurantData._id).then((restaurant) => {
                                 const otpText = otpTextGenerator(restaurant.OTP, "welcome-back")
                                 sendOtpViaMail(otpText, restaurant.email).then((status) => {
-
                                     res.redirect(`/restaurant/${restaurant._id}/validate-otp/2-factor`)
                                 }).catch((status) => {
                                     throw "false"
@@ -65,7 +64,6 @@ const
                         }
                     })
                 } else {
-
                     req.session.err = "user not found"
                     res.redirect('/restaurant/login')
                 }
@@ -74,7 +72,7 @@ const
                 res.redirect('/restaurant/login')
             })
         } catch (err) {
-            console.log(err);
+            next(err)
         }
     },
     //signup
@@ -103,13 +101,13 @@ const
                 console.log("err1");
             })
         } catch (err) {
-            console.log(err);
+           next(err)
         }
     },
     // Get render otp validation page
-    getOtpTwoFactorPage = async (req, res) => {
+    getOtpTwoFactorPage = async (req, res,next) => {
         restaurant.findById({ _id: req.params.restaurant_id }).then((restaurantData) => {
-            console.log("restaurantData");
+            console.log("restaurantData" + restaurantData);
             const response = {
                 restaurantHeader: true,
                 otpCount: restaurantData.otp.expiredAt,
@@ -119,11 +117,13 @@ const
             }
             req.session.err = null;
             res.render("restaurant/2factorValidation", response)
+        }).catch((err)=>{
+            next(err)
         })
     },
     getOtpPage = async (req, res) => {
         restaurant.findById({ _id: req.params.restaurant_id }).then((restaurantData) => {
-            console.log(restaurantData);
+            console.log("restaurantData" + restaurantData);
             const response = {
                 err: req.session.err,
                 restaurantHeader: true,
@@ -175,8 +175,7 @@ const
             res.json({ status: false, message: "something went wrong" })
         }
     },
-    //verify forgot password
-    postverifyRestaurantOtp = (req, res) => {
+    postverifyRestaurantOtp = (req, res,next) => {
         try {
             restaurant.findOne({ email: req.body.email }).then((restaurantData) => {
                 let expired = new Date(restaurantData.otp.expiredAt)
@@ -192,7 +191,7 @@ const
                 })
             })
         } catch (err) {
-            console.log("err");
+           next(err)
         }
     },
 
@@ -200,12 +199,16 @@ const
 
     //login
 
-    getLogin = (req, res) => {
-        res.render("user/login", { userHeader: true, title: "user login", err: req.session.err })
-        req.session.err = null;
+    getLogin = (req, res, next) => {
+        try {
+            res.render("user/login", { userHeader: true, title: "user login", err: req.session.err })
+            req.session.err = null;
+        } catch (err) {
+            next(err)
+        }
     },
     //signup
-    postLogin = (req, res) => {
+    postLogin = (req, res,next) => {
         try {
             console.log(req.body);
             user.findOne({ email: req.body.email }).then((userDetails) => {
@@ -218,29 +221,25 @@ const
                             profile_completed: userDetails.profile_completed
                         }
                         res.redirect('/')
-                    }
-                    else {
+                    } else {
                         res.redirect('/login')
                     }
                 }).catch(() => {
                     res.redirect('/login')
                 })
             }).catch(() => {
-
                 res.redirect('/login')
             })
         } catch (err) {
-            req.session.err = "email or password incorrect"
-            res.redirect('/login')
+            next(err)
         }
     },
     getLoginWithOtp = (req, res) => {
         res.render('user/loginWithOtp', { userHeader: true, title: "user login", err: req.session.err })
         req.session.err = null;
     },
-    postLoginWithOtp = (req, res) => {
+    postLoginWithOtp = (req, res, next) => {
         try {
-            console.log(req.body);
             user.findOne({ email: req.body.email }).then((userData) => {
                 if (userData) {
                     generateUserOtp(userData._id).then((user) => {
@@ -250,8 +249,8 @@ const
                         }).catch((status) => {
                             throw "false"
                         })
-                    }).catch(() => {
-                        console.log("err1");
+                    }).catch((err) => {
+                        next(err)
                     })
                 } else {
                     req.session.err = "user not found"
@@ -262,18 +261,24 @@ const
                 res.redirect('/login-with-otp')
             })
         } catch (err) {
-            console.log(err);
+            next(err)
         }
     },
     //two factor
-    getTwoFactor = (req, res) => {
-        user.find({ _id: req.params.user_id }).then((userData) => {
-            res.render('user/twoFactor', { userId: req.params.user_id })
-        })
+    getTwoFactor = (req, res,next) => {
+        try {
+            user.find({ _id: req.params.user_id }).then((userData) => {
+                console.log(userData);
+                res.render('user/twoFactor', { userId: req.params.user_id, otpCount: userData[0].otp?.expiredAt, restaurantId: userData[0]._id })
+            })
+        } catch (err) {
+            next(err)
+        }
     },
-    postTwoFactor = (req, res) => {
+    postTwoFactor = (req, res,next) => {
         try {
             user.findOne({ _id: req.params.user_id }).then((userData) => {
+                console.log(userData);
                 let expired = new Date(userData.otp.expiredAt)
                 let currentDate = new Date();
                 bcrypt.compare(req.body.otp, userData.otp.otp).then((status) => {
@@ -292,7 +297,7 @@ const
                 })
             })
         } catch (err) {
-            console.log("err");
+            next(err)
         }
     },
     userLogout = (req, res) => {

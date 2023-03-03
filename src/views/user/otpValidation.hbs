@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" style="height: 85vh;">
     <div class="row justify-content-md-center">
         <div class="col-md-4 text-center">
             <div class="row">
@@ -59,7 +59,7 @@
     //resend otp when resend button click
     function resendOtpRestaurnt(userEmail) {
         clearInterval(otpTimer)
-        fetch(`http://localhost:3000/${userEmail}/send-verification-otp/verify-profile`, {
+        fetch(`/${userEmail}/send-verification-otp/verify-profile`, {
             method: 'POST'
         }).then((response) => response.json()).then((response) => {
             if (response.status) {

@@ -2,19 +2,17 @@
     <div class="restaurant_login_page d-flex w-100 vh-100 justify-content-center align-items-center">
         <div class="restaurant_login_header">
             <h4 class="d-flex justify-content-center align-items-center">login</h4>
-            {{#if err}}
-            <small id="error" style="height: 30px; color: red;">{{err}}</small>
-            {{/if}}
-            <small id="error" style="height: 30px; color: red;"></small>
+             <small id="error" style="height: 20px; width: 20px; color: red;">{{err}}</small>
         </div>
         <form action="/restaurant/login" method="post">
             <div class="restaurant_login_inputs">
                 <div>
-                    <input type="email" name="email" placeholder="Enter the restaurant email">
+                    <input type="email" onkeyup="emailValidation(this.value)" name="email"
+                        placeholder="Enter the restaurant email">
                     <label for="email">name</label>
                 </div>
                 <div>
-                    <input type="password" name="password" placeholder="Enter the password">
+                    <input type="password" name="password" onkeyup="passwordValidation()" placeholder="Enter the password">
                     <label for="password">password</label>
                 </div>
                 <label for="">
@@ -23,7 +21,8 @@
                 </label>
             </div>
             <div class="restaurant_login_button">
-                <input type="submit" class="w-50 mt-2 btn btn-outline-warning" id="" value="restaurant login">
+                <input type="submit"  class="w-50 mt-2 btn btn-outline-warning" id=""
+                    value="restaurant login">
                 <label for="forgot_password">Don't have an account? <a href="/restaurant/signup"
                         class="">Signup</a></label>
             </div>
@@ -32,19 +31,55 @@
 </section>
 <link rel="stylesheet" href="/css/restaurant/login.css">
 <script>
-    const form = document.querySelector('form')
-    const inputs = document.getElementsByTagName('input')
-    const error = document.getElementById('error')
-    form.addEventListener('submit', (e) => {
-        if (inputs[0].value <= 0) {
+    const inputs = document.getElementsByTagName("input")
+    const error = document.getElementById("error")
+    const form = document.querySelector("form")
+
+    form.addEventListener("submit", (e) => {
+        if (inputs[0].value?.length <= 0) {
             e.preventDefault()
             error.innerText = "enter the email"
             return false
         }
-        if (inputs[1].value <= 0) {
+        const regx = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/
+        if (!regx.test(inputs[0].value)) {
             e.preventDefault()
-            error.innerHTML = "enter the password"
+            error.innerText = "enter valid email"
+            return false
+        }
+        if (inputs[1].value?.length <= 0) {
+            e.preventDefault()
+            error.innerText = "enter the password"
+            return false
+        }
+        if ((inputs[1].value?.length >= 10) || (inputs[1].value?.length <= 5)) {
+            e.preventDefault()
+            error.innerText = "enter the password between 5 - 10"
             return false
         }
     })
+    function emailValidation(email) {
+        console.log(email)
+        if (email?.length <= 0) {
+            error.innerText = "enter the email"
+            return
+        }
+        const regx = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/
+        if (!regx.test(email)) {
+            error.innerText = "enter the valid email"
+            return
+        }
+        error.innerText = ""
+    }
+    function passwordValidation() {
+        if (inputs[1].value?.length <= 0) {
+            error.innerText = "enter the password"
+            return
+        }
+        if ((inputs[1].value?.length >= 10) || (inputs[1].value?.length <= 5)) {
+            error.innerText = "enter the password between 5 - 10"
+            return false
+        }
+        error.innerText = ""
+    }
 </script>

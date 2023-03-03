@@ -35,7 +35,9 @@
     justify-content: start;
 
 }
-
+.form-select{
+    max-width: 18rem;
+}
 .restaurant-details>.image>img {
     width: 200px;
     height: 200px;
@@ -128,6 +130,12 @@ label[for=chair] {
 .table_count,
 .chair_count {
     margin-left: 10px;
+
+}
+
+.table_count>input::placeholder,
+.chair_count>input::placeholder {
+    padding: 10px;
 }
 
 .table,

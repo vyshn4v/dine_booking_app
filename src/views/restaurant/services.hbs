@@ -18,34 +18,19 @@
             <tr id="table{{this._id}}">
                 <th scope="row">{{inc @index 1 }}</th>
                 <td>{{this.title}}</td>
-                <td>
+                <td class="d-flex justify-content-center align-items-center">
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-danger d-flex justify-content-center align-items-center"
-                        style="height: 30px; width: 80px;" data-toggle="modal" data-target="#servicesModal{{this._id}}">
+                    <a href="/restaurant/edit-service/{{this._id}}">
+                        <button class="btn btn-primary d-flex justify-content-center align-items-center"
+                            style="height: 30px; width: 80px;">
+                            Edit
+                        </button>
+                    </a>
+                    <button onclick="deleteService('{{this._id}}')"
+                        class="ml-1 btn btn-danger d-flex justify-content-center align-items-center"
+                        style="height: 30px; width: 80px;">
                         Delete
                     </button>
-                    <!-- Modal -->
-                    <div class="modal unfade" id="servicesModal{{this._id}}" tabindex="-1" role="dialog"
-                        aria-labelledby="tableModal{{this._id}}" aria-hidden="false">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    ...
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary"
-                                        onclick="deleteService('{{this._id}}')">delete service</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </td>
             </tr>
             {{/each}}
@@ -56,14 +41,29 @@
     $(document).ready(function () {
         $('#myTable').dataTable();
     });
+
+</script>
+<script>
     function deleteService(id) {
-        const url = window.location.origin
-        fetch(url + "/restaurant/delete-service/" + id, {
-            method: "DELETE"
-        }).then((res) => res.json()).then((response) => {
-            location.reload()
-        }).catch((response) => {
-            alert("err")
+        new swal({
+            title: "delete service",
+            text: "are you sure",
+            icon: "warning",
+            buttons: ["cancel", "confirm"],
+        }).then((status) => {
+            if (status) {
+                fetch("/restaurant/delete-service/" + id, {
+                    method: "PUT"
+                }).then((res) => res.json()).then((response) => {
+                    new swal({
+                        title: "delete service",
+                        text: "are you sure",
+                        icon: "success"
+                    }).then(() => {
+                        document.getElementById("table" + id).remove()
+                    })
+                })
+            }
         })
     }
 </script>

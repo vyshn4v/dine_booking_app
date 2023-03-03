@@ -4,161 +4,55 @@
             <div class="card w-100">
                 <div class="card-body ">
                     <h4>restaurant/orders</h4>
-                    <table id="table_id" class="display">
+                    <table id="table_id" class="display table-responsive">
                         <thead>
                             <tr>
-                                <th>Column 1</th>
-                                <th>Column 2</th>
+                                <th>username</th>
+                                <th>email</th>
+                                <th>phone</th>
+                                <th>ordered items</th>
+                                <th>quantity</th>
+                                <th>Date</th>
+                                <th>status</th>
+                                <th>time</th>
+                                <th>chair for one table</th>
+                                <th>total table</th>
+                                <th>action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {{#each cart}}
+                            {{#each orders}}
                             <tr>
-                                <td>Row 1 Data 1</td>
-                                <td>Row 1 Data 2</td>
-                            </tr>
-                            <tr>
-                                <td>Row 2 Data 1</td>
-                                <td>Row 2 Data 2</td>
+                                <td>{{this.user.username}}</td>
+                                <td>{{this.user.email}}</td>
+                                <td>{{this.user.phone}}</td>
+                                <td>
+                                    {{#each this.menu}}
+                                    <span class="d-flex justify-content-center">{{this.product_name}}</span><br>
+                                    {{/each}}
+                                </td>
+                                <td>
+                                    {{#each this.menu}}
+                                    <span class="d-flex justify-content-center">{{this.quantity}}</span><br>
+                                    {{/each}}
+                                </td>
+                                <td>{{this.date}}</td>
+                                <td id="status{{this._id}}">{{this.status}}</td>
+                                <td>{{prettifyDate this.time}}</td>
+                                <td>{{this.chair}} </td>
+                                <td>{{this.table}}</td>
+                                <td>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <button type="button" onclick="rejectOrder('{{this._id}}')"
+                                            class="btn btn-primary mr-1">reject</button>
+                                        <button onclick="approveOrder('{{this._id}}')" type="button"
+                                            class="btn btn-danger">approve</button>
+                                    </div>
+                                </td>
                             </tr>
                             {{/each}}
                         </tbody>
                     </table>
-                    {{!-- <div class="row">
-                        <div class="col">
-                            <div class="media">
-                                <div class="media-body my-auto text-right">
-                                    <div class="order-card">
-                                        <div class="user_details">
-                                            <h6>vyhsnav p c</h6>
-                                            <small>vyshnavpcnaravoor@gmail.com</small>
-                                            <small>8086064478</small>
-                                        </div>
-                                        <div class="order_details">
-                                            <small>Date: <span>14/09/2023</span></small>
-                                            <small>Time: <span>12:30</span></small>
-                                        </div>
-                                        <div class="table_details">
-                                            <small>Table with 2 chair: <span>2</span></small>
-                                            <small>Table with 4 chair: <span>0</span></small>
-                                            <small>Table with 6 chair: <span>1</span></small>
-                                        </div>
-                                        <div class="ordered_items">
-                                            <small>Ordered Items</small>
-                                            <small>
-                                                <small class="show_ordered_item_button btn btn-link" type="button"
-                                                    data-toggle="modal" data-target="#exampleModalLong{{this.id}}">
-                                                    show items
-                                                </small>
-                                                <div class="modal fade" id="exampleModalLong{{this.id}}" tabindex="-1"
-                                                    role="dialog" aria-labelledby="exampleModalLongTitle"
-                                                    aria-hidden="true">
-                                                    <div class="modal-dialog" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="exampleModalLongTitle">
-                                                                    ordered items</h5>
-                                                                <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                {{#each this.items}}
-                                                                <div class="ordered_item">
-                                                                    <small>{{this.name}}</small>
-                                                                    <small>{{this.quantity}}</small>
-                                                                </div>
-                                                                {{/each}}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </small>
-                                        </div>
-                                        <div class="approve_cancel_order">
-                                            <input type="button" class="btn btn-danger" value="reject">
-                                            <input type="button" class="btn btn-success" value="approve">
-                                        </div>
-                                    </div>
-                                    <div class="order-card  my-auto flex-column flex-md-row">
-                                        <div class=" my-auto flex-column align-items-center justify-content-center">
-                                            <div
-                                                class="sq align-self-center d-flex justify-content-center align-items-center">
-                                                <img class="img-fluid  align-self-center" src="{{this.image2}}"
-                                                    width="135" height="135" />
-                                            </div>
-                                        </div>
-                                        <div class=" my-auto flex-column align-items-center justify-content-center">
-                                            <h4 class="mb-0 d-flex justify-content-center align-items-center">
-                                                {{this.user_name}}
-                                            </h4>
-                                            <h6 class="mb-0 d-flex justify-content-center align-items-center">
-                                                {{this.email}} </h6>
-                                        </div>
-                                        <div class="  my-auto flex-column align-items-center justify-content-center">
-                                            <h6 class="d-flex justify-content-center align-items-center">Date:
-                                                <span>{{this.date}} </span>
-                                            </h6>
-
-                                            <h6 class="d-flex justify-content-center align-items-center">Time:
-                                                <span>{{this.time}} </span>
-                                            </h6>
-
-                                            <h6 class="d-flex justify-content-center align-items-center">Tables: <span>2
-                                                </span></h6>
-                                            <h6 class="d-flex justify-content-center align-items-center">Chairs: <span>4
-                                                </span></h6>
-                                        </div>
-                                        <div class="  my-auto">
-                                            <h6 class="mb-0 d-flex justify-content-center align-items-center"> Ordered
-                                                Items
-                                            </h6>
-                                            <h6 class="swiper d-flex justify-content-center align-items-center">
-                                                <div class="swiper mySwiper ">
-                                                    <div class="swiper-wrapper">
-                                                        {{#each this.items}}
-                                                        <div
-                                                            class="swiper-slide d-flex justify-content-center align-items-center">
-                                                            <p class="text-danger">{{this.name}}<span
-                                                                    class="badge">{{this.quantity}}</span></p>
-                                                            <br>
-                                                        </div>
-                                                        {{/each}}
-                                                    </div>
-                                                    <div class="buttons">
-                                                        <div class="swiper-button-next">
-                                                            <i class="fa-solid fa-angle-right"></i>
-                                                        </div>
-                                                        <div class="swiper-button-prev">
-                                                            <i class="fa-solid fa-chevron-left"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </h6>
-                                            <h6 class="mb-0 d-flex justify-content-center align-items-center">price :
-                                                &#8377;{{this.price}}</h6>
-                                            <div class="d-flex justify-content-around mt-3">
-                                                <h6 class="admin-order-confirmation-button">
-                                                    <a href="">
-                                                        <button type="button"
-                                                            class="btn btn-outline-danger">cancel</button>
-                                                    </a>
-                                                </h6>
-                                                <h6 class="admin-order-confirmation-button ">
-                                                    <a href="" class="">
-                                                        <button type="button"
-                                                            class="btn btn-outline-success">complete</button>
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
                     <hr>
                 </div>
             </div>
@@ -172,6 +66,58 @@
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
 
 <script>
+    function approveOrder(orderId) {
+        new swal({
+            text: "Approve order?",
+            icon: "warning",
+            buttons: ["cancel", "confirm"]
+        }).then((status) => {
+            console.log(status)
+            if (status) {
+                fetch('/restaurant/' + orderId + '/approve-order', {
+                    method: "PUT"
+                }).then((res) => res.json()).then((res) => {
+                    new swal({
+                        text: "Order approved",
+                        icon: "success",
+                    }).then(() => {
+                        document.getElementById("status" + orderId).innerText = "Approved"
+                    })
+                })
+            } else {
+                new swal({
+                    text: "Order not approved",
+                    icon: "error",
+                });
+            }
+        })
+    }
+    function rejectOrder(orderId) {
+        new swal({
+            text: "Reject order?",
+            icon: "warning",
+            buttons: ["cancel", "confirm"]
+        }).then((status) => {
+            console.log(status)
+            if (status) {
+                fetch('/restaurant/' + orderId + '/reject-order', {
+                    method: "PUT"
+                }).then((res) => res.json()).then((res) => {
+                    new swal({
+                        text: "Order canceled",
+                        icon: "success",
+                    }).then(() => {
+                        document.getElementById("status" + orderId).innerText = "canceled"
+                    })
+                })
+            } else {
+                new swal({
+                    text: "Order not approved",
+                    icon: "error",
+                });
+            }
+        })
+    }
     $(document).ready(function () {
         $('#table_id').DataTable({
 

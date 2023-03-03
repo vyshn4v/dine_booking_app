@@ -3,25 +3,21 @@ const authController = require("../controllers/Auth")
 const { adminSessionmanagement } = require('../middlewares/session/admin')
 const router = require('express').Router()
 
-//admin login
 router.get('/login', authController.adminLoginGet)
 
 router.post('/login', authController.adminLoginPost)
 
-// logout
 router.get('/logout', authController.adminLogoutGet)
 
-// dashboard
 router.get('/dashboard', adminSessionmanagement, adminController.dashBoardGet)
 
-// users
-router.get('/users', adminSessionmanagement, adminController.allUserGet)
-//banned users
+router.get('/get-month-wise-data', adminSessionmanagement, adminController.dashBoardDataGet)
 
-//ban user
+router.get('/users', adminSessionmanagement, adminController.allUserGet)
+
 router.put('/ban-user/:user_id', adminSessionmanagement, adminController.banUserPost)
 
-router.post('/unban-user/:user_id', adminSessionmanagement, adminController.unbanUserPost)
+router.put('/unban-user/:user_id', adminSessionmanagement, adminController.unbanUserPost)
 
 router.get('/get-all-restaurants', adminSessionmanagement, adminController.allRestaurantGet)
 
@@ -50,6 +46,5 @@ router.post('/add-categories', adminSessionmanagement, adminController.categoryP
 router.put('/categories/change-visibility/:category_id', adminSessionmanagement, adminController.categoryVisibilityPost)
 
 router.delete('/categories/delete-category/:category_id', adminSessionmanagement, adminController.deleteCategoryPost)
-//restauarnt management
 
 module.exports = router

@@ -1,4 +1,4 @@
-<section class="admin_product_table container-fluid">
+<section class="admin_product_table container-fluid" style="height: 85vh;">
     <div>
         <div class="thead-dark d-flex justify-content-around">
             <h4 class="p-5">users</h4>
@@ -9,7 +9,7 @@
             </div>
         </div>
         <div class="">
-            {{#checklength users 0}}
+            {{#checklength users 4}}
             <table class="table-responsive-md mt-5" id="myTable">
                 <thead class="thead-dark">
                     <tr>
@@ -30,13 +30,14 @@
                         <td>{{this.email}}</td>
                         <td>{{#if this.phone}}{{this.phone}}{{else}}not available{{/if}}</td>
                         <td>{{#if this.verified}}verified{{else}}not verified{{/if}}</td>
-                        <td>{{this.status}}</td>
-                        <td>
+                        <td id="status{{this.id}}">{{this.status}}</td>
+                        <td id="userHandle{{this._id}}">
                             {{#ifEquals this.status "active"}}
                             <button type="button" class="btn btn-danger" style="min-width: 80px;"
-                                onclick="banUser('{{this.id}}')">Ban</button>
+                                onclick="banUser('{{this._id}}')">Ban</button>
                             {{else}}
-                            <button type="button" onclick="unbanUser('{{this.id}}')" class="btn btn-primary" style="min-width: 80px;">unban</button>
+                            <button type="button" onclick="unbanUser('{{this._id}}')" class="btn btn-primary"
+                                style="min-width: 80px;">unban</button>
                             {{/ifEquals}}
                         </td>
                     </tr>
@@ -102,46 +103,55 @@
     }
     const baseUrl = window.location.origin
     function banUser(userId) {
-        fetch(`${baseUrl}/admin/ban-user/${userId}`, {
-            method: "PUT"
-        }).then((response) => response.json()).then((response) => {
-            new Toastify({
-                text: response.message,
-                duration: 500,
-                gravity: "top", // `top` or `bottom`
-                position: "right", // `left`, `center` or `right`
-                stopOnFocus: true, // Prevents dismissing of toast on hover
-                style: {
-                    background: "orange",
-                },
-            }).showToast();
-            setTimeout(() => {
-                location.reload()
-            }, 700)
-        }).catch(() => {
-            alert("user not deleted")
+        new swal({
+            title: "Ban restaurant!",
+            text: "confirm!",
+            icon: "warning",
+            buttons: {
+                cancel: true,
+                confirm: true
+            },
+        }).then((status) => {
+            if (status) {
+                fetch(`${baseUrl}/admin/ban-user/${userId}`, {
+                    method: "PUT"
+                }).then((response) => response.json()).then((response) => {
+                    if (response?.status) {
+                        document.getElementById(`userHandle${userId}`).innerHTML = `<button type="button" onclick="unbanUser('${userId}')" class="btn btn-primary"
+                                style="min-width: 80px;">unban</button>`
+
+                        document.getElementById(`status${userId}`).innerHTML = `banned`
+
+                    }
+                }).catch(() => {
+                    alert("user not deleted")
+                })
+            }
         })
     }
     function unbanUser(userId) {
-        fetch(`${baseUrl}/admin/unban-user/${userId}`, {
-            method: "POST"
-        }).then((response) => response.json()).then((response) => {
-            console.log(response)
-            new Toastify({
-                text: response.message,
-                duration: 500,
-                gravity: "top", // `top` or `bottom`
-                position: "right", // `left`, `center` or `right`
-                stopOnFocus: true, // Prevents dismissing of toast on hover
-                style: {
-                    background: "orange",
-                },
-            }).showToast();
-            setTimeout(() => {
-                location.reload()
-            }, 700)
-        }).catch(() => {
-            alert("user not deleted")
+        new swal({
+            title: "UnBan restaurant!",
+            text: "confirm!",
+            icon: "warning",
+            buttons: {
+                cancel: true,
+                confirm: true
+            },
+        }).then((status) => {
+            if (status) {
+                fetch(`${baseUrl}/admin/unban-user/${userId}`, {
+                    method: "PUT"
+                }).then((response) => response.json()).then((response) => {
+                    if (response?.status) {
+                        document.getElementById(`userHandle${userId}`).innerHTML = `<button type="button" class="btn btn-danger" style="min-width: 80px;"
+                                onclick="banUser('${userId}')">Ban</button>`
+                        document.getElementById(`status${userId}`).innerHTML = `active`
+                    }
+                }).catch(() => {
+                    alert("user not deleted")
+                })
+            }
         })
     }
 </script>

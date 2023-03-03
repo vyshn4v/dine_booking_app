@@ -1,13 +1,13 @@
 <section class="restaurant-details container-fluid">
     <div class="topsection">
         <div class="big-image" id="big-image-preview">
-            <div style="min-width: 400px;max-height: 300px;" id="carouselExampleControls" class="carousel slide"
+            <div style="width: 600px;max-height: 300px;" id="carouselExampleControls" class="carousel slide"
                 data-ride="carousel">
                 <div class="carousel-inner">
                     {{#each restaurantDetails.profile_pic}}
                     {{#ifEquals @index "0"}}
                     <div class="carousel-item active">
-                        <img class="d-block " style=" min-width: 400px;max-height: 300px;" src="{{this.url}}"
+                        <img class="d-block " style=" min-width: 800px;max-height: 300px;" src="{{this.url}}"
                             alt="First slide">
                     </div>
                     {{else}}
