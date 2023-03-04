@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express()
 const path = require("path")
-const port = 3000
+const port = process.env.PORT ||3000
 const userRoute = require('./src/routes/user')
 const restaurantRoute = require('./src/routes/restaurant')
 const adminRoute = require('./src/routes/admin')
@@ -84,6 +84,6 @@ app.use((err, req, res, next) => {
     res.status(500).render('internalError')
 })
 // port
-app.listen(process.env.PORT || port, () => {
+app.listen(port, () => {
     console.log("server started on port number " + port);
 })
