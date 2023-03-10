@@ -1,5 +1,5 @@
-<section class="d-flex-column">
-
+<section class="d-flex-column" style="height: 85vh;">
+    {{#checklength restaurants 0}}
     <section class="search_and_filter_restaurants row w-100 ">
         <div class="input-group mb-3 col-6 mt-5">
 
@@ -55,6 +55,11 @@
             {{/if}}
         </ul>
     </nav>
+    {{else}}
+    <div class="alert alert-warning mt-5" role="alert">
+        No restaurants found
+    </div>
+    {{/checklength}}
 </section>
 <link rel="stylesheet" href="css/user/searchRestaurants.css">
 <script>
