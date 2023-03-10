@@ -77,8 +77,9 @@ const
     },
     //signup
     getRestaurantSignup = (req, res) => {
-        res.render("restaurant/signup", { restaurantHeader: true, err: req.session.err })
+        const error = req.session.err
         req.session.err = null
+        res.render("restaurant/signup", { restaurantHeader: true, err: error })
     },
     postRestaurantSignup = async (req, res) => {
         try {
@@ -116,7 +117,7 @@ const
                 err: req.session.err
             }
             req.session.err = null;
-            res.render("restaurant/2factorValidation", response)
+            res.render("restaurant/twofactorValidation", response)
         }).catch((err) => {
             next(err)
         })
