@@ -57,7 +57,7 @@ router.get('/add-products', restaurantSessionManagement, sessionProfileVerified,
 router.post('/add-products', restaurantSessionManagement, imagepload.multer.single('product_image'), restaurantController.addProductPost)
 router.get('/edit-product/:product_id', restaurantSessionManagement, sessionProfileVerified, restaurantController.editProductGet)
 router.post('/edit-product/:product_id', restaurantSessionManagement, imagepload.multer.single('product_image'), restaurantController.editProductPost)
-router.get('/delete-product/:product_id', restaurantSessionManagement,restaurantController.deleteProductPost)
+router.post('/delete-product/:product_id', restaurantSessionManagement,restaurantController.deleteProductPost)
 //forgot password 
 router.get('/forgot-password', restaurantController.forgotPasswordGet)
 router.post('/verify-forgot-password', postverifyRestaurantOtp)

@@ -355,11 +355,16 @@ module.exports = {
     },
     deleteProductPost: (req, res, next) => {
         try {
-            restaurant.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.session.restaurant.restaurantId) }, { $pull: { "menu._id": mongoose.Types.ObjectId(req.params.product_id) } }).then(() => {
-                res.redirect('/restaurant/view-products')
+            console.log(req.params);
+            restaurant.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.session.restaurant.restaurantId) }, { $pull: { "menu": { _id: mongoose.Types.ObjectId(req.params.product_id) } } }).then(() => {
+                res.json({ status: true, message: "Product deleted" })
+                // res.redirect('/restaurant/view-products')
+            }).catch(() => {
+                // res.redirect('/restaurant/view-products')
+                res.json({ status: false, message: "Product not deleted" })
             })
         } catch (err) {
-            next(err)
+            res.json({ status: false, message: "Something wrong in backend" })
         }
     },
     addServiceGet: (req, res, next) => {

@@ -17,7 +17,7 @@
                 </thead>
                 <tbody>
                     {{#each products}}
-                    <tr>
+                    <tr id="{{this._id}}">
                         <th>{{inc @index 1}}</th>
                         <td>
                             <img src="{{this.product_image}}" height="60px" width="100px" alt="">
@@ -33,13 +33,12 @@
                                     edit
                                 </button>
                             </a>
-                            <a href="/restaurant/delete-product/{{this._id}}">
-                                <button type="button" class=" text-white btn btn-danger  ml-2"
-                                    style="width: 100px; height: 40px;" data-toggle="modal"
-                                    onclick="banRestaurant('{{this._id}}')">
-                                    delete
-                                </button>
-                            </a>
+
+                            <button type="button" class=" text-white btn btn-danger  ml-2"
+                                style="width: 100px; height: 40px;" data-toggle="modal"
+                                onclick="deleteProduct('{{this._id}}')">
+                                delete
+                            </button>
                         </td>
                     </tr>
                     {{/each}}
@@ -49,6 +48,36 @@
     </div>
 </section>
 <script>
+    function deleteProduct(productId) {
+        new swal({
+            title: "Delete Product",
+            text: "Confirm",
+            icon: "warning",
+            buttons: ["cancel", "confirm"]
+        }).then((status) => {
+            if (status) {
+                fetch('/restaurant/delete-product/' + productId, {
+                    method: "POST"
+                }).then((data) => data.json()).then((data) => {
+                    if (data?.status) {
+                        new swal({
+                            title: "Delete Product",
+                            text: "Confirm",
+                            icon: "success",
+                        }).then(() => {
+                            document.getElementById(productId).remove()
+                        })
+                    } else {
+                        new swal({
+                            title: "Delete Product",
+                            text: "Confirm",
+                            icon: "success",
+                        })
+                    }
+                })
+            }
+        })
+    }
     $(document).ready(function () {
         $('#myTable').dataTable();
     });
