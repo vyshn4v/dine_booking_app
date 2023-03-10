@@ -81,7 +81,7 @@ const
         req.session.err = null
         res.render("restaurant/signup", { restaurantHeader: true, err: error })
     },
-    postRestaurantSignup = async (req, res) => {
+    postRestaurantSignup = async (req, res,next) => {
         try {
             const { confirm_password, ...rest } = req.body
             rest.password = await bcrypt.hash(rest.password, parseInt(process.env.SALT_ROUND))
