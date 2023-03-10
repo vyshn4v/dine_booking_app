@@ -84,7 +84,7 @@ const
     postRestaurantSignup = async (req, res, next) => {
         try {
             const { confirm_password, ...rest } = req.body
-            rest.password = await bcrypt.hash(rest.password, parseInt(process.env.SALT_ROUND))
+            rest.password = await bcrypt.hash(rest.password, Number(process.env.SALT_ROUND))
             const Restaurant = new restaurant(rest)
             const savedRestaurant = await Restaurant.save()
             generateRestaurantOtp(savedRestaurant._id).then((restaurant) => {
