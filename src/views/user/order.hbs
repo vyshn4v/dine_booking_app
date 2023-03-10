@@ -21,6 +21,12 @@
                                         <h4 class="mb-0 d-flex justify-content-center align-items-center">
                                             {{this.restaurant.restaurant_name}}
                                         </h4>
+                                        <big class="mb-0 d-flex justify-content-center align-items-center">
+                                            {{this.restaurant.email}}
+                                        </big>
+                                        <big class="mb-0 d-flex justify-content-center align-items-center">
+                                            {{this.restaurant.address}}
+                                        </big>
 
                                     </div>
                                     <div class="  my-auto flex-column align-items-center justify-content-center">
@@ -67,7 +73,9 @@
                                                                 {{#each this.tables}}
                                                                 <input type="text" name="table" value="{{this._id}}"
                                                                     hidden>
-                                                                <small class="card m-3">Table number : {{this.table_number}} <br> chair : {{this.chair}} <br> table : {{this.table}} </small>
+                                                                <small class="card m-3">Table number :
+                                                                    {{this.table_number}} <br> chair : {{this.chair}}
+                                                                    <br> table : {{this.table}} </small>
                                                                 {{/each}}
                                                             </div>
                                                         </div>

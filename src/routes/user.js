@@ -37,7 +37,7 @@ router.get("/signup", userController.signupGet)
 router.post("/signup", userNotLogin, userController.signupPost)
 
 router.get("/profile", userSessionManagement, userController.profileGet)
-router.post("/update-profile/:user_id", multer.single('profile_pic'), userSessionManagement, userController.profilePost)
+router.post("/update-profile/:user_id", userSessionManagement,  multer.single('profile_pic'),userController.profilePost)
 
 router.get("/search-products", userController.searchProductsGet)
 

@@ -15,8 +15,7 @@
                                 <th>Date</th>
                                 <th>status</th>
                                 <th>time</th>
-                                <th>chair for one table</th>
-                                <th>total table</th>
+                                <th>tableS</th>
                                 <th>action</th>
                             </tr>
                         </thead>
@@ -39,9 +38,54 @@
                                 <td>{{this.date}}</td>
                                 <td id="status{{this._id}}">{{this.status}}</td>
                                 <td>{{prettifyDate this.time}}</td>
-                                <td>{{this.chair}} </td>
-                                <td>{{this.table}}</td>
+
                                 <td>
+
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-primary mr-1 w-100" data-toggle="modal"
+                                        data-target="#exampleModal{{this._id}}">
+                                        Show tables
+                                    </button>
+
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModal{{this._id}}" tabindex="-1" role="dialog"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="selected-tables">
+                                                        <h6 class="ml-3" style="font-variant: small-caps;">selected
+                                                            tables</h6>
+                                                        <div class="foods">
+                                                            <div id="products" style="display: none;"
+                                                                data-json="{{products}}"
+                                                                onload="setJson('{{products}}')">
+                                                            </div>
+                                                            <input type="hidden" value="">
+                                                            {{#each this.tables}}
+                                                            <input type="text" name="table" value="{{this._id}}" hidden>
+                                                            <small class="card m-3">Table number :
+                                                                {{this.table_number}} <br> chair : {{this.chair}}
+                                                                <br> table : {{this.table}} </small>
+                                                            {{/each}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td id="actions{{this._id}}">
                                     {{#ifEquals this.status "pending"}}
                                     <div class="d-flex-column justify-content-center align-items-center">
                                         <button type="button" onclick="rejectOrder('{{this._id}}')"
@@ -78,7 +122,7 @@
     <script src="/js/order.js"></script>
 </section>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
-
+<link rel="stylesheet" href="/css/user/paymentDetails.css">
 <script>
     function approveOrder(orderId) {
         new swal({
@@ -96,6 +140,11 @@
                         icon: "success",
                     }).then(() => {
                         document.getElementById("status" + orderId).innerText = "Approved"
+                        document.getElementById("actions" + orderId).innerHTML = ` <div class="d-flex justify-content-center align-items-center w-100">
+                                        <button type="button" onclick="rejectOrder('{{this._id}}')"
+                                            class="btn btn-primary mr-1 w-100">reject</button>
+                                    </div>`
+
                     })
                 })
             } else {
@@ -122,6 +171,10 @@
                         icon: "success",
                     }).then(() => {
                         document.getElementById("status" + orderId).innerText = "canceled"
+                        document.getElementById("actions" + orderId).innerHTML = `<div class="d-flex justify-content-center align-items-center w-100">
+                                        <button onclick="approveOrder('{{this._id}}')" type="button"
+                                            class="btn btn-danger w-100">approve</button>
+                                    </div>`
                     })
                 })
             } else {

@@ -36,8 +36,8 @@
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
-                                <input required type="text" name="username" class="form-control" placeholder="Enter the user name"
-                                    value="{{userDetails.username}}">
+                                <input required type="text" name="username" class="form-control"
+                                    placeholder="Enter the user name" value="{{userDetails.username}}">
                                 <label class="labels">name</label>
                             </div>
                             <div class="col-md-6">
@@ -49,11 +49,11 @@
                         <div class="row mt-2">
                             <div class="col-md-6">
                                 <input required type="tel" name="phone" class="form-control" id="phone"
-                                    placeholder="Enter the phone number" value="+{{userDetails.phone}}">
+                                    placeholder="Enter the phone number" value="{{userDetails.phone}}">
                                 <label class="labels">phone</label>
                             </div>
                             <div class="col-md-6">
-                                <input required type="tel" name="password" class="form-control" id="phone"
+                                <input required type="password" name="password" class="form-control"
                                     placeholder="Enter the password" value="">
                                 <label class="labels">password</label>
                             </div>
@@ -108,11 +108,14 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> --}}
 <script>
     var input = document.querySelector("#phone");
+    var phoneNumber = document.querySelector("#phoneNumber");
     const form = document.querySelector('form')
     const iti = window.intlTelInput(input, {
         utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.min.js'
     })
-
+    function updateNumber(number) {
+        phoneNumber.value = number
+    }
     input.addEventListener('countrychange', (e) => {
         e.preventDefault()
         const phone = iti.getNumber();

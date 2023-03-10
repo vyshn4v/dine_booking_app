@@ -3,6 +3,7 @@
         <div class="card w-100">
             <div class="card-body ">
                 <h4>home/wishlist</h4>
+                {{#checklength wishlistData 0}}
                 {{#each wishlistData}}
                 <div class="card">
                     <div class="card-body row">
@@ -18,18 +19,26 @@
                             </p>
                         </div>
                         <div class="col-md-4 sq align-self-center d-flex justify-content-center align-items-center">
-                            <a style="max-width: 200px;" href="restaurant-details/{{this.restaurant._id}}" class="col w-25 btn btn-primary">
+                            <a style="max-width: 200px;" href="restaurant-details/{{this.restaurant._id}}"
+                                class="col w-25 btn btn-primary">
                                 show more
                             </a>
                             {{!-- <a href="whishlist/{{this._id}}/{{this.restaurant._id}}/remove" class="col-12"> --}}
-                                <button style="max-width: 200px;" onclick="removeFromWishlist('{{this._id}}','{{this.restaurant._id}}')"
-                                    type="button" class="ml-1 col btn btn-danger mt-1">remove</button>
+                                <button style="max-width: 200px;"
+                                    onclick="removeFromWishlist('{{this._id}}','{{this.restaurant._id}}')" type="button"
+                                    class="ml-1 col btn btn-danger mt-1">remove</button>
                                 {{!-- </a> --}}
                         </div>
                     </div>
                 </div>
                 <hr>
                 {{/each}}
+                {{else}}
+                <div class="alert alert-warning" role="alert">
+                    wish list is empty
+                </div>
+                {{/checklength}}
+
             </div>
         </div>
     </div>
