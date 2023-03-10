@@ -16,8 +16,7 @@ const service = require("./service");
 module.exports = {
     viewProductsGet: (req, res, next) => {
         restaurant.aggregate([
-            { $match: { _id: mongoose.Types.ObjectId(req.session.restaurant.restaurantId) } },
-            { $unwind: "$menu" }, {
+            { $match: { _id: mongoose.Types.ObjectId(req.session.restaurant.restaurantId) } }, {
                 $lookup: {
                     from: 'categories',
                     localField: "menu.category",
@@ -25,15 +24,9 @@ module.exports = {
                     as: "category"
                 }
             },
-            { $unwind: "$category" },
-            {
-                $project: {
-                    menu: 1,
-                    category: 1
-                }
-            }
         ]).then((dishes) => {
-            res.render("restaurant/products", { restaurantHeader: true, title: "orders", cart: sample, restaurant: true, products: dishes })
+            console.log(dishes);
+            res.render("restaurant/products", { restaurantHeader: true, title: "orders", restaurant: true, products: dishes[0]?.menu })
         }).catch((err) => {
             next(err)
         })
@@ -112,8 +105,8 @@ module.exports = {
             let data = orders
             let products = []
             orders.map((order, index) => {
-                order.products.map((product, index) => {
-                    order.restaurant.menu.map((dish) => {
+                order?.products?.map((product, index) => {
+                    order?.restaurant.menu?.map((dish) => {
                         if (String(dish._id) === String(product.product_id)) {
                             products.push({ ...dish, quantity: product.quantity })
                         }
@@ -179,7 +172,7 @@ module.exports = {
                 bcrypt.compare(password, restaurantData.password).then(async (status) => {
                     if (status) {
                         let image = []
-                        if (req.files) {
+                        if (req.files.length > 0) {
 
                             const file1 = await dataUri(req.files[0]).content
                             const file2 = await dataUri(req.files[1]).content
@@ -220,6 +213,7 @@ module.exports = {
                             })
 
                         }
+                        console.log(rest);
 
                         restaurant.findByIdAndUpdate({ _id: req.session.restaurant.restaurantId }, { $set: { ...rest, profile_completed: true } }).then(async (updatedData) => {
                             res.redirect("/restaurant/profile")
@@ -235,50 +229,48 @@ module.exports = {
             next(err)
         }
     },
-    editProfilPicGet: (req, res, next) => {
+    editProfilPicGet: async (req, res, next) => {
         try {
-            restaurant.findById({ _id: req.params.restaurant_id }).then(() => {
-
-            })
+            console.log();
+            if (req.file) {
+                const file = await dataUri(req.file).content
+                const image = await uploader.upload(file, {
+                    transformation: [
+                        { width: 400, height: 300, crop: "fill" },
+                    ]
+                })
+                const data = {
+                    public_id: image.public_id,
+                    url: image.url
+                }
+                restaurant.updateOne({ _id: req.session.restaurant.restaurantId, "profile_pic.public_id": req.params.public_id }, { $set: { "profile_pic.$": data } }).then(async () => {
+                    await uploader.destroy(req.params.public_id)
+                    res.redirect('/restaurant/profile')
+                })
+            } else {
+                throw "file not found"
+            }
         } catch (err) {
             next(err)
         }
     },
-    saveTablePost: (req, res) => {
-        const table = {
-            chair: req.body.total_chair,
-            tables: req.body.total_table,
-        }
-        restaurant.findById({
-            _id: req.session.restaurant.restaurantId, "tables": {
-                $in: { "chair": parseInt(req.body.total_chair) }
+    saveTablePost: (req, res, next) => {
+        try {
+            console.log(req.body);
+            const table = {
+                table_number: req.body.table_number,
+                chair: req.body.chair,
+                tables: req.body.table,
+                air_conditioned: req.body?.air_condition
             }
-        }).then((restaurantDetails) => {
-            let flag = 0;
-            bcrypt.compare(req.body.password, restaurantDetails.password).then((status) => {
-                if (status) {
-                    restaurantDetails.tables?.map((table, index) => {
-                        if (table.chair === req.body.total_chair) {
-                            flag = 1
-                        }
-                    })
-                    if (flag === 1) {
-                        restaurant.updateOne({ _id: req.session.restaurant.restaurantId, "tables.chair": parseInt(req.body.total_chair) }, { $set: { "tables.$.table": parseInt(req.body.total_table) } }, { new: true }).then((restaurantnew) => {
-                            res.redirect("/restaurant/profile")
-                        })
-                    } else {
-                        restaurant.updateOne({ _id: req.session.restaurant.restaurantId }, {
-                            $push: { tables: { "chair": parseInt(req.body.total_chair), "table": parseInt(req.body.total_table) } }
-                        }).then((restaurantnew) => {
-                            res.redirect("/restaurant/profile")
-                        })
-                    }
-                } else {
-                    req.session.err = "password not matched"
-                    res.redirect('/restaurant/profile')
-                }
+            restaurant.updateOne({ _id: req.session.restaurant.restaurantId }, {
+                $push: { tables: { table_number: table.table_number, "chair": parseInt(table.chair), "table": parseInt(table.tables), air_conditioned: table.air_conditioned } }
+            }).then((restaurantnew) => {
+                res.redirect("/restaurant/table-management")
             })
-        })
+        } catch (err) {
+            next(err)
+        }
     },
     deleteTablePost: (req, res) => {
         restaurant.updateOne({ "_id": req.session.restaurant.restaurantId }, { $pull: { "tables": { "_id": req.params.table_id } } }).then((response) => {
@@ -292,7 +284,7 @@ module.exports = {
         })
     },
     addProductGet: async (req, res) => {
-        const Category = await category.find()
+        const Category = await category.find({ visibility: true })
         res.render("restaurant/addProduct", { restaurantHeader: true, restaurant: true, Category })
     },
     addProductPost: async (req, res, next) => {
@@ -322,27 +314,49 @@ module.exports = {
     },
     editProductPost: async (req, res, next) => {
         try {
-            if (req.file) {
+            console.log(req.body);
+            console.log(req.file);
+            let productData = {
+                "menu.$.product_name": req.body.product_name,
+                "menu.$.stock": Number(req.body.stock),
+                "menu.$.price": Number(req.body.price),
+
+            }
+            if (req?.file) {
                 const file = await dataUri(req.file).content
                 await uploader.upload(file, {
                     transformation: [
                         { width: 400, height: 300, crop: "fill" },
                     ]
                 }).then((result) => {
-                    let productData = {
-                        "menu.$.product_name": req.body.product_name,
-                        "menu.$.category": req.body.category,
-                        "menu.$.stock": Number(req.body.stock),
-                        "menu.$.price": Number(req.body.price),
-                        "menu.$.product_image": result.url
-                    }
-                    restaurant.updateOne({ _id: req.session.restaurant.restaurantId, "menu._id": req.params.product_id }, { $set: { ...productData } }).then(() => {
-                        res.redirect('/restaurant/add-products');
-                    }).catch(() => {
-                        res.redirect('/restaurant/add-products');
-                    })
+                    productData["menu.$.product_image"] = result.url
                 })
             }
+            if (req.body.category != 'Select category') {
+                productData["menu.$.category"] = req.body.category
+            }
+            else if (!req?.file && req.body.category != 'Select category') {
+                productData = {
+                    "menu.$.product_name": req.body.product_name,
+                    "menu.$.stock": Number(req.body.stock),
+                    "menu.$.price": Number(req.body.price),
+                }
+            }
+            console.log(productData);
+            restaurant.updateOne({ _id: mongoose.Types.ObjectId(req.session.restaurant.restaurantId), "menu._id": mongoose.Types.ObjectId(req.params.product_id) }, { $set: { ...productData } }).then(() => {
+                res.redirect('/restaurant/view-products');
+            }).catch((err) => {
+                next(err)
+            })
+        } catch (err) {
+            next(err)
+        }
+    },
+    deleteProductPost: (req, res, next) => {
+        try {
+            restaurant.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.session.restaurant.restaurantId) }, { $pull: { "menu._id": mongoose.Types.ObjectId(req.params.product_id) } }).then(()=>{
+                res.redirect('/restaurant/view-products')
+            })
         } catch (err) {
             next(err)
         }

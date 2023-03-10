@@ -12,7 +12,6 @@
                         <th scope="col">name</th>
                         <th scope="col">price</th>
                         <th scope="col">quantity</th>
-                        <th scope="col">category</th>
                         <th scope="col">handle</th>
                     </tr>
                 </thead>
@@ -21,30 +20,26 @@
                     <tr>
                         <th>{{inc @index 1}}</th>
                         <td>
-                            <img src="{{this.menu.product_image}}" height="60px" alt="">
+                            <img src="{{this.product_image}}" height="60px" width="100px" alt="">
                         </td>
-                        <td>{{this.menu.product_name}}</td>
-                        <td>{{this.menu.price}}</td>
-                        <td>{{this.menu.stock}}</td>
-                        <td>{{this.category.category}}</td>
+                        <td>{{this.product_name}}</td>
+                        <td>{{this.price}}</td>
+                        <td>{{this.stock}}</td>
                         <td class="">
-                            <a href="/restaurant/edit-product/{{this.menu._id}}">
+                            <a href="/restaurant/edit-product/{{this._id}}">
                                 <button type="button" class=" text-white btn btn-warning  ml-2"
                                     style="width: 100px; height: 40px;" data-toggle="modal"
                                     onclick="banRestaurant('{{this._id}}')">
                                     edit
                                 </button>
                             </a>
-                            <button type="button" class=" text-white btn btn-warning  ml-2"
-                                style="width: 100px; height: 40px;" data-toggle="modal"
-                                onclick="banRestaurant('{{this._id}}')">
-                                ban
-                            </button>
-                            <button type="button" class=" text-white btn btn-danger  ml-2"
-                                style="width: 100px; height: 40px;" data-toggle="modal"
-                                onclick="deleteRestaurant('{{this._id}}')">
-                                delete
-                            </button>
+                            <a href="/restaurant/delete-product/{{this._id}}">
+                                <button type="button" class=" text-white btn btn-danger  ml-2"
+                                    style="width: 100px; height: 40px;" data-toggle="modal"
+                                    onclick="banRestaurant('{{this._id}}')">
+                                    delete
+                                </button>
+                            </a>
                         </td>
                     </tr>
                     {{/each}}
@@ -54,9 +49,6 @@
     </div>
 </section>
 <script>
-    function banProduct(productId) {
-
-    }
     $(document).ready(function () {
         $('#myTable').dataTable();
     });

@@ -8,6 +8,7 @@
     grid-template-areas:
         'restaurantDetails payment_card'
         'selectedFood payment_card'
+        'selectedTables payment_card'
         'selectDateTimeSeats payment_card';
 }
 
@@ -35,9 +36,11 @@
     justify-content: start;
 
 }
-.form-select{
+
+.form-select {
     max-width: 18rem;
 }
+
 .restaurant-details>.image>img {
     width: 200px;
     height: 200px;
@@ -54,16 +57,27 @@
     padding: 10px;
 }
 
-.selected-foods>.foods {
+.selected-tables {
+    grid-area: selectedTables;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin: 10px;
+    padding: 10px;
+}
+
+.selected-foods>.foods,
+.selected-tables>.foods {
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
 }
 
-.selected-foods>.foods>.card {
+.selected-foods>.foods>.card,
+.selected-tables>.foods>.card {
     border: 1px solid orange;
     max-width: 200px;
-    height: 30px;
+
     padding: 10px;
     display: flex;
     justify-content: center;
@@ -75,7 +89,8 @@
 
 }
 
-.selected-foods>.foods>.card:hover {
+.selected-foods>.foods>.card:hover,
+.selected-tables>.foods>.card:hover {
     background-color: orange;
     cursor: pointer;
     color: white;
@@ -103,10 +118,10 @@
 #table,
 #chair,
 #datepicker,
-#timepicker {
+#timepicker,
+#totalHead,
+#totalChair {
     width: 200px;
-    border-radius: 5px;
-    border: 1px solid black;
 }
 
 .date_time {
@@ -125,13 +140,6 @@ label[for=chair] {
     font-weight: 600;
 }
 
-.date_picker,
-.time_picker,
-.table_count,
-.chair_count {
-    margin-left: 10px;
-
-}
 
 .table_count>input::placeholder,
 .chair_count>input::placeholder {

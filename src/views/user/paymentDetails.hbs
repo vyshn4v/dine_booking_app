@@ -9,8 +9,10 @@
                 <input type="text" id="restaurant_id" name="restaurant_id" value="{{restaurant._id}}" hidden>
                 <h6 class="" style="font-variant: small-caps;">{{restaurant.restaurant_name}}</h6>
                 <small>{{restaurant.address}}</small>
-                <small>opening Time {{restaurant.closing_time}}</small>
-                <small>closing Time {{restaurant.opening_time}}</small>
+                <input type="text" value="{{restaurant.opening_time}}" id="opening_time" hidden>
+                <input type="text" value="{{restaurant.closing_time}}" id="closing_time" hidden>
+                <small>opening Time <span>{{prettifyDate restaurant.opening_time}}</span></small>
+                <small>closing Time <span>{{prettifyDate restaurant.closing_time}}</span> </small>
             </div>
         </div>
         <div class="selected-foods">
@@ -19,29 +21,54 @@
                 <div id="products" style="display: none;" data-json="{{products}}" onload="setJson('{{products}}')">
                 </div>
                 <input type="hidden" value="">
+               
                 {{#each products}}
-                {{!-- <input type="text" name="quantity" value="{{this.quantity}}" hidden>
-                <input type="text" name="product_name" value="{{this.quantity}}" hidden> --}}
                 <input type="text" name="price" value="{{this.price}}" hidden>
                 <small class="card">{{this.product_name}} {{this.quantity}}</small>
+                {{/each}}
+                
+            </div>
+        </div>
+        <div class="selected-tables">
+            <h6 class="ml-3" style="font-variant: small-caps;">selected tables</h6>
+            <div class="foods">
+                <div id="products" style="display: none;" data-json="{{products}}" onload="setJson('{{products}}')">
+                </div>
+                <input type="hidden" value="">
+                {{#each tables}}
+                <input type="text" name="table" value="{{this._id}}" hidden>
+                <small class="card">{{this.table_number}}</small>
                 {{/each}}
             </div>
         </div>
         <div class="select-date-time-seats">
-            <div class="date_time">
-                <div class="date_picker">
+            <div class="row date_time">
+                <div class="col-md-6 date_picker">
+                    <label for="datepicker">Total chair</label>
+                    <br>
+                    <input type="number" readonly id="totalChair" value="{{totalChair}}">
+                </div>
+                <div class="col-md-6 date_picker">
+                    <label for="datepicker">Total member</label>
+                    <br>
+                    <input type="number" name="totalHead" id="totalHead">
+                </div>
+                <div class="col-md-6 date_picker">
                     <label for="datepicker">Date</label>
+                    <br>
                     <input type="text" name="date" id="datePicker" value="" hidden>
                     <input type="text" name="datepicker" class="datepicker" id="datepicker">
                 </div>
-                <div class="time_picker">
+                <div class="col-md-6 time_picker">
                     <label for="timepicker">Time</label>
+                    <br>
                     <input type="text" id="timePicker" name="" value="" hidden>
                     <input type="text" name="timepicker" id="timepicker">
                 </div>
             </div>
             <div class="table-chair">
-                <div class="table_count">
+
+                {{!-- <div class="table_count">
                     <div>
                         <label for="table">chair</label>
                         <input type="text" value="{{restaurant.tables}}" id="tableData" hidden>
@@ -65,7 +92,7 @@
                     <div>
                         <small class="chair" id="table-count"></small>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
         <div class="payment-card">
@@ -74,7 +101,6 @@
                 <input type="text" id="guestName" name="guestName" placeholder="Enter the guest name">
                 <input name="guestPhone" id="guestPhone" placeholder="Enter the phone number">
                 <big>price : <span id="total-amount"> {{totalProductPrice}}</span></big>
-                <big>Discount : <span id="discount">0</span></big>
                 <big>total : <span id="total-billing-amount"></span></big>
             </div>
             <div class="proceed-button">
@@ -98,16 +124,21 @@
         const restaurant_id = document.querySelector('#restaurant_id').value
         const date = document.getElementById('datePicker').value
         const time = document.querySelector('#timePicker').value
-        const table = document.querySelector('#selectedChair').value
-        const chair = document.querySelector('#table').value
         const guestName = document.querySelector('#guestName').value
         const guestPhone = document.querySelector('#guestPhone').value
         const total = Number(document.getElementById('total-billing-amount').innerText)
-        if (total,
-            date,
-            time,
-            table,
-            chair) {
+        const totalChair = Number(document.querySelector('#totalChair').value)
+        const totalHead = Number(document.querySelector('#totalHead').value)
+        if (totalHead > totalChair) {
+            new swal({
+                text: "Total member is morethan chair",
+                icon: "warning"
+            })
+            return false
+        }
+        if (total &&
+            date &&
+            time && totalChair && totalHead) {
             fetch('/order', {
                 method: "post",
                 headers: {
@@ -153,15 +184,15 @@
                         restaurant_id,
                         date,
                         time,
-                        table,
-                        chair,
                         response,
                         guestName,
-                        guestPhone
+                        guestPhone,
+                        totalChair,
+                        totalHead
                     })
                 }).then((res) => res.json()).then((res) => {
                     if (res.status) {
-                        location.replace("/order-success")
+                        location.replace("/order-success?amount=" + total + "&date=" + date + "&time=" + time + "&guestname=" + guestName + "&guestphone=" + guestPhone + "&totalChair=" + totalChair + "&totalHead=" + totalHead)
                     } else {
                         location.replace("/order-failed")
                     }
@@ -169,7 +200,7 @@
             }
         } else {
             new swal({
-                title: "Enter the field",
+                title: "Enter the fields",
                 icon: "warning",
             })
         }
@@ -190,15 +221,33 @@
         $('#timepicker').timepicker({
             timeFormat: "h:mm p",
             change: function (time) {
-                console.log(time)
-                document.querySelector('#timePicker').value = time
+                const open = new Date(document.querySelector('#opening_time').value)
+                const close = new Date(document.querySelector('#closing_time').value)
+                const selectedTime = new Date(time)
+                if (open < selectedTime && close > selectedTime) {
+                    document.querySelector('#timePicker').value = time
+                } else {
+                    new swal({
+                        title: "Enter the valid time",
+                        icon: "warning",
+                    })
+                }
             }
         });
         let datepicker = $('#datepicker').datepicker({
             dateFormat: "yy-m-d",
             onSelect: function (dateText, inst) {
                 console.log("dateText" + dateText)
-                document.getElementById('datePicker').value = dateText
+                if (new Date() < new Date(dateText)) {
+                    document.getElementById('datePicker').value = dateText
+                } else {
+                    new swal({
+                        title: "Enter the valid date",
+                        icon: "warning",
+                    })
+                    document.getElementById('datePicker').value = ""
+                    document.getElementById('datepicker').value = ""
+                }
             }
         });
     });

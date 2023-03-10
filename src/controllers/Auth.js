@@ -101,11 +101,11 @@ const
                 console.log("err1");
             })
         } catch (err) {
-           next(err)
+            next(err)
         }
     },
     // Get render otp validation page
-    getOtpTwoFactorPage = async (req, res,next) => {
+    getOtpTwoFactorPage = async (req, res, next) => {
         restaurant.findById({ _id: req.params.restaurant_id }).then((restaurantData) => {
             console.log("restaurantData" + restaurantData);
             const response = {
@@ -117,7 +117,7 @@ const
             }
             req.session.err = null;
             res.render("restaurant/2factorValidation", response)
-        }).catch((err)=>{
+        }).catch((err) => {
             next(err)
         })
     },
@@ -138,9 +138,7 @@ const
         try {
             restaurant.findOne({ email: req.params.restaurant_email }).then((restaurantData => {
                 generateRestaurantOtp(restaurantData._id).then((restaurant) => {
-                    console.log(req.params.validation_type);
                     const emailTemplate = otpTextGenerator(restaurant.OTP, req.params.validation_type);
-                    console.log(emailTemplate);
                     sendOtpViaMail(emailTemplate, restaurant.email).then((status) => {
                         res.json({ status: true, message: "email successfully send to " + restaurant.email, otpTime: restaurant.otp.expiredAt })
                     }).catch((status) => {
@@ -175,7 +173,7 @@ const
             res.json({ status: false, message: "something went wrong" })
         }
     },
-    postverifyRestaurantOtp = (req, res,next) => {
+    postverifyRestaurantOtp = (req, res, next) => {
         try {
             restaurant.findOne({ email: req.body.email }).then((restaurantData) => {
                 let expired = new Date(restaurantData.otp.expiredAt)
@@ -191,7 +189,7 @@ const
                 })
             })
         } catch (err) {
-           next(err)
+            next(err)
         }
     },
 
@@ -201,16 +199,15 @@ const
 
     getLogin = (req, res, next) => {
         try {
-            res.render("user/login", { userHeader: true, title: "user login", err: req.session.err })
+            res.render("user/login", { title: "user login", err: req.session.err })
             req.session.err = null;
         } catch (err) {
             next(err)
         }
     },
     //signup
-    postLogin = (req, res,next) => {
+    postLogin = (req, res, next) => {
         try {
-            console.log(req.body);
             user.findOne({ email: req.body.email }).then((userDetails) => {
                 bcrypt.compare(req.body.password, userDetails.password).then((status) => {
                     if (status) {
@@ -265,7 +262,7 @@ const
         }
     },
     //two factor
-    getTwoFactor = (req, res,next) => {
+    getTwoFactor = (req, res, next) => {
         try {
             user.find({ _id: req.params.user_id }).then((userData) => {
                 console.log(userData);
@@ -275,7 +272,7 @@ const
             next(err)
         }
     },
-    postTwoFactor = (req, res,next) => {
+    postTwoFactor = (req, res, next) => {
         try {
             user.findOne({ _id: req.params.user_id }).then((userData) => {
                 console.log(userData);

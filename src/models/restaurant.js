@@ -29,8 +29,8 @@ const Restaurant_Schema = new Schema({
     description: String,
     gst_number: String,
     pan_number: String,
-    opening_time: String,
-    closing_time: String,
+    opening_time: Date,
+    closing_time: Date,
     verified: { type: Boolean, default: false },
     status: { type: String, default: "pending" },
     location: {
@@ -49,11 +49,15 @@ const Restaurant_Schema = new Schema({
         category: Schema.Types.ObjectId,
         price: Number,
         stock: Number,
+        status: { type: Boolean, default: true },
         product_image: String,
     }],
     tables: [{
+        table_number: String,
         chair: Number,
-        table: Number
+        table: Number,
+        booked: { type: Boolean, default: false },
+        air_conditioned: { type: String }
     }]
 }, { timestamps: true })
 Restaurant_Schema.plugin(mongoosePaginate)

@@ -1,5 +1,5 @@
-<section class="tables">
-    <div class="w-100 vh-100">
+<section class="container-fluid tables vw-100">
+    <div class="vw-100 vh-100">
         <form action="/book-table" method="post">
             <div class="seats">
                 {{#each tables}}
@@ -31,10 +31,15 @@
     }
 </script>
 <style>
-    .seats{
-        display: grid;
-        grid-template-columns: repeat(5,auto);
+    .tables{
+        min-width: 100%;
     }
+    .seats {
+        min-width: 100%;
+        display: grid;
+        grid-template-columns: repeat(5, auto);
+    }
+
     .seat {
         width: max-content;
         height: 50px;

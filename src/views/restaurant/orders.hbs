@@ -42,12 +42,26 @@
                                 <td>{{this.chair}} </td>
                                 <td>{{this.table}}</td>
                                 <td>
-                                    <div class="d-flex justify-content-center align-items-center">
+                                    {{#ifEquals this.status "pending"}}
+                                    <div class="d-flex-column justify-content-center align-items-center">
                                         <button type="button" onclick="rejectOrder('{{this._id}}')"
-                                            class="btn btn-primary mr-1">reject</button>
+                                            class="btn btn-primary mr-1 w-100">reject</button>
                                         <button onclick="approveOrder('{{this._id}}')" type="button"
-                                            class="btn btn-danger">approve</button>
+                                            class="btn btn-danger w-100 mt-2">approve</button>
                                     </div>
+                                    {{/ifEquals}}
+                                    {{#ifEquals this.status "canceled"}}
+                                    <div class="d-flex justify-content-center align-items-center w-100">
+                                        <button onclick="approveOrder('{{this._id}}')" type="button"
+                                            class="btn btn-danger w-100">approve</button>
+                                    </div>
+                                    {{/ifEquals}}
+                                    {{#ifEquals this.status "approved"}}
+                                    <div class="d-flex justify-content-center align-items-center w-100">
+                                        <button type="button" onclick="rejectOrder('{{this._id}}')"
+                                            class="btn btn-primary mr-1 w-100">reject</button>
+                                    </div>
+                                    {{/ifEquals}}
                                 </td>
                             </tr>
                             {{/each}}

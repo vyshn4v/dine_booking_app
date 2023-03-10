@@ -1,0 +1,98 @@
+<html>
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700,900&display=swap" rel="stylesheet">
+</head>
+
+
+<body>
+    <section class="payment-details">
+        <div class="card">
+            <div style="border-radius:200px; height:200px; width:200px; background: #F8FAF5; margin:0 auto;">
+                <i class="checkmark">✓</i>
+            </div>
+            <h1>Success</h1>
+
+            <div class="selected-foods d-flex justify-content-center align-items-center">
+                <h6 class="ml-3" style="font-variant: small-caps;">selected Foods</h6>
+                <div class="foods">
+                    <div id="products" style="display: none;" data-json="{{products}}" onload="setJson('{{products}}')">
+                    </div>
+                    <input type="hidden" value="">
+                    {{#checklength orders 0}}
+                    {{#each orders}}
+                    <input type="text" name="price" value="{{this.price}}" hidden>
+                    <small class="card">{{this.product_name}} {{this.quantity}}</small>
+                    {{/each}}
+                    {{else}}
+                    <small class="card">no products selected</small>
+                    {{/checklength}}
+                </div>
+            </div>
+            <div class="selected-tables d-flex justify-content-center align-items-center">
+                <h6 class="ml-3" style="font-variant: small-caps;">selected tables</h6>
+                <div class="foods">
+                    <div id="products" style="display: none;" data-json="{{products}}" onload="setJson('{{products}}')">
+                    </div>
+                    <input type="hidden" value="">
+                    {{#checklength orders 0}}
+                    {{#each tables}}
+                    <input type="text" name="table" value="{{this._id}}" hidden>
+                    <small class="card">{{this.table_number}}</small>
+                    {{/each}}
+                    {{else}}
+                    <small class="card">no table selected</small>
+                    {{/checklength}}
+                </div>
+            </div>
+            <link rel="stylesheet" href="/css/user/paymentDetails.css">
+            <h5><span>Amount : </span>{{data.amount}}</h5>
+            {{!-- <h5><span>Date</span>{{#dateFormat data.date}}</h5> --}}
+            <h5><span>Total Chair : </span>{{data.totalChair}}</h5>
+            <h5><span>Total Head : </span>{{data.totalHead}}</h5>
+            <a href="/orders">
+                <button class="btn btn-warning text-white">View oders</button>
+            </a>
+        </div>
+    </section>
+</body>
+
+</html>
+<style>
+    body {
+        text-align: center;
+        padding: 40px 0;
+        background: #EBF0F5;
+    }
+
+    h1 {
+        color: #fe9d00;
+        font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+        font-weight: 900;
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+
+    p {
+        color: #000000;
+        font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+        font-size: 20px;
+        margin: 0;
+    }
+
+    i {
+        color: #fe9d00;
+        font-size: 100px;
+        line-height: 200px;
+        margin-left: -15px;
+    }
+
+    .card {
+        background: white;
+        padding: 60px;
+        border-radius: 4px;
+        box-shadow: 0 2px 3px #C8D0D8;
+        display: inline-block;
+        margin: 0 auto;
+    }
+</style>

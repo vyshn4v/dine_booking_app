@@ -13,13 +13,12 @@
                         <div class="row mt-5">
                             <div class="col-md-12">
                                 <div id="error" class="w-100 d-flex">
-
+                                    {{#if err}}
+                                    <div class="w-100 alert alert-warning" role="alert">
+                                        {{err}}
+                                    </div>
+                                    {{/if}}
                                 </div>
-                                {{#if err}}
-                                <div class="w-100 alert alert-warning" role="alert">
-                                    {{err}}
-                                </div>
-                                {{/if}}
                             </div>
                             <div class="col-md-12 d-flex-column">
                                 <input id="title" type="text" class="form-control mb-2" value=""

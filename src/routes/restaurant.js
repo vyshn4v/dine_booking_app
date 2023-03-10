@@ -26,8 +26,8 @@ router.post('/login', restaurantAuthManagement, postRestaurantLogin)
 router.get('/logout', restaurantController.restaurantLogout)
 //view orders
 router.get('/view-orders', restaurantSessionManagement, sessionProfileVerified, restaurantController.viewOrdersGet)
-router.put("/:order_id/approve-order",restaurantSessionManagement, restaurantController.approveOrderPost)
-router.put("/:order_id/reject-order",restaurantSessionManagement, restaurantController.cancelOrderPost)
+router.put("/:order_id/approve-order", restaurantSessionManagement, restaurantController.approveOrderPost)
+router.put("/:order_id/reject-order", restaurantSessionManagement, restaurantController.cancelOrderPost)
 //restaurant signup
 router.get('/signup', restaurantAuthManagement, getRestaurantSignup)
 router.post('/signup', restaurantAuthManagement, validateUserAlreadySignup, postRestaurantSignup)
@@ -35,13 +35,13 @@ router.post('/signup', restaurantAuthManagement, validateUserAlreadySignup, post
 
 //profile
 router.get('/profile', restaurantSessionManagement, restaurantController.showProfileGet)
-router.post('/profile/save-details',restaurantSessionManagement, imagepload.multer.array('profile_pic', 10), restaurantController.saveProfilePost)
-router.get('/edit-picures/:restaurant_id',restaurantSessionManagement,restaurantController.editProfilPicGet)
+router.post('/profile/save-details', restaurantSessionManagement, imagepload.multer.array('profile_pic', 10), restaurantController.saveProfilePost)
+router.post('/restaurant/edit-profile-pic/:public_id', restaurantSessionManagement, imagepload.multer.single('images'), restaurantController.editProfilPicGet)
 
 // table management
 router.get('/table-management', restaurantSessionManagement, sessionProfileVerified, restaurantController.tableManagementGet)
-router.post('/profile/update-tables', restaurantController.saveTablePost)
-router.post('/profile/delete-tables/:table_id', restaurantController.deleteTablePost)
+router.post('/profile/update-tables', restaurantSessionManagement, restaurantController.saveTablePost)
+router.post('/profile/delete-tables/:table_id', restaurantSessionManagement, restaurantController.deleteTablePost)
 
 // service management
 router.get('/manage-services', restaurantSessionManagement, sessionProfileVerified, serviceController.serviceManagementGet)
@@ -57,7 +57,7 @@ router.get('/add-products', restaurantSessionManagement, sessionProfileVerified,
 router.post('/add-products', restaurantSessionManagement, imagepload.multer.single('product_image'), restaurantController.addProductPost)
 router.get('/edit-product/:product_id', restaurantSessionManagement, sessionProfileVerified, restaurantController.editProductGet)
 router.post('/edit-product/:product_id', restaurantSessionManagement, imagepload.multer.single('product_image'), restaurantController.editProductPost)
-
+router.get('/delete-product/:product_id', restaurantSessionManagement,restaurantController.deleteProductPost)
 //forgot password 
 router.get('/forgot-password', restaurantController.forgotPasswordGet)
 router.post('/verify-forgot-password', postverifyRestaurantOtp)

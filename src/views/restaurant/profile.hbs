@@ -29,6 +29,16 @@
                             <div class="swiper-button-prev"></div>
                         </div>
                         <div class="image-input row w-100">
+                            <div class="col-md-12  d-flex justify-content-center align-items-center">
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#imageModal">
+                                    Edit images
+                                </button>
+
+                            </div>
+                        </div>
+                        <div class="image-input row w-100">
                             <div class="col-md-12">
                                 <input type="file" class="w-100" name="profile_pic" multiple>
                                 <label class="labels">images</label>
@@ -86,13 +96,15 @@
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
-                                <input required type="text" name="opening_time" id="opening_time" class="form-control"
-                                    value="{{restaurant.opening_time}}" placeholder="opening time">
+                                <input type="text" name="opening_time" id="opening_time" hidden>
+                                <input required type="text" id="openingTime" class="form-control"
+                                    value="{{prettifyDate restaurant.opening_time}}" placeholder="opening time">
                                 <label class="labels">opening time</label>
                             </div>
                             <div class="col-md-6">
-                                <input required type="text" name="closing_time" id="closing_time" class="form-control"
-                                    value="{{restaurant.closing_time}}" placeholder="closing Time">
+                                <input type="text" name="closing_time" id="closing_time" hidden>
+                                <input required type="text" id="closingTime" class="form-control"
+                                    value="{{prettifyDate restaurant.closing_time}}" placeholder="closing Time">
                                 <label class="labels">closing time</label>
                             </div>
                         </div>
@@ -115,56 +127,7 @@
                             </div>
                         </div>
                     </form>
-                    {{!-- table details --}}
-                    <div class="d-flex justify-content-between align-items-center mt-5">
-                        <h4 class="text-right">tables details</h4>
-                    </div>
 
-
-
-                    {{!-- update tables --}}
-                    <form action="/restaurant/profile/update-tables" method="post">
-                        <div class="row mt-5">
-                            <div class="col-md-6">
-                                <select name="category" id="chairType" onchange="changeChairCount()"
-                                    class="form-select form-select-lg mb-3 w-100 p-2"
-                                    aria-label=".form-select-lg example">
-                                    <option selected>available tables</option>
-                                    {{#each restaurant.tables}}
-                                    <option value="{{this.chair}}">{{this.chair}} chair</option>
-                                    {{/each}}
-                                </select>
-                                <label class="labels">update/add tables</label>
-                            </div>
-
-                            <div class="col-md-6">
-                                <input required type="text" id="chair" class="form-control" value="" name="total_chair"
-                                    placeholder="chair for one table">
-                                <label class="labels">chair</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input required type="text" class="form-control" value="" name="total_table"
-                                    placeholder="table">
-                                <label class="labels">table</label>
-                            </div>
-                            
-                        </div>
-                        <div class="col-md-6">
-                            <input required type="text" name="password" class="form-control" value=""
-                                placeholder="confirm your password">
-                            <label class="labels">password</label>
-                        </div>
-                        <div class="row mt-2">
-                            {{!-- <div class="col-md-6">
-                                <input required type="submit" class="mt-2 btn btn-success form-control"
-                                    value="add table">
-                            </div> --}}
-                            <div class="col-md-6">
-                                <input required type="submit" class="mt-2 btn btn-outline-primary form-control"
-                                    value="save tables">
-                            </div>
-                        </div>
-                    </form>
                     {{!-- change password --}}
                     <form action="/restaurant/update-password/{{restaurant._id}}" method="post">
                         <div class="mt-4 d-flex justify-content-between align-items-center mb-3">
@@ -223,6 +186,43 @@
         </div>
     </div>
 </section>
+<!-- Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit images</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    {{#each restaurant.profile_pic}}
+                    <div class="col-md-6">
+                        <form action="restaurant/edit-profile-pic/{{this.public_id}}" method="POST"
+                            enctype="multipart/form-data" class="text-center">
+                            <div class="image-container border p-2" style="border-width: 4px;">
+                                <img src="{{this.url}}"
+                                    style="width:50%; height:30%; object-fit:contain; display:block; margin:auto;">
+                                <input style="width: 100%; margin: auto;" type="file" id="file" name="images"
+                                    onchange="return fileValidation()">
+                                <button class="update-image-btn btn btn-sm btn-success mt-2 mx-auto d-block">Update
+                                    Image</button>
+                            </div>
+                        </form>
+                    </div>
+                    {{/each}}
+                </div>
+                <div class="modal-footer">
+                    {{!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button> --}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {{!-- swiper cdn --}}
 <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
 <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
@@ -242,7 +242,16 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> --}}
 <script>
     $(document).ready(function () {
-        $('#closing_time').timepicker();
+        $('#closingTime').timepicker({
+            change: function (time) {
+                document.getElementById('closing_time').value = time
+            }
+        });
+        $('#openingTime').timepicker({
+            change: function (time) {
+                document.getElementById('opening_time').value = time
+            }
+        });
     });
     var input = document.querySelector("#phone");
     const form = document.querySelector('form')
@@ -261,8 +270,7 @@
 <script>
     function deleteTable(tableId) {
         const div = document.getElementById("table" + tableId)
-        const url = window.location.origin
-        fetch(`${url}/restaurant/profile/delete-tables/${tableId}`, {
+        fetch(`/restaurant/profile/delete-tables/${tableId}`, {
             method: "POST"
         }).then((res) => res.json()).then((response) => {
             if (response.status) {

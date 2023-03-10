@@ -22,7 +22,9 @@ router.get("/ordered-items/:restaurant_id", userSessionManagement, userControlle
 router.get("/wishlist", userSessionManagement, userController.wishListGet)
 router.get("/whishlist/:wishlist_id/:product_id/remove", userSessionManagement, userController.removeFromWhishListPost)
 router.get("/add-to-wishlist/:product_id", userSessionManagement, userController.wishListPost)
-router.post("/check-out", userSessionManagement, userController.checkOutGet)
+router.post("/check-out/:restaurant_id", userSessionManagement, userController.checkOutGet)
+router.post("/update-product/:restaurant_id", userSessionManagement, userController.selectedItemsPost)
+router.get("/select-tables/:restaurant_id", userSessionManagement, userController.selectTablesGet)
 
 //user login
 router.get("/login", userNotLogin, getLogin)
@@ -51,6 +53,8 @@ router.post("/:user_id/validate-otp", userController.otpVerificationPost)
 router.get('/orders', userSessionManagement, userController.orderPageGet)
 router.post("/order", userSessionManagement, userController.orderPost)
 router.post("/confirm-order", userSessionManagement, userController.confirmOrderPost)
+router.get("/order-success", userSessionManagement, userController.orderSuccessGet)
+router.get("/order-failed", userSessionManagement, userController.orderFailedGet)
 router.get("/cancel-order/:order_id", userSessionManagement, userController.cancelOrderGet)
 
 // forgot password

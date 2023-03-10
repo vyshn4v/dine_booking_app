@@ -4,7 +4,7 @@ const Order = require('../models/order')
 const bcrypt = require('bcrypt')
 const generateUserOtp = require('../helpers/generateUserOtp')
 const otpTextGenerator = require('../helpers/generateOtpText')
-const sendOtpViaMail = require('../helpers/sendOtpMail')
+const sendcancelMail = require('../helpers/sendCancelMail')
 const restaurant = require('../models/restaurant')
 const wishlist = require('../models/wishlist')
 const Razorpay = require('razorpay');
@@ -33,13 +33,15 @@ const pages = {
 
 module.exports = {
     homePageGet: (req, res, next) => {
-        restaurant.find({ profile_completed: { $ne: false }, status: { $ne: 'pending' } }).then((restaurants) => {
+        restaurant.find({ profile_completed: { $eq: true }, status: { $eq: 'active' } }).then(async (restaurants) => {
+            const newRestaurant = await restaurant.find({ profile_completed: { $eq: true }, status: { $eq: 'active' } }).sort({ createdAt: 1 }).limit(20)
             if (restaurants) {
                 const data = {
                     user: req.session?.user ? true : false,
                     userHeader: true,
                     title: "home",
-                    restaurants
+                    restaurants,
+                    newRestaurant
                 }
                 res.render("user/home", data)
             }
@@ -48,13 +50,13 @@ module.exports = {
     buyProductGet: (req, res, next) => {
         restaurant.findById({ _id: req.params.restaurant_id }).then((restaurant) => {
             let data = {
+                user: req.session?.user ? true : false,
                 userHeader: true,
                 restaurant: restaurant
             }
             res.render('user/products', data)
         }).catch((err) => next(err))
     },
-    ///GET - Order Page
     orderPageGet: (req, res, next) => {
         order.aggregate([{
             $match: {
@@ -78,7 +80,7 @@ module.exports = {
             }
         }, {
             $unwind: "$restaurant"
-        }]).then((orders) => {
+        }]).sort({createdAt:-1}).then((orders) => {
             let data = orders
             let products = []
             orders.map((order, index) => {
@@ -90,11 +92,21 @@ module.exports = {
                     })
                 })
                 data[index].menu = products
-                data[index].date = new Date(data[index].date).toDateString()
-                data[index].time = new Date(data[index].time).toTimeString()
+                const date = new Date(data[index].date)
+                data[index].date = ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear()
+                // time
+                const time = new Date(data[index].time)
+                var hours = time.getHours();
+                var minutes = time.getMinutes();
+                var ampm = hours >= 12 ? 'pm' : 'am';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // the hour '0' should be '12'
+                minutes = minutes < 10 ? '0' + minutes : minutes;
+                var strTime = hours + ':' + minutes + ' ' + ampm;
+                data[index].time = strTime
                 products = []
             })
-            res.render(pages.ORDER_PAGE, { userHeader: true, title: "orders", orders: { ...orders, ...products } })
+            res.render(pages.ORDER_PAGE, { userHeader: true, user: req.session?.user ? true : false, title: "orders", orders: { ...orders, ...products } })
         }).catch((err) => next(err))
     },
     tablesPageGet: (req, res, next) => {
@@ -163,11 +175,7 @@ module.exports = {
                     as: "users"
                 }
             }])
-            console.log("restaurantDetails" + restaurantDetails);
-            console.log(review);
-
             res.render("user/restaurantNew", { userHeader: true, title: "restaurant", restaurantDetails, review, userId: req.session.user.userId })
-
         } catch (err) {
             next(err)
         }
@@ -189,13 +197,11 @@ module.exports = {
             })
         }
         let restaurant = sample.filter((restaurant) => restaurant.id == req.params.restaurant_id)[0]
-        res.render(pages.PAYMENT_DETAILS_PAGE, { userHeader: true, title: "payment details", restaurant })
+        res.render(pages.PAYMENT_DETAILS_PAGE, { userHeader: true, user: req.session?.user ? true : false, title: "payment details", restaurant })
     },
 
     wishListGet: (req, res, next) => {
         try {
-
-
             wishlist.aggregate([{
                 $unwind: "$products"
             },
@@ -221,12 +227,10 @@ module.exports = {
                 $unwind: "$restaurant"
             }
             ]).then((data) => {
-                console.log(data);
-                res.render(pages.WISHLIST_PAGE, { userHeader: true, title: "wishlist", wishlistData: data })
+                res.render(pages.WISHLIST_PAGE, { userHeader: true, user: req.session?.user ? true : false, title: "wishlist", wishlistData: data })
             })
-
         } catch (err) {
-            console.log(err);
+            next(err)
         }
     }
     ,
@@ -255,7 +259,7 @@ module.exports = {
         }
     }
     ,
-    checkOutGet: (req, res, next) => {
+    selectedItemsPost: (req, res) => {
         req.session.orderedItems = null
         const keys = Object.keys(req.body)
         let result = []
@@ -268,10 +272,42 @@ module.exports = {
                 })
             }
         }
-        restaurant.findById({ _id: req.body.restaurantId }).then((restaurantDetails) => {
+        req.session.orderedItems = result
+        res.redirect('/select-tables/' + req.params.restaurant_id)
+    },
+    selectTablesGet: async (req, res, next) => {
+        try {
+            let data = null
+            if (req.query?.category == "Ac") {
+                data = {
+                    _id: req.params.restaurant_id,
+                    "tables.air_conditioned": "AC"
+                }
+            } else if (req.query?.category == "Non_Ac") {
+                data = {
+                    _id: req.params.restaurant_id,
+                    "tables.air_conditioned": "Non Ac"
+                }
+            } else {
+                data = {
+                    _id: req.params.restaurant_id
+                }
+            }
+
+            const tables = await restaurant.find(data, { tables: 1 })
+            res.render('user/selectTables', { userHeader: true, tables: tables[0]?.tables, restaurantId: req.params.restaurant_id })
+        } catch (err) {
+            next(err)
+        }
+    }
+    ,
+    checkOutGet: (req, res, next) => {
+        const result = req.session.orderedItems
+        restaurant.findById({ _id: req.params?.restaurant_id }).then((restaurantDetails) => {
             const products = []
-            restaurantDetails.menu.map((data) => {
-                result.map((product) => {
+            const tables = []
+            restaurantDetails.menu?.map((data) => {
+                result?.map((product) => {
                     if (product.product_id == data._id) {
                         let productDetails = {
                             ...data._doc,
@@ -281,17 +317,33 @@ module.exports = {
                     }
                 })
             })
-            req.session.orderedItems = result
+            restaurantDetails.tables?.map((data) => {
+                req.body?.tables?.map((product) => {
+                    if (product == data._id) {
+                        let productDetails = {
+                            ...data._doc,
+                        }
+                        tables.push(productDetails)
+                    }
+                })
+            })
             let totalProductPrice = null;
-            products.map((data) => {
+            let totalChair = 0
+            req.session.selectTables = tables
+            req.session.productDetails = products
+            console.log(tables);
+            products?.map((data) => {
                 totalProductPrice += ((data.price) * (data.quantity))
             })
-            res.render('user/paymentDetails', { userHeader: true, restaurant: restaurantDetails, products, totalProductPrice })
+            tables.map((table) => {
+                (totalChair += table?.chair)
+            })
+            res.render('user/paymentDetails', { userHeader: true, user: req.session?.user ? true : false, title: "payment page", restaurant: restaurantDetails, products, totalProductPrice, tables, totalChair })
         }).catch((err) => next(err))
     }
     ,
     signupGet: (req, res, next) => {
-        res.render('user/signup', { userHeader: true, title: "user signup", err: req.session.err })
+        res.render('user/signup', { userHeader: true, user: req.session?.user ? true : false, title: "user signup", err: req.session.err })
     },
     signupPost: async (req, res, next) => {
         try {
@@ -343,14 +395,13 @@ module.exports = {
                     console.log(result);
                     await user.findByIdAndUpdate({ _id: req.params.user_id }, { $set: { "profile_pic": { "url": result.url, "public_key": result.public_id } } }).then(async (user) => {
                         await uploader.destroy(user.profile_pic?.public_key)
-
                     })
                 })
             }
             await user.findByIdAndUpdate({ _id: req.params.user_id }, { $set: { ...rest } })
             res.redirect('/profile')
         } catch (err) {
-           next(err)
+            next(err)
         }
     },
     searchProductsGet: (req, res, next) => {
@@ -363,7 +414,7 @@ module.exports = {
     otpVerificationGet: (req, res, next) => {
         user.findOne({ _id: req.params.user_id }).then((user) => {
             res.render(pages.OTP_VERIFICATION, { userHeader: true, title: "OTP verification", otpCount: user.otp.expiredAt, userId: user._id })
-        }).catch((err)=>next(err))
+        }).catch((err) => next(err))
     },
     otpVerificationPost: async (req, res, next) => {
         try {
@@ -387,7 +438,7 @@ module.exports = {
         }
     },
     orderPost: async (req, res, next) => {
-        try{
+        try {
 
             const razorpayInstance = new Razorpay({
                 // Replace with your key_id
@@ -409,7 +460,7 @@ module.exports = {
                     amount: req.body?.amount
                 })
             })
-        }catch(err){
+        } catch (err) {
             next(err)
         }
     },
@@ -423,21 +474,21 @@ module.exports = {
             });
             const order = await razorpayInstance.orders.fetch(req.body.response.razorpay_order_id)
             if (order.status === 'paid') {
+                console.log(req.body);
+                console.log("req.session" + req.session);
                 const newOrder = new Order({
                     restaurant_id: req.body.restaurant_id,
-                    date: Date.parse(req.body.date),
                     user_id: req.session.user.userId,
                     products: req.session.orderedItems,
-                    time: req.body.time,
-                    table: req.body.chair,
-                    chair: req.body.table,
+                    tables: req.session.selectTables,
+                    date: Date.parse(req.body.date),
+                    time: new Date(req.body.time),
                     guestName: req.body?.guestName,
                     guestPhone: req.body?.guestPhone,
                     total_price: req.body.amount,
                     razor_pay_order_id: req.body.response.razorpay_order_id
                 })
                 newOrder.save().then((data) => {
-                    req.session.orderedItems = null
                     res.json({ status: true, message: "order placed" })
                 }).catch(() => {
                     res.json({
@@ -453,18 +504,23 @@ module.exports = {
             next(err)
         }
     },
+    orderSuccessGet: (req, res, next) => {
+        res.render('user/order-success', { data: req?.query, tables: req.session?.selectTables, orders: req.session?.productDetails })
+    },
+    orderFailedGet: (req, res) => {
+        res.render('user/order-canceled')
+    },
     cancelOrderGet: (req, res, next) => {
         try {
             order.findByIdAndUpdate({ _id: req.params.order_id }, { status: "canceled" }).then(async (data) => {
                 // console.log("refund" + data);
-                const razorpayInstance = new Razorpay({
+                const razorpayInstance = await new Razorpay({
                     // Replace with your key_id
                     key_id: process.env.RAZOR_PAY_KEY_ID,
                     // Replace with your key_secret
                     key_secret: process.env.RAZOR_PAY_KEY_SECRET
                 });
                 const order = await razorpayInstance.orders.fetchPayments(data.razor_pay_order_id)
-                console.log(order);
                 const refund = await razorpayInstance.payments.refund(order.items[0].id, {
                     "amount": data.total_price,
                     "speed": "optimum",
@@ -473,8 +529,8 @@ module.exports = {
                 const userDetails = await user.findById({ _id: data.user_id })
                 if (refund.status === 'processed') {
                     const emailTemplate = otpTextGenerator(restaurant.OTP, "refund-payment");
-                    sendOtpViaMail(emailTemplate, userDetails.email).then((status) => {
-                        res.redirect('/orders')
+                    sendcancelMail(emailTemplate, userDetails.email).then((status) => {
+                        res.json({ status: true, message: "Order canceled" })
                     }).catch((err) => {
                         next(err)
                     })
@@ -508,7 +564,7 @@ module.exports = {
             console.log("restaurant" + restaurant[0].tables);
             const selectedTable = restaurant[0].tables?.filter((table) => table._id == req.params.table_id)
             res.json({ status: true, selectedTable: selectedTable[0] })
-        }).catch((err)=>next(err))
+        }).catch((err) => next(err))
     },
     verifyuserOtpPost: (req, res, next) => {
         try {
