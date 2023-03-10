@@ -110,14 +110,13 @@ const
         restaurant.findById({ _id: req.params.restaurant_id }).then((restaurantData) => {
             console.log("restaurantData" + restaurantData);
             const response = {
-                restaurantHeader: true,
                 otpCount: restaurantData.otp.expiredAt,
                 restaurantId: restaurantData._id,
                 restaurantEmail: restaurantData.email,
                 err: req.session.err
             }
             req.session.err = null;
-            res.render("restaurant/twofactorValidation", response)
+            res.render("restaurant/twofactorvalidation", response)
         }).catch((err) => {
             next(err)
         })
