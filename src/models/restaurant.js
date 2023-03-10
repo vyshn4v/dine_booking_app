@@ -41,7 +41,7 @@ const Restaurant_Schema = new Schema({
         }]
     },
     services: [{
-        title: { type: String },
+        title: { type: String, unique: true },
     }],
     otp: { type: Otp_schema },
     menu: [{
