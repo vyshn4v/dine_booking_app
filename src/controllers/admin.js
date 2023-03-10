@@ -11,7 +11,7 @@ const
         const totalRestaurantsInMonth = await restaurant.find({
             $where: function () {
                 var currentDate = new Date();
-                var lastMonthDate = new Date(currentDate.setMonth(currentDate.getMonth() - 1))
+                var lastMonthDate = new Date(currentDate.setMonth(currentDate.getMonth()))
                 return this.createdAt.getFullYear() === lastMonthDate.getFullYear()
                     && this.createdAt.getMonth() === lastMonthDate.getMonth();
             }
@@ -19,7 +19,7 @@ const
         const totalUsersInMonth = await user.find({
             $where: function () {
                 var currentDate = new Date();
-                var lastMonthDate = new Date(currentDate.setMonth(currentDate.getMonth() - 1))
+                var lastMonthDate = new Date(currentDate.setMonth(currentDate.getMonth()))
                 return this.createdAt.getFullYear() === lastMonthDate.getFullYear()
                     && this.createdAt.getMonth() === lastMonthDate.getMonth();
             }
