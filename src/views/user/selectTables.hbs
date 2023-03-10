@@ -1,5 +1,6 @@
 <section class="w-100">
     <form action="/check-out/{{restaurantId}}" method="post" style="height: 85vh;">
+        {{#checklength tables 0}}
         <div class="mt-4 ml-2 dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -11,6 +12,7 @@
                 <a class="dropdown-item" href="?category=Non_Ac">Non Ac</a>
             </div>
         </div>
+        {{/checklength}}
 
         <div id="product-selection" class="products" style="min-height: 80%;">
             {{!-- <input type="text" value="{{restaurant._id}}" name="restaurantId" hidden> --}}
