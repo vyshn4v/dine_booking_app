@@ -10,7 +10,7 @@ const generateUserOtp = (userId) => {
             user.findByIdAndUpdate({ _id: userId }, { $set: { "otp.expiredAt": new Date((Date.now() + Number(process.env.OTP_EXPIRE_TIME))), "otp.otp": hashedOtp } }, { new: true }).then((userData) => {
                 resolve({ ...userData._doc, OTP })
             }).catch(() => {
-                throw false
+                reject(err)
             })
         } catch (err) {
             reject(err)

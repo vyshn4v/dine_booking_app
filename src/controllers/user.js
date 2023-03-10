@@ -13,6 +13,7 @@ const { uploader } = require('../config/cloudinary')
 const { default: mongoose } = require('mongoose')
 const crypto = require('crypto')
 const order = require('../models/order')
+const sendOtpViaMail = require('../helpers/sendOtpMail')
 
 
 const pages = {
@@ -365,10 +366,11 @@ module.exports = {
                         res.redirect(`${savedUser._id}/validate-otp`)
                     }).catch(() => {
                         req.session.err = "otp not sent"
-                        res.redirect("/login")
+                        res.redirect("/signup")
                     })
                 }).catch(() => {
-                    console.log("err1");
+                    req.session.err = "otp not sent"
+                    res.redirect("/signup")
                 })
             } else {
                 req.session.err = "email already taken"
