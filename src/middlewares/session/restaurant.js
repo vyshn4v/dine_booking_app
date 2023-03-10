@@ -46,7 +46,8 @@ const validateUserAlreadySignup = (req, res, next) => {
                 next()
             }
         }).catch((err) => {
-            throw err
+            req.session.err = "email already taken"
+            res.redirect('/restaurant/signup')
         })
     } catch (err) {
         req.session.err = "email already taken"

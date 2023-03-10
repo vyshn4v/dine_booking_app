@@ -81,7 +81,7 @@ const
         req.session.err = null
         res.render("restaurant/signup", { restaurantHeader: true, err: error })
     },
-    postRestaurantSignup = async (req, res,next) => {
+    postRestaurantSignup = async (req, res, next) => {
         try {
             const { confirm_password, ...rest } = req.body
             rest.password = await bcrypt.hash(rest.password, parseInt(process.env.SALT_ROUND))
@@ -89,17 +89,15 @@ const
             const savedRestaurant = await Restaurant.save()
             generateRestaurantOtp(savedRestaurant._id).then((restaurant) => {
                 const otpText = otpTextGenerator(restaurant.OTP, "verify-profile")
-                console.log("restaurant");
                 sendOtpViaMail(otpText, restaurant.email).then((status) => {
 
                     console.log("working");
                     res.redirect(`${restaurant._id}/validate-otp/verify-profile`)
                 }).catch((status) => {
-                    console.log(status);
                     throw "false"
                 })
-            }).catch(() => {
-                console.log("err1");
+            }).catch((err) => {
+                next(err)
             })
         } catch (err) {
             next(err)
