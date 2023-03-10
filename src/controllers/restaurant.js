@@ -214,7 +214,8 @@ module.exports = {
 
                         }
                         console.log(rest);
-
+                        rest.opening_time = new Date(rest.opening_time)
+                        rest.closing_time = new Date(rest.closing_time)
                         restaurant.findByIdAndUpdate({ _id: req.session.restaurant.restaurantId }, { $set: { ...rest, profile_completed: true } }).then(async (updatedData) => {
                             res.redirect("/restaurant/profile")
                         })
@@ -354,7 +355,7 @@ module.exports = {
     },
     deleteProductPost: (req, res, next) => {
         try {
-            restaurant.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.session.restaurant.restaurantId) }, { $pull: { "menu._id": mongoose.Types.ObjectId(req.params.product_id) } }).then(()=>{
+            restaurant.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.session.restaurant.restaurantId) }, { $pull: { "menu._id": mongoose.Types.ObjectId(req.params.product_id) } }).then(() => {
                 res.redirect('/restaurant/view-products')
             })
         } catch (err) {
