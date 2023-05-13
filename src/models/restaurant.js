@@ -12,6 +12,10 @@ const profile_image = new Schema({
     url: String,
     public_key: String
 })
+const Location_schema = new Schema({
+    type: { type: String, default: "Point" },
+    coordinates: { type: Array }
+})
 const Restaurant_Schema = new Schema({
     restaurant_name: String,
     email: { type: String, required: true, unique: true },
@@ -33,15 +37,8 @@ const Restaurant_Schema = new Schema({
     closing_time: Date,
     verified: { type: Boolean, default: false },
     status: { type: String, default: "pending" },
-    location: {
-        type: String,
-        coordiantes: [{
-            x: String,
-            y: String
-        }]
-    },
     services: [{
-        title: { type: String, unique: true },
+        title: { type: String },
     }],
     otp: { type: Otp_schema },
     menu: [{
@@ -58,7 +55,8 @@ const Restaurant_Schema = new Schema({
         table: Number,
         booked: { type: Boolean, default: false },
         air_conditioned: { type: String }
-    }]
+    }],
+    location: { type: Location_schema }
 }, { timestamps: true })
 Restaurant_Schema.plugin(mongoosePaginate)
 module.exports = mongoose.model('restaurant', Restaurant_Schema)

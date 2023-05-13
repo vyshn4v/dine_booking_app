@@ -1,0 +1,57 @@
+{{#checkLength tables 0}}
+<form action="/check-out/{{restaurantId}}" method="get" onsubmit="checktableSelected(event)">
+    <section class="select_tables vh-100">
+        <div class="row mt-5 pt-5 g-0 d-flex justify-content-center">
+            {{#each tables}}
+            <div class="col btn-group m-2">
+                <input type="checkbox" class="btn-check" name="tables[]" value="{{this._id}}" id="option{{@index}}"
+                    autocomplete="off" />
+                <label id="{{this._id}}" onclick="changeColor('{{this._id}}')" class="btn btn-secondary"
+                    for="option{{@index}}">{{this.table_number}}</label>
+            </div>
+            {{/each}}
+        </div>
+        <button type="submit" class="btn btn-primary p-2 m-2 w-100">check out</button>
+    </section>
+</form>
+{{else}}
+<div class="col-12 mt-5 pt-5 vh-100">
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">Sorry</h4>
+        <p>It's seems like restaurant doesn't have any tables </p>
+        <hr>
+
+        <p class="mb-0">Contact restaurant through <br>email : {{restaurant.email}} <br> phone :
+            {{restaurant.phone}}
+        </p>
+    </div>
+</div>
+{{/checkLength}}
+
+<script>
+    function checktableSelected(event) {
+        const inputs = document.querySelectorAll('input[type=checkbox]:checked')
+        event.preventDefault()
+        if (inputs.length <= 0) {
+            new swal({
+                text: "Please select A table",
+                icon:'info'
+            })
+        } else {
+            document.querySelector('form').submit()
+        }
+    }
+    function changeColor(id) {
+        const checkbox = document.getElementById(document.getElementById(id).htmlFor)
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                document.getElementById(id).classList.remove("btn-secondary")
+                document.getElementById(id).classList.add("btn-danger")
+            } else {
+                document.getElementById(id).classList.remove("btn-danger")
+                document.getElementById(id).classList.add("btn-secondary")
+            }
+        })
+
+    }
+</script>

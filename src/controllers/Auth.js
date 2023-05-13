@@ -217,6 +217,7 @@ const
                         }
                         res.redirect('/')
                     } else {
+                        req.session.err = "Email and password is not matched"
                         res.redirect('/login')
                     }
                 }).catch(() => {

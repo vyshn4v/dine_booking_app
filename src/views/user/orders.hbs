@@ -1,0 +1,337 @@
+<section class="orders mt-5 ">
+    <section class="" style="background-color: #eee;">
+        <div class="container  ">
+            <h4 class="pt-5">Orders</h4>
+            <div class="row  d-flex justify-content-center align-items-center h-100 ">
+                {{#each orders}}
+                <div class="col-12 pt-3 pb-3">
+                    <div class="card card-stepper" style="border-radius: 10px;">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex flex-column">
+                                    <span class="lead fw-normal">Your order has been {{this.status}}</span>
+                                    <span class="text-muted small">{{Date this.createdAt}} {{prettifyDate
+                                        this.createdAt}}</span>
+                                </div>
+                                <div class="row g-3" style="max-width: 200px;">
+                                    <button type="button" class="btn btn-outline-primary vw-100"
+                                        style="max-height: 40px;" data-mdb-toggle="modal"
+                                        data-mdb-target="#Modal{{this._id}}">
+                                        Track order details
+                                    </button>
+                                    {{#ifEquals this.status "delivered"}}
+                                    {{else}}
+
+                                    <button onclick="cancelThisOrder('{{this._id}}')" class="btn btn-danger">Cancel this
+                                        order</button>
+
+                                    {{/ifEquals}}
+                                </div>
+                            </div>
+                            <hr class="my-4">
+
+                            <div class="d-flex flex-row justify-content-between align-items-center">
+                                <div class="d-flex flex-column align-items-start">
+                                    <span>{{this.restaurant.restaurant_name}}</span>
+                                </div>
+
+                                <div class="d-flex flex-column align-items-start">
+                                    <span>{{this.restaurant.email}}</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Button trigger modal -->
+                <!-- Modal -->
+                <div class="modal fade " id="Modal{{this._id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true" role="dialog">
+                    <div class="modal-dialog row">
+                        <div class="container h-100 ">
+                            <div class="row w-100">
+                                <div class="col-lg-6 col-xl-6 order-details">
+                                    <div class="card border-top border-bottom border-3"
+                                        style="border-color: #396DC3 !important;">
+                                        <div class="card-body p-5 ">
+
+                                            <p class="lead fw-bold mb-5" style="color: #396DC3;">
+                                                Purchase
+                                                Reciept</p>
+
+                                            <div class="row">
+                                                <div class="col-6 mb-3">
+                                                    <p class="small text-muted mb-1">
+                                                        Date
+                                                    </p>
+                                                    <p>{{Date this.createdAt}} {{prettifyDate this.createdAt}}</p>
+                                                </div>
+                                                <div class="col-6 mb-3">
+                                                    <p class="small text-muted mb-1">
+                                                        Order
+                                                        No.</p>
+                                                    <p>{{this._id}}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="mx-n5 px-5 py-4" style="background-color: #f2f2f2;">
+                                                <div class="row">
+                                                    <div class="col-md-8 col-lg-9">
+                                                        <b>Name
+                                                        </b>
+                                                    </div>
+                                                    <div class="col-md-4 col-lg-3">
+                                                        <p class="mb-0">{{this.restaurant.restaurant_name}}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-8 col-lg-9">
+                                                        <b>Opening Time
+                                                        </b>
+                                                    </div>
+                                                    <div class="col-md-4 col-lg-3">
+                                                        <p class="mb-0">{{prettifyDate this.restaurant.opening_time}}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-8 col-lg-9">
+                                                        <b>Closing Time
+                                                        </b>
+                                                    </div>
+                                                    <div class="col-md-4 col-lg-3">
+                                                        <p class="mb-0">{{prettifyDate this.restaurant.closing_time}}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12 col-lg-4">
+                                                        <b>Selected Tables
+                                                        </b>
+                                                    </div>
+                                                    <div class="col-12 row">
+                                                        {{#each this.tables}}
+                                                        <label id="{{this._id}}" onclick="changeColor('{{this._id}}')"
+                                                            class="col-3 btn btn-secondary mx-2 mt-1"
+                                                            for="option{{@index}}">{{this.table_number}}</label>
+                                                        <label id="{{this._id}}" onclick="changeColor('{{this._id}}')"
+                                                            class="col-3 btn btn-secondary mx-2 mt-1"
+                                                            for="option{{@index}}">{{this.table_number}}</label>
+                                                        <label id="{{this._id}}" onclick="changeColor('{{this._id}}')"
+                                                            class="col-3 btn btn-secondary mx-2 mt-1"
+                                                            for="option{{@index}}">{{this.table_number}}</label>
+
+
+                                                        {{/each}}
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-8 col-lg-4">
+                                                        <b>Selected food
+                                                        </b>
+                                                    </div>
+                                                    <div class="col-12 row">
+                                                        {{#each this.menu}}
+                                                        <label id="{{this._id}}" onclick="changeColor('{{this._id}}')"
+                                                            class="col-3 btn btn-secondary mx-2 mt-1"
+                                                            for="option{{@index}}">{{this.product_name}}</label>
+                                                        <label id="{{this._id}}" onclick="changeColor('{{this._id}}')"
+                                                            class="col-3 btn btn-secondary mx-2 mt-1"
+                                                            for="option{{@index}}">{{this.product_name}}</label>
+                                                        <label id="{{this._id}}" onclick="changeColor('{{this._id}}')"
+                                                            class="col-3 btn btn-secondary mx-2 mt-1"
+                                                            for="option{{@index}}">{{this.product_name}}</label>
+                                                        {{/each}}
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row my-4">
+                                                <div class="col-md-4 offset-md-8 col-lg-3 offset-lg-9">
+                                                    <p class="lead fw-bold mb-0" style="color: #396DC3;">
+                                                        Price : {{this.total_price}}</p>
+                                                </div>
+                                            </div>
+
+                                            <p class="lead fw-bold mb-4 pb-2" style="color: #396DC3;">Tracking
+                                                Order</p>
+
+                                            <div class="row">
+                                                <div class="col-lg-12">
+
+
+                                                    <div class="horizontal-timeline">
+                                                        {{#ifEquals this.status 'confirm'}}
+                                                        <div
+                                                            class="d-flex flex-row justify-content-between align-items-center align-content-center">
+                                                            <span class="dot"></span>
+                                                            <hr class="flex-fill track-line">
+                                                            <span class="dot"></span>
+                                                            <hr class="flex-fill ">
+                                                            <span
+                                                                class="d-flex justify-content-center align-items-center  dot">
+                                                        </div>
+
+                                                        <div
+                                                            class="d-flex flex-row justify-content-between align-items-center">
+
+                                                            <div
+                                                                class="d-flex flex-column justify-content-center align-items-center">
+                                                                <span>Order Pending</span>
+                                                            </div>
+                                                            <div class="d-flex flex-column align-items-center">
+                                                                <span>Order Confirmed</span>
+                                                            </div>
+                                                            <div class="d-flex flex-column align-items-end"><span>Order
+                                                                    Delivered</span></div>
+                                                        </div>
+                                                        {{/ifEquals}}
+                                                        {{#ifEquals this.status 'pending'}}
+                                                        <div
+                                                            class="d-flex flex-row justify-content-between align-items-center align-content-center">
+                                                            <span class="dot"></span>
+                                                            <hr class="flex-fill">
+                                                            <span class="dot"></span>
+                                                            <hr class="flex-fill">
+                                                            <span
+                                                                class="d-flex justify-content-center align-items-center  dot">
+                                                        </div>
+
+                                                        <div
+                                                            class="d-flex flex-row justify-content-between align-items-center">
+
+                                                            <div
+                                                                class="d-flex flex-column justify-content-center align-items-center">
+                                                                <span>Order Pending</span>
+                                                            </div>
+                                                            <div class="d-flex flex-column align-items-center">
+                                                                <span>Order Confirmed</span>
+                                                            </div>
+                                                            <div class="d-flex flex-column align-items-end"><span>Order
+                                                                    Delivered</span></div>
+                                                        </div>
+                                                        {{/ifEquals}}
+                                                        {{#ifEquals this.status "delivered"}}
+                                                        <div
+                                                            class="d-flex flex-row justify-content-between align-items-center align-content-center">
+                                                            <span class="dot"></span>
+                                                            <hr class="flex-fill track-line">
+                                                            <span class="dot"></span>
+                                                            <hr class="flex-fill track-line">
+                                                            <span
+                                                                class="d-flex justify-content-center align-items-center big-dot dot">
+                                                                <i class="fa fa-check text-white"></i></span>
+                                                        </div>
+
+                                                        <div
+                                                            class="d-flex flex-row justify-content-between align-items-center">
+
+                                                            <div
+                                                                class="d-flex flex-column justify-content-center align-items-center">
+                                                                <span>Order Pending</span>
+                                                            </div>
+                                                            <div class="d-flex flex-column align-items-center">
+                                                                <span>Order Confirmed</span>
+                                                            </div>
+                                                            <div class="d-flex flex-column align-items-end"><span>Order
+                                                                    Delivered</span></div>
+                                                        </div>
+                                                        {{/ifEquals}}
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <p class="mt-4 pt-2 mb-0">Want any
+                                                help? <a href="#!" style="color: #396DC3;">Please
+                                                    contact
+                                                    us</a></p>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-mdb-dismiss="modal">Close</button>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </section>
+</section>
+</section>
+<script>
+    function cancelThisOrder(id) {
+        new swal({
+            title: "Are yoy sure",
+            text: "Cancel this order",
+            icon: "warning",
+            buttons: ["No", "yes"]
+        }).then((status) => {
+            if (status) {
+                fetch('/cancel-order/' + id).then((res) => res.json()).then((data) => {
+                    if (data.status) {
+                        new swal({
+                            title: "Success",
+                            text: "Order cancelled",
+                            icon: "success"
+                        })
+                    }
+                })
+            }
+        })
+    }
+</script>
+<style>
+    .order-details {
+        min-width: 500px;
+    }
+
+    @media (max-width:500px) {
+        .order-details {
+            min-width: 300px
+        }
+    }
+
+    .track-line {
+        height: 2px !important;
+        background-color: #488978;
+        opacity: 1;
+    }
+
+    .dot {
+        height: 10px;
+        width: 10px;
+        margin-left: 3px;
+        margin-right: 3px;
+        margin-top: 0px;
+        background-color: #488978;
+        border-radius: 50%;
+        display: inline-block
+    }
+
+    .big-dot {
+        height: 25px;
+        width: 25px;
+        margin-left: 0px;
+        margin-right: 0px;
+        margin-top: 0px;
+        background-color: #488978;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .big-dot i {
+        font-size: 12px;
+    }
+
+    .card-stepper {
+        z-index: 0
+    }
+</style>

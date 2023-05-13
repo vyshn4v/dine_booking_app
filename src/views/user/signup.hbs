@@ -1,63 +1,124 @@
-<section style="height: 90vh;" class="d-flex justify-content-center">
-    <div class="signup_page w-100 d-flex justify-content-center align-items-center">
-        <div class="signup_header">
-            <h4 class="d-flex justify-content-center align-items-center">signup</h4>
-            {{#if err}}
-            <small id="error" style=" height: 10px; color: red;">{{err}}</small>
-            {{/if}}
-            <small id="error" style=" height: 10px; color: red;"></small>
-        </div>
-        <form action="/signup" method="post">
-            <div class="signup_inputs">
-                <input type="text" name="username" placeholder="Enter the name">
-                <label for="name">name</label>
-                <input type="email" name="email" placeholder="Enter the Email address">
-                <label for="email">Email</label>
-                <input type="password" name="password" placeholder="Enter the password">
-                <label for="password">password</label>
-                <input type="password" name="confirm_password" placeholder="Confirm password">
-                <label for="password">Confirm password</label>
+<section class="login_page  vh-">
+    <div class="bg-primary text-white w-100">
+        <h4 class="p-2 text-center">Foodzone</h4>
+    </div>
+    <div class="vh-100 d-flex justify-content-center align-items-center">
+        <form id="form" style="max-width: 500px; min-width: 500px" action="/signup" method="post">
+            <h4 class="text-center">Signup</h4>
+            <div class="mb-4" id="error">
+                {{#if err}}
+                <div class="alert alert-danger" role="alert" data-mdb-color="danger">
+                    <i class="fas fa-times-circle me-3"></i>{{err}}
+                </div>
+                {{/if}}
             </div>
-            <div class="signup_button">
-                <input type="submit" class="w-100 mt-2 btn btn-outline-warning" name="" value="signup">
-                <label for="forgot_password">Already have an account? <a href="/user_login" class="">Login</a></label>
+            <!-- Name input -->
+            <div class="form-outline mb-4">
+                <input type="text" name="username" id="form1" class="form-control" />
+                <label class="form-label" for="form1">Name</label>
+            </div>
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+                <input type="email" name="email" id="form2" class="form-control" />
+                <label class="form-label" for="form2">Email address</label>
+            </div>
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+                <input type="password" name="password" id="form3" class="form-control" />
+                <label class="form-label" for="form3">Password</label>
+            </div>
+            <!-- Confirm Password input -->
+            <div class="form-outline mb-4">
+                <input type="password" name="confirm_password" id="form4" class="form-control" />
+                <label class="form-label" for="form4">Password</label>
+            </div>
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary btn-block mb-4">Register</button>
+            <!-- Register buttons -->
+            <div class="text-center">
+                <p>Already have an account <a href="/login">Login</a></p>
+                <p>or sign up with:</p>
+                <button type="button" class="btn btn-link btn-floating ">
+                    <i class="fab fa-facebook-f"></i>
+                </button>
+
+                <button type="button" class="btn btn-link btn-floating ">
+                    <i class="fab fa-google"></i>
+                </button>
+
+                <button type="button" class="btn btn-link btn-floating ">
+                    <i class="fab fa-twitter"></i>
+                </button>
+
+                <button type="button" class="btn btn-link btn-floating ">
+                    <i class="fab fa-github"></i>
+                </button>
             </div>
         </form>
     </div>
 </section>
-<link rel="stylesheet" href="css/user/signup.css">
-<script>
-    const inputs = document.getElementsByTagName("input")
-    const error = document.getElementById("error")
-    const form = document.querySelector("form")
-    console.log(inputs[0].value)
+
+<script type="text/javascript">
+    function generateError(Text) {
+        return ` <div class="alert alert-danger" role="alert" data-mdb-color="danger">
+                    <i class="fas fa-times-circle me-3"></i>${Text}
+                </div>`
+    }
+    const error = document.getElementById('error')
+    const form = document.getElementById('form')
+    const inputs = document.querySelectorAll('input')
     form.addEventListener("submit", (e) => {
+        const regxName = /[a-zA-Z]+[a-zA-Z ]+[a-zA-Z]$/;
+
+        if (!regxName.test(inputs[0].value)) {
+            e.preventDefault()
+            error.innerHTML = generateError("Enter name properly")
+            return false
+        }
         if (inputs[0].value?.length <= 0) {
             e.preventDefault()
-            error.innerText = "enter the name"
+            error.innerHTML = generateError("Please enter the name")
+            return false
+        }
+         inputs[0].value = inputs[0].value.trim()
+        
+        if (!regxName.test(inputs[1].value)) {
+            e.preventDefault()
+            error.innerHTML = generateError("Enter email properly")
             return false
         }
         if (inputs[1].value?.length <= 0) {
             e.preventDefault()
-            error.innerText = "enter the email"
+            error.innerHTML = generateError("Please enter the email")
             return false
         }
+        const regx = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/
+        if (!regx.test(inputs[1].value)) {
+            e.preventDefault()
+            error.innerHTML = generateError("Please enter valid email")
+            return false
+        }
+        inputs[1].value = inputs[1].value.trim()
+        
         if (inputs[2].value?.length <= 0) {
             e.preventDefault()
-            error.innerText = "enter the password"
+            error.innerHTML = generateError("Please enter the password")
             return false
         }
-        if (inputs[3].value?.length <= 0) {
+        if (inputs[2].value?.length >= 10) {
             e.preventDefault()
-            error.innerText = "confirm the password"
+            error.innerHTML = generateError("Please enter the password between 5 - 10")
             return false
         }
-        console.log(inputs[3], inputs[2])
-        if (!inputs[3].value.match(inputs[2].value)) {
+        if ((inputs[2].value?.length <= 5)) {
             e.preventDefault()
-            error.innerText = "password is not matched"
+            error.innerHTML = generateError("Please enter the password between 5 - 10")
             return false
         }
+        inputs[2].value = inputs[2].value.trim()
+        inputs[3].value = inputs[3].value.trim()
+       
         return true
+
     })
 </script>

@@ -1,142 +1,220 @@
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
-<form>
-    <section class="payment-details">
-        <div class="restaurant-details">
-            <div class="image">
-                <img src="{{restaurant.profile_pic.0.url}}" alt="">
-            </div>
-            <div class="details">
-                <input type="text" id="restaurant_id" name="restaurant_id" value="{{restaurant._id}}" hidden>
-                <h6 class="" style="font-variant: small-caps;">{{restaurant.restaurant_name}}</h6>
-                <small>{{restaurant.address}}</small>
-                <input type="text" value="{{restaurant.opening_time}}" id="opening_time" hidden>
-                <input type="text" value="{{restaurant.closing_time}}" id="closing_time" hidden>
-                <small>opening Time <span>{{prettifyDate restaurant.opening_time}}</span></small>
-                <small>closing Time <span>{{prettifyDate restaurant.closing_time}}</span> </small>
-            </div>
-        </div>
-        <div class="selected-foods">
-            <h6 class="ml-3" style="font-variant: small-caps;">selected Foods</h6>
-            <div class="foods">
-                <div id="products" style="display: none;" data-json="{{products}}" onload="setJson('{{products}}')">
-                </div>
-                <input type="hidden" value="">
-               
-                {{#each products}}
-                <input type="text" name="price" value="{{this.price}}" hidden>
-                <small class="card">{{this.product_name}} {{this.quantity}}</small>
-                {{/each}}
-                
-            </div>
-        </div>
-        <div class="selected-tables">
-            <h6 class="ml-3" style="font-variant: small-caps;">selected tables</h6>
-            <div class="foods">
-                <div id="products" style="display: none;" data-json="{{products}}" onload="setJson('{{products}}')">
-                </div>
-                <input type="hidden" value="">
-                {{#each tables}}
-                <input type="text" name="table" value="{{this._id}}" hidden>
-                <small class="card">{{this.table_number}}</small>
-                {{/each}}
-            </div>
-        </div>
-        <div class="select-date-time-seats">
-            <div class="row date_time">
-                <div class="col-md-6 date_picker">
-                    <label for="datepicker">Total chair</label>
-                    <br>
-                    <input type="number" readonly id="totalChair" value="{{totalChair}}">
-                </div>
-                <div class="col-md-6 date_picker">
-                    <label for="datepicker">Total member</label>
-                    <br>
-                    <input type="number" name="totalHead" id="totalHead">
-                </div>
-                <div class="col-md-6 date_picker">
-                    <label for="datepicker">Date</label>
-                    <br>
-                    <input type="text" name="date" id="datePicker" value="" hidden>
-                    <input type="text" name="datepicker" class="datepicker" id="datepicker">
-                </div>
-                <div class="col-md-6 time_picker">
-                    <label for="timepicker">Time</label>
-                    <br>
-                    <input type="text" id="timePicker" name="" value="" hidden>
-                    <input type="text" name="timepicker" id="timepicker">
-                </div>
-            </div>
-            <div class="table-chair">
+<section class="mt-5 pt-5">
+    <div class="container mb-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12">
+                <div class="card card-registration card-registration-2" style="border-radius: 15px;">
+                    <div class="card-body p-0">
+                        <div class="row g-0">
+                            <div class="col-12 col-lg-8">
+                                <div class="p-5">
+                                    <div class="d-flex justify-content-between align-items-center mb-5">
+                                        <h1 class="fw-bold mb-0 text-black">Payment Details</h1>
+                                        <h6 class="mb-0 text-muted"></h6>
+                                    </div>
+                                    <hr class="my-4">
 
-                {{!-- <div class="table_count">
-                    <div>
-                        <label for="table">chair</label>
-                        <input type="text" value="{{restaurant.tables}}" id="tableData" hidden>
-                        <select class="form-select" id="chair" onchange="changeTable(this.value)">
-                            <option value="" selected>select chair type</option>
-                            {{#each restaurant.tables}}
-                            <option value="{{this._id}}">{{this.chair}} chair</option>
-                            {{/each}}
-                        </select>
-                        <div>
-                            <small class="table">chair for one table</small>
+                                    <div class="row mb-4 d-flex">
+                                        <h4>Restaurant Details</h4>
+                                        <div class="col-md-5">
+                                            <img src="{{restaurant.profile_pic.0.url}}" class="img-fluid rounded-3"
+                                                alt="Cotton T-shirt">
+                                        </div>
+                                        <input type="text" id="restaurant_id" name="restaurant_id"
+                                            value="{{restaurant._id}}" hidden>
+                                        <div class="col-md-5">
+                                            <h6 class="text-muted">{{restaurant.restaurant_name}}</h6>
+                                            <h6 class="text-muted">{{restaurant.address}}</h6>
+                                            <input type="text" value="{{restaurant.opening_time}}" id="opening_time"
+                                                hidden>
+                                            <h6 class="text-muted">Opening Time : {{prettifyDate
+                                                restaurant.opening_time}}</h6>
+                                            <input type="text" value="{{restaurant.closing_time}}" id="closing_time"
+                                                hidden>
+                                            <h6 class="text-muted">Closing Time : {{prettifyDate
+                                                restaurant.closing_time}}</h6>
+                                        </div>
+                                    </div>
+
+                                    <hr class="my-4">
+
+                                    <div class="row mb-4">
+                                        <h6>Selected Tables</h6>
+                                        {{#each tables}}
+                                        <div class="col-6 col-sm-6 col-md-3">
+                                            <div class="btn-group m-2">
+                                                <input type="text" name="table" value="{{this._id}}" hidden>
+                                                <input type="checkbox" class="btn-check" name="tables[]"
+                                                    value="{{this._id}}" id="option{{@index}}" autocomplete="off" />
+                                                <label id="{{this._id}}" onclick="changeColor('{{this._id}}')"
+                                                    class="btn btn-secondary"
+                                                    for="option{{@index}}">{{this.table_number}}</label>
+                                            </div>
+                                        </div>
+                                        {{/each}}
+                                    </div>
+
+                                    <hr class="my-4">
+
+                                    <div class="row mb-4 d-flex  align-items-center">
+                                        <h6>Selected Foods</h6>
+                                        {{#checkLength products 0}}
+                                        {{#each products}}
+                                        <div class="col-3">
+                                            <div class="btn-group m-2">
+                                                <input type="text" name="price" value="{{this.price}}" hidden>
+                                                <input type="checkbox" class="btn-check" name="tables[]"
+                                                    value="{{this._id}}" id="option{{@index}}" autocomplete="off" />
+                                                <label id="{{this._id}}" onclick="changeColor('{{this._id}}')"
+                                                    class="btn btn-secondary d-flex justify-content-center align-items-center"
+                                                    for="option{{@index}}">{{this.product_name}}<span
+                                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-danger">
+                                                        {{this.quantity}}
+                                                    </span></label>
+                                            </div>
+                                        </div>
+                                        {{/each}}
+                                        {{else}}
+                                        <div class="alert alert-primary" role="alert" data-mdb-color="primary">
+                                            <i class="fas fa-info-circle me-3"></i>No products selected
+                                        </div>
+                                        {{/checkLength}}
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-4 bg-grey">
+                                <div class="p-5">
+                                    <h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
+                                    <hr class="my-4">
+
+                                    <h5 class=" mb-3">Selected chair</h5>
+                                    <div class="mb-2">
+                                        <div class="form-outline">
+                                            <input type="text" id="totalChair" value="{{totalChair}}"
+                                                class="form-control form-control-lg" readonly />
+                                            <label class="form-label" for="form3Examplea2">Selected chairs
+                                                count</label>
+                                        </div>
+                                    </div>
+                                    <h5 class=" mb-3">Total Members</h5>
+                                    <div class="mb-2">
+                                        <div class="form-outline">
+                                            <input type="text" id="totalHead" class="form-control form-control-lg" />
+                                            <label class="form-label" for="form3Examplea2">Enter total members
+                                                count</label>
+                                        </div>
+                                    </div>
+                                    <h5 class=" mb-3">Date</h5>
+                                    <div class="mb-2">
+                                        <div class="form-outline">
+                                            <input type="date" id="datePicker" class="form-control form-control-lg" />
+                                            <label class="form-label" for="form3Examplea2">Select date</label>
+                                        </div>
+                                    </div>
+                                    <h5 class=" mb-3">Time</h5>
+                                    <div class="mb-2">
+                                        <div class="form-outline">
+                                            <input type="time" id="timePicker" class="form-control form-control-lg" />
+                                            <label class="form-label" for="form3Examplea2">Select Time</label>
+                                        </div>
+                                    </div>
+                                    <h5 class=" mb-3">Give code</h5>
+
+                                    <div class="mb-3">
+                                        <div class="form-outline">
+                                            <input type="text" id="coupenCode" class="form-control form-control-lg" />
+                                            <label class="form-label" for="form3Examplea2">Enter your code</label>
+                                        </div>
+                                    </div>
+
+                                    <hr class="my-2">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <h5 class="text-uppercase">Price</h5>
+                                        <h5>&#8377; {{totalProductPrice}}</h5>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <h5 class="text-uppercase">Discount</h5>
+                                        <h5>&#8377; 0</h5>
+                                    </div>
+                                    <hr class="my-2">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <h5 class="text-uppercase">Total price</h5>
+                                        <h5>&#8377;<span id="total-billing-amount">{{totalProductPrice}}</span>
+                                        </h5>
+                                    </div>
+
+                                    <button type="button" class="btn btn-dark btn-block btn-lg"
+                                        data-mdb-ripple-color="dark"
+                                        onclick="proceedPayment('{{restaurant.opening_time}}','{{restaurant.closing_time}}')">Register</button>
+
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
-                <div class="chair_count">
-                    <div>
-                        <label for="chair">table</label>
-                        <input type="text" id="selectedChair" hidden>
-                        <input type="text" id="table">
-                    </div>
-                    <div>
-                        <small class="chair" id="table-count"></small>
-                    </div>
-                </div> --}}
             </div>
         </div>
-        <div class="payment-card">
-            <div class="guest_and_payment_details">
-                <h4>Enter the guest details</h4>
-                <input type="text" id="guestName" name="guestName" placeholder="Enter the guest name">
-                <input name="guestPhone" id="guestPhone" placeholder="Enter the phone number">
-                <big>price : <span id="total-amount"> {{totalProductPrice}}</span></big>
-                <big>total : <span id="total-billing-amount"></span></big>
-            </div>
-            <div class="proceed-button">
-                {{!-- <input type="submit" class=" w-100 btn btn-outline-warning"> --}}
-                <button id="rzp-button1" class=" w-100 btn btn-outline-warning">Pay</button>
-            </div>
-        </div>
-    </section>
-</form>
+    </div>
+</section>
+</section>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-    window.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('total-billing-amount').innerText = document.getElementById('total-amount').innerText
-    })
-    function sumbitForm(e) {
-        console.log("hello")
-        console.log(e)
-    }
-    document.querySelector('form').onsubmit = (e) => {
-        e.preventDefault()
+    function proceedPayment(openingTime, closingTime) {
+        const open = new Date(openingTime)
+        const close = new Date(closingTime)
         const restaurant_id = document.querySelector('#restaurant_id').value
         const date = document.getElementById('datePicker').value
-        const time = document.querySelector('#timePicker').value
-        const guestName = document.querySelector('#guestName').value
-        const guestPhone = document.querySelector('#guestPhone').value
-        const total = Number(document.getElementById('total-billing-amount').innerText)
+        const Time = document.querySelector('#timePicker').value
+        const coupenCode = document.querySelector('#coupenCode').value
+        const amount = Number(document.getElementById('total-billing-amount').innerText)
         const totalChair = Number(document.querySelector('#totalChair').value)
         const totalHead = Number(document.querySelector('#totalHead').value)
-        if (totalHead > totalChair) {
+        if (totalHead <= 0) {
             new swal({
-                text: "Total member is morethan chair",
-                icon: "warning"
+                text: "Please enter the total member",
+                icon: "info"
             })
             return false
         }
-        if (total &&
+        if (totalHead > totalChair) {
+            new swal({
+                text: "Total member is more than chair",
+                icon: "info"
+            })
+            return false
+        }
+        if (date === '' || new Date(date).getTime() < new Date().getTime()) {
+            new swal({
+                text: "Please select valid date",
+                icon: "info"
+            })
+            return false
+        }
+        let minute = Time.split(":")
+        let time = new Date()
+        time.setHours(minute[0])
+        time.setMinutes(minute[1])
+        let OpeningTime = new Date()
+        OpeningTime.setTime(open.getTime())
+        OpeningTime.setMonth(new Date().getMonth())
+        OpeningTime.setDate(new Date().getDate())
+        OpeningTime.setFullYear(new Date().getFullYear())
+        let ClosingTime = new Date()
+        ClosingTime.setTime(close.getTime())
+        ClosingTime.setMonth(new Date().getMonth())
+        ClosingTime.setDate(new Date().getDate())
+        ClosingTime.setFullYear(new Date().getFullYear())
+        if (Time === '' || OpeningTime.getTime() > time.getTime() && ClosingTime.getTime() < time.getTime()) {
+            new swal({
+                text: "Please select valid time",
+                icon: "info"
+            })
+            return false
+        }
+        if (amount &&
             date &&
             time && totalChair && totalHead) {
             fetch('/order', {
@@ -145,7 +223,7 @@
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    amount: total
+                    amount: amount
                 })
             }).then((res) => res.json()).then((res) => {
                 var options =
@@ -163,13 +241,6 @@
                     new sweet({
                         title: "payment failed"
                     })
-                    alert(response.error.code);
-                    alert(response.error.description);
-                    alert(response.error.source);
-                    alert(response.error.step);
-                    alert(response.error.reason);
-                    alert(response.error.metadata.order_id);
-                    alert(response.error.metadata.payment_id);
                 })
                 rzp1.open();
             })
@@ -180,19 +251,18 @@
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        amount: total,
+                        amount,
                         restaurant_id,
                         date,
                         time,
+                        coupenCode,
                         response,
-                        guestName,
-                        guestPhone,
                         totalChair,
                         totalHead
                     })
                 }).then((res) => res.json()).then((res) => {
                     if (res.status) {
-                        location.replace("/order-success?amount=" + total + "&date=" + date + "&time=" + time + "&guestname=" + guestName + "&guestphone=" + guestPhone + "&totalChair=" + totalChair + "&totalHead=" + totalHead)
+                        location.replace("/order-success?amount=" + amount + "&date=" + date + "&time=" + time + "&totalChair=" + totalChair + "&totalHead=" + totalHead)
                     } else {
                         location.replace("/order-failed")
                     }
@@ -200,71 +270,46 @@
             }
         } else {
             new swal({
-                title: "Enter the fields",
+                title: "Fields are empty",
+                text: "Please enter the fields",
                 icon: "warning",
             })
         }
     }
-    function setJson(products) {
-        console.log(products)
+</script>
+<style>
+    @media (min-width: 1025px) {
+        .h-custom {
+            height: 100vh !important;
+        }
     }
 
-</script>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
-{{!-- css --}}
-<link rel="stylesheet" href="/css/user/paymentDetails.css">
-<script>
-    $(document).ready(function () {
-        $('#timepicker').timepicker({
-            timeFormat: "h:mm p",
-            change: function (time) {
-                const open = new Date(document.querySelector('#opening_time').value)
-                const close = new Date(document.querySelector('#closing_time').value)
-                const selectedTime = new Date(time)
-                if (open < selectedTime && close > selectedTime) {
-                    document.querySelector('#timePicker').value = time
-                } else {
-                    new swal({
-                        title: "Enter the valid time",
-                        icon: "warning",
-                    })
-                }
-            }
-        });
-        let datepicker = $('#datepicker').datepicker({
-            dateFormat: "yy-m-d",
-            onSelect: function (dateText, inst) {
-                console.log("dateText" + dateText)
-                if (new Date() < new Date(dateText)) {
-                    document.getElementById('datePicker').value = dateText
-                } else {
-                    new swal({
-                        title: "Enter the valid date",
-                        icon: "warning",
-                    })
-                    document.getElementById('datePicker').value = ""
-                    document.getElementById('datepicker').value = ""
-                }
-            }
-        });
-    });
-
-</script>
-<script>
-    window.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('table-count').innerText = document.getElementById('chair').value
-    })
-    function changeTable(table_id) {
-        let tableData = document.getElementById('chair').value
-        const restaurant_id = document.querySelector('#restaurant_id').value
-        fetch('/table-details/' + restaurant_id + "/" + table_id, {
-            method: "get"
-        }).then((res) => res.json()).then((data) => {
-            document.getElementById('table-count').innerText = data.selectedTable.table + "table Available"
-            document.querySelector('#selectedChair').value = data.selectedTable.chair
-        })
+    .card-registration .select-input.form-control[readonly]:not([disabled]) {
+        font-size: 1rem;
+        line-height: 2.15;
+        padding-left: .75em;
+        padding-right: .75em;
     }
-</script>
+
+    .card-registration .select-arrow {
+        top: 13px;
+    }
+
+    .bg-grey {
+        background-color: #eae8e8;
+    }
+
+    @media (min-width: 992px) {
+        .card-registration-2 .bg-grey {
+            border-top-right-radius: 16px;
+            border-bottom-right-radius: 16px;
+        }
+    }
+
+    @media (max-width: 991px) {
+        .card-registration-2 .bg-grey {
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+        }
+    }
+</style>

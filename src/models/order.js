@@ -11,8 +11,6 @@ const order_Schema = new Schema({
     tables: Array,
     date: Date,
     time: Date,
-    guestName: { type: String, default: null },
-    guestPhone: { type: String, default: null },
     totalHead: Number,
     status: { type: String, default: "pending" },
     total_price: Number,

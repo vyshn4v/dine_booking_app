@@ -1,2 +1,7 @@
 /node_modules
 .env
+/.vscode
+/.history
+localhost.pem
+localhost-key.pem
+/src/views123

@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const wish_list_Schema = new Schema({
     user_id: { type: Schema.Types.ObjectId },
-    products: { type: Array, unique: true }
+    products: { type: Array }
 }, { timestamps: true });
 
 module.exports = mongoose.model('wishlist', wish_list_Schema)

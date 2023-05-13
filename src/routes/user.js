@@ -5,6 +5,7 @@ const { multer } = require('../helpers/imagepload')
 const router = require('express').Router()
 
 router.get('/', userSessionManagement, userController.homePageGet)
+router.get('/get_all_restaurants', userSessionManagement, userController.allRestaurantGet)
 router.get('/search', userSessionManagement, userController.searchGet)
 router.get('/:restaurant_id/buy-products', userSessionManagement, userController.buyProductGet)
 
@@ -15,14 +16,14 @@ router.post('/update-review', userSessionManagement, userController.updateReview
 
 router.get("/restaurant-details/:restaurant_id", userSessionManagement, userController.restaurantPageGet)
 
-router.get("/restaurant-details/:restaurant_id/available-foods", userSessionManagement, userController.availableFoodGet)
+router.get("/restaurant-details/:restaurant_id/available_foods", userSessionManagement, userController.availableFoodGet)
 
 router.get("/ordered-items/:restaurant_id", userSessionManagement, userController.paymentDetailsGet)
 
 router.get("/wishlist", userSessionManagement, userController.wishListGet)
 router.get("/whishlist/:wishlist_id/:product_id/remove", userSessionManagement, userController.removeFromWhishListPost)
-router.get("/add-to-wishlist/:product_id", userSessionManagement, userController.wishListPost)
-router.post("/check-out/:restaurant_id", userSessionManagement, userController.checkOutGet)
+router.post("/add-to-wishlist/:product_id", userSessionManagement, userController.wishListPost)
+router.get("/check-out/:restaurant_id", userSessionManagement, userController.checkOutGet)
 router.post("/update-product/:restaurant_id", userSessionManagement, userController.selectedItemsPost)
 router.get("/select-tables/:restaurant_id", userSessionManagement, userController.selectTablesGet)
 
@@ -38,6 +39,7 @@ router.post("/signup", userNotLogin, userController.signupPost)
 
 router.get("/profile", userSessionManagement, userController.profileGet)
 router.post("/update-profile/:user_id", userSessionManagement,  multer.single('profile_pic'),userController.profilePost)
+router.post("/update-profile/location/:user_id", userSessionManagement,  userController.locationPost)
 
 router.get("/search-products", userController.searchProductsGet)
 

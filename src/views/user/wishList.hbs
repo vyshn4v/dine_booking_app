@@ -1,71 +1,107 @@
-<section class="order-history" style="height: 85vh;width: 100%;">
-    <div class="container-fluid my-5  d-flex  justify-content-center">
-        <div class="card w-100">
-            <div class="card-body ">
-                <h4>home/wishlist</h4>
-                {{#checklength wishlistData 0}}
-                {{#each wishlistData}}
-                <div class="card">
-                    <div class="card-body row">
-                        <div class=" my-auto col-md-4 flex-column align-items-center justify-content-center">
-                            <div class="sq align-self-center d-flex justify-content-center align-items-center">
-                                <img style="border-radius: 6px;" class="img-fluid align-self-center"
-                                    src="{{this.restaurant.profile_pic.0.url}}" width="135" height="135" />
+<section class="mt-5 pt-5 container">
+    {{#each wishlistData}}
+    <div class="col-12" id="{{this._id}}">
+        <div class="row justify-content-center mb-3">
+            <div class="col-md-12 col-xl-10">
+                <div class="card shadow-0 border rounded-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 col-lg-3 mb-4 mb-lg-0">
+                                <div class="bg-image hover-zoom ripple rounded ripple-surface">
+                                    <img src="{{this.restaurant.profile_pic.0.url}}" alt="Restaurant image"
+                                        class="w-100" />
+                                    <a href="#!">
+                                        <div class="hover-overlay">
+                                            <div class="mask" style="background-color: rgba(253, 253, 253, 0.15);">
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <div class=" col-md-4 sq align-self-center d-flex justify-content-center align-items-center">
-                            <p>{{this.restaurant.restaurant_name}}<br>{{this.restaurant.email}}
-                                <br>PH : {{this.restaurant.phone}}
-                            </p>
-                        </div>
-                        <div class="col-md-4 sq align-self-center d-flex justify-content-center align-items-center">
-                            <a style="max-width: 200px;" href="restaurant-details/{{this.restaurant._id}}"
-                                class="col w-25 btn btn-primary">
-                                show more
-                            </a>
-                            {{!-- <a href="whishlist/{{this._id}}/{{this.restaurant._id}}/remove" class="col-12"> --}}
-                                <button style="max-width: 200px;"
-                                    onclick="removeFromWishlist('{{this._id}}','{{this.restaurant._id}}')" type="button"
-                                    class="ml-1 col btn btn-danger mt-1">remove</button>
-                                {{!-- </a> --}}
+                            <div class="col-sm-6 col-sm-6 col-md-6">
+                                <h5>{{this.restaurant.restaurant_name}}</h5>
+                                <div class="d-flex flex-row">
+                                    <div class="text-danger mb-1 me-2">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                    </div>
+                                    <span>310</span>
+                                </div>
+                                <div class="mt-1 mb-0 text-muted small">
+                                    <span class="text-primary"> • </span>
+                                    <span>Opening Time : {{prettifyDate this.restaurant.opening_time}} </span>
+
+                                </div>
+                                <div class="mb-2 text-muted small">
+                                    <span class="text-primary"> • </span>
+                                    <span>Closing Time : {{prettifyDate this.restaurant.closing_time}} </span>
+                                </div>
+                                <p class="text-truncate mb-4 mb-md-0">
+                                    {{this.restaurant.description}}
+                                </p>
+                            </div>
+                            <div class="col-sm-12 col-sm-3 col-md-3 border-sm-start-none border-start">
+                                <div class="d-flex flex-row align-items-center mb-1">
+                                    <h4 class="mb-1 me-1">$13.99</h4>
+                                    <span class="text-danger"><s>$20.99</s></span>
+                                </div>
+                                <h6 class="text-success">Free shipping</h6>
+                                <div class="d-flex flex-column mt-4">
+                                    <a href="/restaurant-details/{{this.products}}" class="btn btn-primary btn-sm"
+                                        type="button">
+                                        Details
+                                    </a>
+                                    <button class="btn btn-outline-primary btn-sm mt-2"
+                                        onclick="removeFromWhishList('{{this._id}}','{{this.products}}','{{this.restaurant.restaurant_name}}')"
+                                        type="button">
+                                        Remove from wishlist
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <hr>
-                {{/each}}
-                {{else}}
-                <div class="alert alert-warning" role="alert">
-                    wish list is empty
-                </div>
-                {{/checklength}}
-
             </div>
         </div>
     </div>
+    {{/each}}
 </section>
-{{!-- swiper cdn --}}
-<link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
-<script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
-<link rel="stylesheet" href="/css/user/wishlist.css">
-<script src="js/wishlist.js"></script>
+
 <script>
-    function removeFromWishlist(wishlistId, restaurantId) {
-        new swal({
-            text: "Remove restaurant from",
-            icon: "warning",
-            buttons: ['cancel', 'confirm']
+    function removeFromWhishList(wishlist_id, product_id, restaurantName) {
+        swal({
+            title: "Are you sure",
+            text: restaurantName + "will be remove from wishlist",
+            icon: "info",
+            buttons:["No","Yes"]
         }).then((status) => {
-            if (status) {
-                fetch('/whishlist/' + wishlistId + '/' + restaurantId + '/remove').then(() => {
-                    new swal({
-                        text: "Restaurant removed from wishlist",
-                        icon: "warning",
-                    }).then((status) => {
-                        location.reload()
+            alert(status)
+            if (status)
+                fetch(`/whishlist/${wishlist_id}/${product_id}/remove`).then((res) => res.json()).then((response) => {
+                    if (response.status) {
+                        swal({
+                            title: "Success",
+                            text: restaurantName + " is removed from wishlist",
+                            icon: "success"
+                        }).then(() => {
+                            document.getElementById(wishlist_id).remove()
+                        })
+                    } else {
+                        swal({
+                            title: "Failed",
+                            text: "Failed to remove " + restaurantName + " from wishlist",
+                            icon: "error"
+                        })
+                    }
+                }).catch((err) => {
+                    swal({
+                        title: "Failed",
+                        text: "Failed to remove " + restaurantName + " from wishlist",
+                        icon: "error"
                     })
                 })
-            }
         })
-
     }
 </script>

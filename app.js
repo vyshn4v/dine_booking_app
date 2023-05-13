@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express()
+const https = require('https')
+const fs = require('fs');
 const path = require("path")
-const port = process.env.PORT ||3000
+const port = process.env.PORT || 3000
 const userRoute = require('./src/routes/user')
 const restaurantRoute = require('./src/routes/restaurant')
 const adminRoute = require('./src/routes/admin')
@@ -46,21 +48,29 @@ hbs.registerHelper("inc", function (value, options) {
 hbs.registerHelper('ifEquals', function (arg1, arg2, options) {
     return (arg1 != arg2) ? options.inverse(this) : options.fn(this);
 });
-hbs.registerHelper('checklength', function (v1, v2, options) {
-    if (v1.length > v2) {
+hbs.registerHelper('checkLength', function (v1, v2, options) {
+    if (v1?.length > v2) {
         return options.fn(this);
     }
     return options.inverse(this);
 });
-hbs.registerHelper('prettifyDate', function(timestamp) {
-    const date=new Date(timestamp)
+hbs.registerHelper('prettifyDate', function (timestamp) {
+    const date = new Date(timestamp)
     var hours = date.getHours();
     var minutes = date.getMinutes();
     var ampm = hours >= 12 ? 'pm' : 'am';
     hours = hours % 12;
     hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0'+minutes : minutes;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
     var strTime = hours + ':' + minutes + ' ' + ampm;
+    return strTime
+});
+hbs.registerHelper('Date', function (timestamp) {
+    const date = new Date(timestamp)
+    const day = date.getDay();
+    const month = date.getMonth();
+    const year = date.getFullYear()
+    var strTime = day + '/' + month + '/' + year;
     return strTime
 });
 hbs.registerHelper('dateFormat', require('handlebars-dateformat'));
@@ -84,6 +94,13 @@ app.use((err, req, res, next) => {
     res.status(500).render('internalError')
 })
 // port
-app.listen(port, () => {
-    console.log("server started on port number " + port);
-})
+if (process.env.WORKINGMODE === "DEV") {
+    https.createServer({
+        key: fs.readFileSync('./localhost-key.pem'),
+        cert: fs.readFileSync('./localhost.pem'),
+    }, app).listen(port)
+} else {
+    app.listen(port, () => {
+        console.log('server running on port ' + port);
+    })
+}

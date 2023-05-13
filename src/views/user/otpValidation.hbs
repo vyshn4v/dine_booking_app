@@ -1,34 +1,65 @@
-<div class="container" style="height: 85vh;">
-    <div class="row justify-content-md-center">
-        <div class="col-md-4 text-center">
-            <div class="row">
-                <div class="col-sm-12 mt-5 bgWhite">
-                    <div class="title">
-                        Verify OTP
-                    </div>
-                    <div class="count_down">
-                        <input type="text" id="otpCounter" value="{{otpCount}}" hidden>
-                        <span id="otpCounterLive"></span>
-                    </div>
-                    <form action="/{{userId}}/validate-otp" method="post" class="mt-5" onsubmit="return otpInputField()">
-                        <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(2)' maxlength=1>
-                        <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(3)' maxlength=1>
-                        <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(4)' maxlength=1>
-                        <input class="otp" type="text" oninput='digitValidate(this)' onkeyup='tabChange(5)' maxlength=1>
-                        <input type="text" id="otp" name="otp" hidden>
-                        <hr class="mt-4">
-                        <input id="verify_otp" class='btn btn-outline-warning text-dark btn-block mt-4 mb-4 customBtn'
-                            type="submit" value="Verify">
-                        <input id="resend_otp" class='btn btn-danger text-white btn-block mt-4 mb-4 customBtn'
-                            type="hidden" value="resend otp" onclick="resendOtpRestaurnt('{{restaurantEmail}}')">
-                    </form>
-                </div>
-            </div>
-        </div>
+<section class="login_page  vh-">
+    <div class="bg-primary text-white w-100">
+        <h4 class="p-2 text-center">Foodzone</h4>
     </div>
-</div>
-<link rel="stylesheet" href="/css/restaurant/otpValidation.css">
-<script>
+    <div class="vh-100 d-flex justify-content-center align-items-center">
+        <form id="form" class=" w-75" action="/{{userId}}/validate-otp" method="post">
+            <h4 class="text-center">OTP verification</h4>
+            <div class=" mb-4 d-flex justify-content-center">
+                <button type="button" id="dark" class="btn btn-dark m-1  w-50"><span
+                        id="otpCounterLive">Time</span></button>
+            </div>
+            <div class=" mb-4" id="error">
+                {{#if err}}
+                <div class="alert alert-danger" role="alert" data-mdb-color="danger">
+                    <i class="fas fa-times-circle me-3"></i>{{err}}
+                </div>
+                {{/if}}
+            </div>
+            <input type="text" id="otpCounter" value="{{otpCount}}" hidden>
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+                <input type="text" name="otp" id="otp" class="form-control" />
+                <label class="form-label" for="otp">OTP</label>
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary btn-block mb-4">Submit</button>
+            <button type="button" onclick="resendOtpRestaurnt('{{userEmail}}')"
+                class="btn btn-primary btn-block mb-4">Resend Otp</button>
+
+        </form>
+    </div>
+</section>
+
+<script type="text/javascript">
+    function generateError(Text) {
+        return `<div class="alert alert-danger" role="alert" data-mdb-color="danger">
+                    <i class="fas fa-times-circle me-3"></i>${Text}
+                </div>`
+    }
+    function generateSuccess(Text) {
+        return `<div class="alert alert-success" role="alert" data-mdb-color="success">
+                     <i class="fas fa-check-circle me-3"></i>${Text}
+                </div>`
+    }
+    const error = document.getElementById('error')
+    const form = document.getElementById('form')
+    const inputs = document.querySelectorAll('input')
+    form.addEventListener("submit", (e) => {
+        console.log(inputs[0].value?.length)
+        if (inputs[1].value?.length <= 0) {
+            e.preventDefault()
+            error.innerHTML = generateError("Please enter the Otp")
+            return false
+        }
+        if (inputs[1].value?.length > 4) {
+            e.preventDefault()
+            error.innerHTML = generateError("Atleast 4 digit is permitted")
+            return false
+        }
+    })
+
     const otpCounterLive = document.getElementById('otpCounterLive')
     const verifyOtp = document.querySelector('#verify_otp')
     const resendOtp = document.querySelector('#resend_otp')
@@ -48,8 +79,6 @@
             const seconds = Math.floor((timeleft % (1000 * 60)) / 1000);
             if (minute < 0) {
                 otpCounterLive.innerText = "otp expired"
-                verifyOtp.type = "hidden"
-                resendOtp.type = "button"
                 clearInterval(otpTimer)
             } else {
                 otpCounterLive.innerText = minute + " Minutes : " + seconds + " Seconds left"
@@ -59,12 +88,11 @@
     //resend otp when resend button click
     function resendOtpRestaurnt(userEmail) {
         clearInterval(otpTimer)
-        fetch(`/${userEmail}/send-verification-otp/verify-profile`, {
+        fetch(`/${userEmail}/send-otp/verify-profile`, {
             method: 'POST'
         }).then((response) => response.json()).then((response) => {
             if (response.status) {
-                verifyOtp.type = "submit"
-                resendOtp.type = "hidden"
+                error.innerHTML = generateSuccess("Otp send to " + userEmail)
                 setCountDown(response.otpTime)
             } else {
                 alert(response.message)
@@ -72,31 +100,5 @@
         }).catch(() => {
             alert(response.message)
         })
-
     }
-    function otpInputField() {
-        const otps = document.querySelectorAll('input');
-        const otp = document.querySelector('#otp')
-        otp.value = String(otps[1].value + otps[2].value + otps[3].value + otps[4].value)
-        if (otp.value.length === 4) {
-            return true
-        } else {
-            return false
-        }
-    }
-    function digitValidate(ele) {
-        console.log(ele.value);
-        ele.value = ele.value.replace(/[^0-9]/g, '');
-    }
-    function tabChange(val) {
-        console.log(val)
-        let ele = document.querySelectorAll('input');
-        if (ele[val - 1].value != '') {
-            ele[val].focus()
-        } else if (ele[val - 1].value == '') {
-            ele[val - 2].focus()
-        }
-    }
-
-
 </script>
