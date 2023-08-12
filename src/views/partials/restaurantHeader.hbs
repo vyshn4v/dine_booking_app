@@ -1,60 +1,40 @@
-{{!-- nav bar source = bootsrap --}}
-<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand font-weight-bold" href="/restaurant/view-orders">Food Zone <small
-            style="font-size: 10px; ">Restaurants</small></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="/restaurant/view-orders">Orders <i
-                        class="fa-sharp fa-solid fa-cart-shopping"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/restaurant/add-service">add service
-                    <i class="fa-solid fa-briefcase"></i>
-                    {{!-- <i class="fa-regular fa-heart"></i> --}}
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/restaurant/add-products">add products
-                    {{!-- <i class="fa-regular fa-heart"></i> --}}
-                </a>
-            </li>
-            <div class="dropdown show mt-2  ">
-                <a class=" dropdown-toggle " style="border:none; color: black; text-decoration: none;" href="#"
-                    role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false">
-                    more option
-                </a>
-
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <a class="nav-link" href="/restaurant/table-management">tables <i
-                            class="fa-solid fa-table-list"></i></a>
-                    <a class="nav-link" href="/restaurant/profile">Profile <i class="fa-solid fa-user"></i></a>
-                    <a class="nav-link" href="/restaurant/manage-services">services <i
-                            class="fa-solid fa-briefcase"></i></a>
-                    <a class="nav-link" href="/restaurant/view-products">products <i
-                            class="fa-duotone fa-pot-food"></i></a>
+<section class="header">
+    <header class="fixed-top" style="z-index: 999;">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/restaurant/view-orders">FOOD ZONE</a>
+                <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/restaurant/table-management">Tables</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/restaurant/manage-services">Services</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/restaurant/view-products">products</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/restaurant/profile">Profile</a>
+                        </li>
+                        {{#if restaurant}}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/restaurant/logout">Logout⏳</a>
+                        </li>
+                        {{else}}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/restaurant/login">Login</a>
+                        </li>
+                        {{/if}}
+                    </ul>
                 </div>
             </div>
-            {{#if restaurant}}
-            <li class="nav-item">
-                <a class="nav-link" href="/restaurant/logout" tabindex="-1" aria-disabled="true">Logout<i
-                        class="fa-solid fa-right-to-bracket"></i></a>
-            </li>
-            {{else}}
-            <li class="nav-item d-flex align-items-center">
-                <a class="nav-link" href="/restaurant/login" tabindex="-1" aria-disabled="true">Login<i
-                        class="ml-2 fa-solid fa-right-to-bracket"></i></a>
-            </li>
-            {{/if}}
-
-
-        </ul>
-    </div>
-</nav>
-
-<link rel="stylesheet" href="/css/toggleBar.css">
+        </nav>
+        <!-- Navbar -->
+    </header>
+</section>

@@ -1,0 +1,157 @@
+<section class="admin_product_table container-fluid" style="height: 85vh;">
+    <div>
+        <div class="thead-dark d-flex justify-content-around">
+            <h4 class="p-5">users</h4>
+            <div class="m-5 h-25 d-flex">
+                <a id="searchUrl" href="/admin/users" class="btn">all</a>
+                <a id="searchUrl" href="?filter=active" class="btn">active</a>
+                <a id="searchUrl" href="?filter=banned" class="btn">banned</a>
+            </div>
+        </div>
+        <div class="">
+            {{#checklength users 0}}
+            <table class="table-responsive-md mt-5" id="myTable">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">No</th>
+                        <th scope="col">name</th>
+                        <th scope="col">email</th>
+                        <th scope="col">phone</th>
+                        <th scope="col">verified</th>
+                        <th scope="col">status</th>
+                        <th scope="col">handle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each users}}
+                    <tr>
+                        <th>{{inc @index 1}}</th>
+                        <td>{{this.username}}</td>
+                        <td>{{this.email}}</td>
+                        <td>{{#if this.phone}}{{this.phone}}{{else}}not available{{/if}}</td>
+                        <td>{{#if this.verified}}verified{{else}}not verified{{/if}}</td>
+                        <td id="status{{this.id}}">{{this.status}}</td>
+                        <td id="userHandle{{this._id}}">
+                            {{#ifEquals this.status "active"}}
+                            <button type="button" class="btn btn-danger" style="min-width: 80px;"
+                                onclick="banUser('{{this._id}}')">Ban</button>
+                            {{else}}
+                            <button type="button" onclick="unbanUser('{{this._id}}')" class="btn btn-primary"
+                                style="min-width: 80px;">unban</button>
+                            {{/ifEquals}}
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            {{else}}
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="d-flex justify-content-center align-items-center w-75 alert alert-warning" role="alert">
+                    no users found
+                </div>
+            </div>
+            {{/checklength}}
+        </div>
+    </div>
+
+</section>
+<script>
+    $(document).ready(function () {
+        $('#myTable').dataTable();
+    });
+</script>
+<style>
+    .seats {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .restaurant-details:hover {
+        background-color: rgba(239, 239, 239, 0.444);
+        cursor: pointer;
+    }
+
+    .seat {
+        width: max-content;
+        background-color: rgba(237, 237, 237, 0.411);
+        padding: 10px;
+        border-radius: 5px;
+        margin-left: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-top: 10px;
+        box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.182);
+    }
+
+    .seat>small {
+        font-size: small;
+    }
+
+    small {
+        font-size: medium;
+    }
+</style>
+<script>
+    const search = window.location.search
+    if (search) {
+        appendSearch()
+    }
+    function appendSearch() {
+        const aTag = document.getElementsByTagName('a')
+        console.log(aTag)
+    }
+    const baseUrl = window.location.origin
+    function banUser(userId) {
+        new swal({
+            title: "Ban restaurant!",
+            text: "confirm!",
+            icon: "warning",
+            buttons: {
+                cancel: true,
+                confirm: true
+            },
+        }).then((status) => {
+            if (status) {
+                fetch(`${baseUrl}/admin/ban-user/${userId}`, {
+                    method: "PUT"
+                }).then((response) => response.json()).then((response) => {
+                    if (response?.status) {
+                        document.getElementById(`userHandle${userId}`).innerHTML = `<button type="button" onclick="unbanUser('${userId}')" class="btn btn-primary"
+                                style="min-width: 80px;">unban</button>`
+
+                        document.getElementById(`status${userId}`).innerHTML = `banned`
+
+                    }
+                }).catch(() => {
+                    alert("user not deleted")
+                })
+            }
+        })
+    }
+    function unbanUser(userId) {
+        new swal({
+            title: "UnBan restaurant!",
+            text: "confirm!",
+            icon: "warning",
+            buttons: {
+                cancel: true,
+                confirm: true
+            },
+        }).then((status) => {
+            if (status) {
+                fetch(`${baseUrl}/admin/unban-user/${userId}`, {
+                    method: "PUT"
+                }).then((response) => response.json()).then((response) => {
+                    if (response?.status) {
+                        document.getElementById(`userHandle${userId}`).innerHTML = `<button type="button" class="btn btn-danger" style="min-width: 80px;"
+                                onclick="banUser('${userId}')">Ban</button>`
+                        document.getElementById(`status${userId}`).innerHTML = `active`
+                    }
+                }).catch(() => {
+                    alert("user not deleted")
+                })
+            }
+        })
+    }
+</script>

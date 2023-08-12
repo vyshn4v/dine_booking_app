@@ -9,7 +9,8 @@
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex flex-column">
-                                    <span class="lead fw-normal">Your order has been {{this.status}}</span>
+                                    <span class="lead fw-normal">Your order has been <span
+                                            id="order_status{{this._id}}">{{this.status}}</span></span>
                                     <span class="text-muted small">{{Date this.createdAt}} {{prettifyDate
                                         this.createdAt}}</span>
                                 </div>
@@ -21,10 +22,11 @@
                                     </button>
                                     {{#ifEquals this.status "delivered"}}
                                     {{else}}
-
+                                    {{#ifEquals this.status "canceled"}}
+                                    {{else}}
                                     <button onclick="cancelThisOrder('{{this._id}}')" class="btn btn-danger">Cancel this
                                         order</button>
-
+                                    {{/ifEquals}}
                                     {{/ifEquals}}
                                 </div>
                             </div>
@@ -238,6 +240,32 @@
                                                                     Delivered</span></div>
                                                         </div>
                                                         {{/ifEquals}}
+                                                        {{#ifEquals this.status "canceled"}}
+                                                        <div
+                                                            class="d-flex flex-row justify-content-between align-items-center align-content-center">
+                                                            <span class="dot"></span>
+                                                            <hr class="flex-fill track-line">
+                                                            <span
+                                                                class="d-flex justify-content-center align-items-center bg-danger  big-dot dot">
+                                                            </span>
+                                                            <hr class="flex-fill text-danger">
+                                                            <span class="dot"></span>
+                                                        </div>
+
+                                                        <div
+                                                            class="d-flex flex-row justify-content-between align-items-center">
+
+                                                            <div
+                                                                class="d-flex flex-column justify-content-center align-items-center">
+                                                                <span>Order Pending</span>
+                                                            </div>
+                                                            <div class="d-flex flex-column align-items-center">
+                                                                <span>Order Canceled</span>
+                                                            </div>
+                                                            <div class="d-flex flex-column align-items-end"><span>Order
+                                                                    Delivered</span></div>
+                                                        </div>
+                                                        {{/ifEquals}}
                                                     </div>
 
                                                 </div>
@@ -281,6 +309,8 @@
                             title: "Success",
                             text: "Order cancelled",
                             icon: "success"
+                        }).then(() => {
+                            document.getElementById('order_status' + id).innerHTML = 'canceled'
                         })
                     }
                 })

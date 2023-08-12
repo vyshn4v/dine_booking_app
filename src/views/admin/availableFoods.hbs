@@ -1,0 +1,195 @@
+<section class="restaurant-details">
+    <div class="topsection">
+        <div class="small-images">
+            <img style="cursor: pointer;" src="{{restaurant.image1}}" id="image1" onclick="showImage('image1')"
+                class="preview-image" alt="">
+            <img style="cursor: pointer;" src="{{restaurant.image2}}" id="image2" onclick="showImage('image2')"
+                class="preview-image" alt="">
+            <img style="cursor: pointer;" src="{{restaurant.image3}}" id="image3" onclick="showImage('image3')"
+                class="preview-image" alt="">
+        </div>
+        <div class="big-image" id="big-image-preview">
+            <img src="{{restaurant.image1}}" alt="">
+        </div>
+        <div class="details">
+            <h1 class="heading" style="font-variant: small-caps;">{{restaurant.name}}</h1>
+            <h6 class="place">{{restaurant.address}}</h6>
+            <p class="description">{{restaurant.description}}</p>
+            <h6>{{restaurant.price}}/table</h6>
+            <h6>Time: {{restaurant.time}}</h6>
+            <div class="other-options">
+                <a href="../../restaurant/{{restaurant.id}}">Services</a>
+                <a href="../../restaurant/{{restaurant.id}}">Review</a>
+                <a href="../{{restaurant.id}}/available_foods">Available Foods</a>
+            </div>
+        </div>
+    </div>
+    <div class="middle-section">
+        <form action="/order_items/{{restaurant.id}}" method="get">
+            <div class="foods">
+
+                {{#each restaurant.items}}
+                <div class="food">
+                    <div class="card">
+                        <div class="card-body d-flex align-items-center justify-content-between">
+                            <img class="product-image" src="{{this.image2}}" alt="">
+                            <big>
+                                {{this.name}}
+                            </big>
+                            <div class="food-count-section">
+                                <div class="food-counter-button" onclick="decreaseCount('{{this.id}}')">
+                                    <i style="cursor: pointer;" class="fa-solid fa-minus"></i>
+                                </div>
+                                <input type="text" value="{{this.name}}" hidden>
+                                <input type="number" id="{{this.id}}" name="items[0][number]" value=0
+                                    class="food-count">
+                                <div class="food-counter-button" onclick="increaseCount('{{this.id}}')">
+                                    <i style="cursor: pointer;" class="fa-solid fa-plus"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </form>
+    </div>
+</section>
+<style>
+    .foods {
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(2, auto);
+    }
+
+    .food {
+        margin-left: 10px;
+        margin-top: 10px;
+    }
+
+    .food-count {
+        width: 50px;
+    }
+
+    .food-count-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .food-counter-button {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: rgb(237, 237, 237);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 10px;
+    }
+
+    .food-counter-button:hover {
+        background-color: rgb(189, 189, 189);
+    }
+
+    .product-image {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .details>h5 {
+        margin-bottom: 0;
+    }
+
+    .details>small {
+        margin-top: 0;
+        opacity: 0.5;
+    }
+
+    #services {
+        display: grid;
+        min-height: 300px;
+        grid-template-columns: repeat(4, auto);
+        padding: 30px;
+        margin-top: 10px;
+        background-color: rgba(242, 242, 242, 0.488);
+    }
+
+    @media (max-width:1200px) {
+        #services {
+            grid-template-columns: repeat(3, auto);
+        }
+    }
+
+    @media (max-width:800px) {
+        #services {
+            grid-template-columns: repeat(2, auto);
+        }
+    }
+
+    @media (max-width:560px) {
+        #services {
+            grid-template-columns: repeat(1, auto);
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    .service {
+        width: 90%;
+    }
+
+    .mt-20 {
+        margin-top: 100px;
+    }
+
+    .progress {
+        height: 31px;
+        margin-bottom: 10px;
+    }
+
+
+    .progress .skill {
+        font: normal 12px "Open Sans Web";
+        line-height: 32px;
+        padding: 0;
+        margin: 0 0 0 20px;
+        text-transform: uppercase;
+    }
+
+    .progress .skill .val {
+        float: right;
+        font-style: normal;
+        margin: 0 20px 0 0;
+    }
+
+    .progress-bar {
+        text-align: left;
+        transition-duration: 3s;
+        background-color: orange;
+    }
+
+    .bsp_big-image {
+        box-shadow: 1px 1px 5px 1px rgba(0, 0, 0, 0);
+        border-radius: 5px;
+        margin-top: 0px;
+    }
+</style>
+<link rel="stylesheet" href="/css/user/restaurantPage.css">
+<script>
+    function increaseCount(food_id) {
+        console.log(food_id)
+        document.getElementById(food_id).value++
+    }
+    function decreaseCount(food_id) {
+        if (document.getElementById(food_id).value > 0) {
+            document.getElementById(food_id).value--
+        }
+    }
+    function showImage(id) {
+        let thump = document.getElementById(id).src;
+        document.getElementById('big-image-preview').innerHTML = `<img src=${thump} id="big-image-preview" alt="">`
+    }
+</script>

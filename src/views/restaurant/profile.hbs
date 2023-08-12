@@ -1,191 +1,6 @@
 <link rel="stylesheet" href="path/to/intlTelInput.css">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
-<section class="profile">
-    <div class="container rounded bg-white mt-5 mb-5">
-        <div class="row">
-            <div class="col-12 border-right ">
-                <div class="p-3 py-5 w-100">
-                    {{!-- user profile --}}
-                    <div class=" row mt-2">
-                        <div class=" col-md-12 d-flex justify-content-center align-items-center">
-                            <label class="labels">{{err}}</label>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="text-right">restaurant profile</h4>
-                    </div>
-                    <form action="/restaurant/profile/save-details" method="post" enctype="multipart/form-data">
-                        {{!-- profile swiper --}}
-                        <div class="swiper mySwiper">
-                            <div class="swiper-wrapper mb-1">
-                                {{#each restaurant.profile_pic}}
-                                <div class="swiper-slide slide_1 w-100 d-flex justify-content-center"
-                                    style="height: 300px;">
-                                    <img class="img-fluid" src="{{this.url}}" alt="">
-                                </div>
-                                {{/each}}
-                            </div>
-                            <div class="swiper-button-next"></div>
-                            <div class="swiper-button-prev"></div>
-                        </div>
-                        <div class="image-input row w-100">
-                            <div class="col-md-12  d-flex justify-content-center align-items-center">
-                                <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-primary" data-toggle="modal"
-                                    data-target="#imageModal">
-                                    Edit images
-                                </button>
 
-                            </div>
-                        </div>
-                        <div class="image-input row w-100">
-                            <div class="col-md-12">
-                                <input type="file" class="w-100" name="profile_pic" multiple>
-                                <label class="labels">images</label>
-                            </div>
-                            {{!-- <div class="col-md-6 w-100 mt-1 ">
-                                <a href="/restaurant/edit-picures/{{restaurant._id}}" class="w-100 btn btn-success">edit
-                                    pictures</a>
-                            </div> --}}
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                <input required type="text" name="restaurant_name" class="form-control"
-                                    placeholder="restaurant name" id="restaurant_name"
-                                    value="{{restaurant.restaurant_name}}">
-                                <label class="labels">name</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input required type="text" name="email" class="form-control"
-                                    value="{{restaurant.email}}" id="restaurant_email" placeholder="email">
-                                <label class="labels">email</label>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                <input required type="text" name="address" class="form-control"
-                                    placeholder="restaurant address" id="restaurant_address"
-                                    value="{{restaurant.address}}">
-                                <label class="labels">address</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input required type="text" name="pincode" class="form-control"
-                                    placeholder="pincode" id="restaurant_name" value="{{restaurant.pincode}}">
-                                <label class="labels">pincode</label>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-
-                                <input required type="tel" name="phone" class="form-control" id="phone"
-                                    placeholder="enter the phone number" value="{{restaurant.phone}}">
-                                <label class="labels">phone</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input required type="text" class="form-control" value="{{restaurant.gst_number}}"
-                                    name="gst_number" placeholder="GST identification number of restaurant ">
-                                <label class="labels">gst in</label>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-12 form-group mb-3">
-                                <textarea name="description" class="form-control validate" rows="10"
-                                    placeholder="enter description...">{{restaurant.description}}</textarea>
-                                <label for="description">Description</label>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                <input type="text" name="opening_time" id="opening_time" hidden>
-                                <input required type="text" id="openingTime" class="form-control"
-                                    value="{{prettifyDate restaurant.opening_time}}" placeholder="opening time">
-                                <label class="labels">opening time</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" name="closing_time" id="closing_time" hidden>
-                                <input required type="text" id="closingTime" class="form-control"
-                                    value="{{prettifyDate restaurant.closing_time}}" placeholder="closing Time">
-                                <label class="labels">closing time</label>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                <input required type="text" name="pan_number" class="form-control"
-                                    value="{{restaurant.pan_number}}" placeholder="table">
-                                <label class="labels">pancard</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input required type="password" name="password" class="form-control" value=""
-                                    placeholder="confirm your password">
-                                <label class="labels">password</label>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                <input required type="submit" class="mt-2 btn btn-outline-primary form-control"
-                                    value="save details">
-                            </div>
-                        </div>
-                    </form>
-
-                    {{!-- change password --}}
-                    <form action="/restaurant/update-password/{{restaurant._id}}" method="post">
-                        <div class="mt-4 d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="text-right">change password</h4>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                <input required type="password" class="form-control " name="currentPassword"
-                                    placeholder="enter your current password" value="">
-                                <label class="labels">current password</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input required type="password" class="form-control" value="" name="newPassword"
-                                    placeholder="enter new password">
-                                <label class="labels">new password</label>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                <input required type="password" class="form-control" name="confirmNewPassword"
-                                    placeholder="confirm new password" value="">
-                                <label class="labels">confirm new password</label>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6 mt-2">
-                                <input required type="submit" class=" btn btn-outline-primary form-control"
-                                    value="change password">
-                            </div>
-                        </div>
-                        <div class="mt-4 d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="text-right">delete account</h4>
-                        </div>
-                    </form>
-                    <form action="/{{this._id}}/delete-account">
-                        <div class="row mt-2">
-                            <div class="col-md-6 d-flex-column">
-                                <small class="text-danger">Deleting your account is a permanent action
-                                    and cannot be undone. If you are sure you
-                                    <label class="labels">confirm password</label><br>
-                                    want to delete your account, select the button
-                                    below.</small>
-                                <input required type="text" class="form-control" placeholder="Confirrm Password"
-                                    value="">
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6 mt-2">
-                                <input required type="submit" class=" btn btn-outline-primary form-control"
-                                    placeholder="first name" value="confirm delete">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 <!-- Modal -->
 <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
@@ -240,6 +55,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 {{!--
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> --}}
+{{!--
 <script>
     $(document).ready(function () {
         $('#closingTime').timepicker({
@@ -298,116 +114,190 @@
             prevEl: ".swiper-button-prev",
         }
     });
-</script>
+</script> --}}
+
+
+<H1>NEW PROFILE</H1>
+<div class="container rounded bg-white mt-5 mb-5">
+    <div class="row">
+        <form class="row col-lg-8" action="/restaurant/profile/save-details" method="post"
+            enctype="multipart/form-data">
+
+            <div class="col-lg-4 border-right">
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                    <div class="swiper mySwiper">
+                        <div class="swiper-wrapper mb-1">
+                            {{#each restaurant.profile_pic}}
+                            <div class="swiper-slide slide_1 w-100 d-flex justify-content-center"
+                                style="aspect-ratio: 1/1;">
+                                {{!-- <img class="img-fluid" src="{{this.url}}" alt=""> --}}
+                                <img class="img-fluid rounded-circle " src="{{this.url}}" alt="profile">
+                            </div>
+                            {{/each}}
+                        </div>
+                        <div class="swiper-button-next"
+                            style="background-color: #0000008d; color: white ;border-radius:10px;padding:25px;"></div>
+                        <div class="swiper-button-prev"
+                            style="background-color: #000000; color: white  ;border-radius:10px;padding:25px"></div>
+                    </div>
+                    {{!-- <img class="rounded-circle mt-5" width="150px" src="{{restaurant.profile_pic.0.url}}"
+                        alt="profile"> --}}
+                    <span class="font-weight-bold">{{restaurant.restaurant_name}}</span>
+                    <span class="font-weight-bold">{{restaurant.email}}</span>
+                    <span class="font-weight-bold">Opening time:{{prettifyDate restaurant.opening_time}}</span>
+                    <span class="font-weight-bold">Closing time:{{prettifyDate restaurant.closing_time}}</span>
+                    <span>
+                        <label class="form-label label-hidden" for="customFile">Update Profile</label>
+                        <input multiple type="file" name="profile_pic" class="form-control" id="customFile" />
+                    </span>
+                </div>
+            </div>
+            <div class="col-lg-8 border-right">
+                <div class="p-3 py-5">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="text-right">Profile Settings</h4>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label class="labels">Restaurant name</label><input type="text" class="form-control"
+                                placeholder="first name" name="restaurant_name" value="{{restaurant.restaurant_name}}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="labels">Email</label><input type="text" class="form-control"
+                                value="{{restaurant.email}}" name="email" placeholder="Email" readonly>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <label class="labels">Address</label>
+                            <input type="text" class="form-control" name="address" placeholder="Enter address"
+                                value="{{restaurant.address}}">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="labels">Pincode</label>
+                            <input type="text" name="pincode" class="form-control" placeholder="Enter pincode"
+                                value="{{restaurant.pincode}}">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="labels">Phone number</label>
+                            <input type="text" name="phone" class="form-control" placeholder="Enter phone number"
+                                value="{{restaurant.phonenumber}}">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="labels">GST Number</label>
+                            <input type="text" name="gst_number" class="form-control" placeholder="Enter gst number"
+                                value="{{restaurant.gst_number}}">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="labels">Description</label>
+                            <input type="text" name="description" class="form-control" placeholder="Enter description"
+                                value="{{restaurant.description}}">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="labels">Opening Time : </label>
+                            <time class="labels font-weight-bold" datetime="1914-12-20 08:30:45.687">{{prettifyDate
+                                restaurant.opening_time}}</time>
+                            <input type="time" name="opening_time" class="form-control" placeholder="Enter opening time"
+                                value="{{prettifyDate restaurant.opening_time}}">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="labels">Closing Time : </label>
+                            <time class="labels font-weight-bold" datetime="1914-12-20 08:30:45.687">{{prettifyDate
+                                restaurant.closing_time}}</time>
+                            <input type="time" name="closing_time" class="form-control" placeholder="enter closing time"
+                                value="{{restaurant.closing_time}}">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="labels">Pan number</label>
+                            <input type="text" name="pan_number" class="form-control" placeholder="enter pan number"
+                                value="{{restaurant.pan_number}}">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="labels">Password</label>
+                            <input type="text" class="form-control" name="password" placeholder="Enter password"
+                                value="">
+                        </div>
+                    </div>
+                    <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="submit">Update
+                            Profile</button></div>
+                </div>
+            </div>
+        </form>
+        <div class="col-lg-4">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center experience"><span>Change
+                        Password</span></div>
+                <div class="col-md-12"><label class="labels">Current password</label><input type="text"
+                        class="form-control" placeholder="Enter your current password" value=""></div>
+                <div class="col-md-12"><label class="labels">New password</label><input type="text" class="form-control"
+                        placeholder="Enter new password" value=""></div>
+                <div class="col-md-12"><label class="labels">Confirm new password</label><input type="text"
+                        class="form-control" placeholder="Enter new password" value=""></div>
+                <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="button">Change
+                        password</button></div>
+            </div>
+            <div class="p-3 py-5">
+                <div class="text-danger d-flex justify-content-between align-items-center experience"><span
+                        class="text-danger">Delete Account</span>
+                </div>
+                <small class="text-danger">Deleting your account is a permanent action
+                    and cannot be undone. If you are sure you
+                    <label class="text-dark text-bold">confirm password</label><br>
+                    want to delete your account, select the button
+                    below.</small>
+                <div class="col-md-12"><label class="labels">Confirm password</label><input type="text"
+                        class="form-control" placeholder="Enter new password" value=""></div>
+                <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="button">Change
+                        password</button></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
-    .table {
-        width: 150px;
-        font-size: 10px;
-    }
-
-    .table span {
-        font-size: 10px;
-    }
-
-    .table h6 {
-        font-size: 12px;
-    }
-
-    .iti {
-        width: 100%;
-        margin-top: 20px;
-    }
-
-    .profile input:not([type=submit]),
-    .profile textarea {
-        color: black;
-        border-radius: 0;
-        border: none;
-        border-bottom: 1px solid rgba(95, 95, 95, 0.248);
-        margin-top: 20px;
-    }
-
-    .profile textarea::-webkit-scrollbar {
-        display: none;
-    }
-
-    .profile input:not([type=submit])::placeholder {
-        color: rgba(108, 108, 108, 0.419);
-    }
-
-    .profile label:not([for="file"]) {
-        color: rgba(44, 44, 44, 0.704);
-    }
-
-    .profile select {
-        color: black;
-        border-radius: 0;
-        border: 1px solid rgba(95, 95, 95, 0.248);
-        margin-top: 20px;
-    }
-
-    .profile input:not([type=submit]):focus,
-    .profile textarea:focus,
-    .profile select:focus {
-        border-bottom: 2px solid rgba(25, 151, 0, 0.8);
+    .form-control:focus {
         box-shadow: none;
-        outline: 0 none;
-        background-color: transparent;
+        border-color: #BA68C8
     }
 
-    .profile-pic {
-        color: transparent;
-        transition: all .3s ease;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        transition: all .3s ease;
-
+    .profile-button {
+        box-shadow: none;
+        border: none
     }
 
-    .profile-pic>input {
-        display: none;
+
+    .profile-button:focus {
+        background: #682773;
+        box-shadow: none
     }
 
-    .profile-pic>img {
-        position: absolute;
-        object-fit: cover;
-        width: 165px;
-        height: 165px;
-        box-shadow: 0 0 10px 0 rgba(255, 255, 255, .35);
-        border-radius: 100px;
-        border: 1px solid black;
-        background-image: url('https://cdn-icons-png.flaticon.com/512/149/149071.png');
-        background-size: contain;
-        z-index: 0;
+    .profile-button:active {
+        background: #682773;
+        box-shadow: none
     }
 
-    .profile-pic>.-label {
+    .back:hover {
+        color: #682773;
+        cursor: pointer
+    }
+
+    .labels {
+        font-size: 11px
+    }
+
+    .add-experience:hover {
+        background: #BA68C8;
+        color: #fff;
         cursor: pointer;
-        height: 165px;
-        width: 165px;
-    }
-
-    .profile-pic:hover>.-label {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: rgba(0, 0, 0, .8);
-        z-index: 10000;
-        color: rgb(250, 250, 250);
-        transition: background-color .2s ease-in-out;
-        border-radius: 100px;
-        margin-bottom: 0;
-    }
-
-    .profile-pic>span {
-        display: inline-flex;
-        padding: .2em;
-        height: 2em;
-    }
-
-    body>a:hover {
-        text-decoration: none;
+        border: solid 1px #BA68C8
     }
 </style>
+<script>
+    let swiper = new Swiper(".mySwiper", {
+        slidesPerView: 1,
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        }
+    });
+</script>

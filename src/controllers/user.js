@@ -57,6 +57,22 @@ module.exports = {
             }
         }).catch((err) => next(err))
     },
+    restaurantNearYou: async (req, res, next) => {
+        const userData = await user.findById({ _id: req.session.user.userId })
+        let nearestRestaurant
+        if (userData?.location?.coordinates) {
+            nearestRestaurant = await restaurant.find({ location: { $geoWithin: { $centerSphere: [userData?.location?.coordinates, 5 / 3963.2] } } }, { fields: { password: 0 } }).sort({ createdAt: 1 }).limit(3)
+        } else {
+            nearestRestaurant = []
+        }
+        const data = {
+            user: req.session?.user ? true : false,
+            userHeader: true,
+            title: "home",
+            nearestRestaurant
+        }
+        res.render("user/nearestRestaurant", data)
+    },
     allRestaurantGet: (req, res, next) => {
         let search = req.query.search, start = 0, end = 3
         let query = {
@@ -576,7 +592,7 @@ module.exports = {
     },
     cancelOrderGet: (req, res, next) => {
         try {
-            order.findById({ _id: req.params.order_id }, { status: "canceled" }).then(async (data) => {
+            order.findById({ _id: req.params.order_id }).then(async (data) => {
                 // console.log("refund" + data);
                 const razorpayInstance = await new Razorpay({
                     // Replace with your key_id
@@ -584,29 +600,28 @@ module.exports = {
                     // Replace with your key_secret
                     key_secret: process.env.RAZOR_PAY_KEY_SECRET
                 });
-                const order = await razorpayInstance.orders.fetchPayments(data.razor_pay_order_id)
+                const orderDetails = await razorpayInstance.orders.fetchPayments(data.razor_pay_order_id)
                 // console.log(order);
-                const refund = await razorpayInstance.payments.refund(order.items[0].id, {
-                    "amount": data.total_price * 100,
+                const refund = await razorpayInstance.payments.refund(orderDetails.items[0].id, {
+                    "amount": data.total_price,
                     "speed": "optimum",
                 })
                 const userDetails = await user.findById({ _id: data.user_id })
                 if (refund.status === 'processed') {
                     const emailTemplate = otpTextGenerator(restaurant.OTP, "refund-payment");
                     sendcancelMail(emailTemplate, userDetails.email).then((status) => {
-                        order.findById({ _id: req.params.order_id }, { status: "canceled" }).then(() => {
+                        order.findByIdAndUpdate({ _id: req.params.order_id }, { status: "canceled" }).then(() => {
                             res.json({ status, message: "Order canceled" })
                         }).catch(() => {
-                            l
                             res.status(500).json({ status: false, message: "Something went wrong1" })
                         })
                     }).catch((err) => {
-                        res.status(500).json({ status: false, message: "Something went wrong1" })
+                        res.status(400).json({ status: false, message: "Something went wrong1" })
                     })
                 }
             }).catch((err) => {
                 console.log(err);
-                res.status(500).json({ status: false, message: "Something went wrong2" })
+                res.status(409).json({ status: false, message: "Something went wrong2" })
             })
         } catch (err) {
             res.status(500).json({ status: false, message: "Something went wrong" })

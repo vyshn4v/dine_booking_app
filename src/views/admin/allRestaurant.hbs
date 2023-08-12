@@ -1,0 +1,119 @@
+<section class="admin_product_table container-fluid" style="min-height: 85vh;">
+    <div>
+        <div class="thead-dark">
+            <h4 class="p-5">Restaurants</h4>
+        </div>
+        <div class="">
+            {{#checklength restaurants 0}}
+            <table class="table-responsive mt-5 w-100" id="myTable">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">No</th>
+                        <th scope="col">name</th>
+                        <th scope="col">email address</th>
+                        <th scope="col">profile</th>
+                        <th scope="col">email</th>
+                        <th scope="col">status</th>
+                        <th scope="col">address</th>
+                        <th scope="col">gst</th>
+                        <th scope="col">pan</th>
+                        <th scope="col">phone</th>
+                        <th scope="col">handle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each restaurants}}
+                    <tr id="table{{this._id}}">
+                        <th>{{inc @index 1}}</th>
+                        <td>{{this.restaurant_name}}</td>
+                        <td>{{this.email}}</td>
+                        <td>{{#if this.profile_completed}}completed{{else}}not completed{{/if}}</td>
+                        <td>{{#if this.verified}}verified{{else}}not verified{{/if}}</td>
+                        <td>{{this.status}}</td>
+                        <td>
+                            {{#if this.address}}
+                            {{this.address}}
+                            {{else}}
+                            not available
+                            {{/if}}
+                        </td>
+                        <td>
+                            {{#if this.gst_number}}
+                            {{this.gst_number}}
+                            {{else}}
+                            not available
+                            {{/if}}
+                        </td>
+                        <td>
+                            {{#if this.pan_number}}
+                            {{this.pan_number}}
+                            {{else}}
+                            not available
+                            {{/if}}
+                        </td>
+                        <td>
+                            {{#if this.phone}}
+                            {{this.phone}}
+                            {{else}}
+                            not available
+                            {{/if}}
+                        </td>
+                        <td>
+                            <button type="button" class=" text-white btn btn-danger w-75  ml-2" style="height: 40px;"
+                                data-toggle="modal" onclick="banRestaurant('{{this._id}}')">
+                                ban
+                            </button>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            {{else}}
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="d-flex justify-content-center align-items-center w-75 alert alert-warning" role="alert">
+                    no restaurants found
+                </div>
+            </div>
+            {{/checklength}}
+        </div>
+    </div>
+</section>
+
+<style>
+
+</style>
+<script>
+    $(document).ready(function () {
+        $('#myTable').dataTable();
+    });
+    const baseUrl = window.location.origin
+    function banRestaurant(restaurantId) {
+        new swal({
+            title: "Ban restaurant!",
+            text: "confirm!",
+            icon: "warning",
+            buttons: {
+                cancel: true,
+                confirm: true
+            },
+        }).then((status) => {
+            if (status) {
+                fetch(`${baseUrl}/admin/ban-restaurant/${restaurantId}`, {
+                    method: "PUT"
+                }).then((response) => response.json()).then((response) => {
+                    document.querySelector('#table' + restaurantId).remove()
+                }).catch(() => {
+                    new swal({
+                        title: "Restaurant not banned",
+                        text: "confirm!",
+                        icon: "error",
+                        buttons: {
+                            cancel: true,
+                            confirm: true
+                        },
+                    })
+                })
+            }
+        })
+    }
+</script>

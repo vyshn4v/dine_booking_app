@@ -2,22 +2,22 @@
     <section class="order-history">
         <div class="container-fluid my-5  d-flex  justify-content-center">
             <div class="card w-100">
-                <div class="card-body ">
+                <div class="card-body  table-responsive">
                     <h4>restaurant/orders</h4>
-                    <table id="table_id" class="display table-responsive">
-                        <thead>
+                    <table class="table align-middle mb-0 bg-white text-dark" >
+                        <thead class="bg-light ">
                             <tr>
-                                <th>username</th>
-                                <th>email</th>
-                                <th>phone</th>
-                                <th>ordered items</th>
-                                <th>quantity</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Ordered items</th>
                                 <th>Date</th>
-                                <th>status</th>
-                                <th>time</th>
-                                <th>tableS</th>
-                                <th>action</th>
+                                <th>Status</th>
+                                <th>Time</th>
+                                <th>Tables</th>
+                                <th>Action</th>
                             </tr>
+
                         </thead>
                         <tbody>
                             {{#each orders}}
@@ -26,60 +26,97 @@
                                 <td>{{this.user.email}}</td>
                                 <td>{{this.user.phone}}</td>
                                 <td>
-                                    {{#each this.menu}}
-                                    <span class="d-flex justify-content-center">{{this.product_name}}</span><br>
-                                    {{/each}}
-                                </td>
-                                <td>
-                                    {{#each this.menu}}
-                                    <span class="d-flex justify-content-center">{{this.quantity}}</span><br>
-                                    {{/each}}
-                                </td>
-                                <td>{{this.date}}</td>
-                                <td id="status{{this._id}}">{{this.status}}</td>
-                                <td>{{prettifyDate this.time}}</td>
-
-                                <td>
-
                                     <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-primary mr-1 w-100" data-toggle="modal"
-                                        data-target="#exampleModal{{this._id}}">
-                                        Show tables
+                                    <button type="button" class="btn btn-primary" data-mdb-toggle="modal"
+                                        data-mdb-target="#OrderedItems{{this._id}}">
+                                        Items
                                     </button>
 
-
                                     <!-- Modal -->
-                                    <div class="modal fade" id="exampleModal{{this._id}}" tabindex="-1" role="dialog"
+                                    <div class="modal fade" id="OrderedItems{{this._id}}" tabindex="-1"
                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
+                                        <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
+                                                    <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                                        aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <div class="selected-tables">
-                                                        <h6 class="ml-3" style="font-variant: small-caps;">selected
-                                                            tables</h6>
-                                                        <div class="foods">
-                                                            <div id="products" style="display: none;"
-                                                                data-json="{{products}}"
-                                                                onload="setJson('{{products}}')">
-                                                            </div>
-                                                            <input type="hidden" value="">
-                                                            {{#each this.tables}}
-                                                            <input type="text" name="table" value="{{this._id}}" hidden>
-                                                            <small class="card m-3">Table number :
-                                                                {{this.table_number}} <br> chair : {{this.chair}}
-                                                                <br> table : {{this.table}} </small>
-                                                            {{/each}}
-                                                        </div>
-                                                    </div>
+                                                    {{#each this.menu}}
+                                                    <span
+                                                        style="min-width: 60px;min-height: 30px;display: flex;justify-content: center;align-items: center;"
+                                                        class="badge rounded-pill badge-primary">{{this.product_name}}
+                                                        <span class="badge badge-danger ms-2">{{this.quantity}}</span>
+                                                    </span>
+                                                    {{/each}}
                                                 </div>
                                                 <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-mdb-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </td>
+                                <td>{{this.date}}</td>
+                                {{#ifEquals this.status 'canceled'}}
+                                <td>
+                                    <span id="status{{this._id}}"
+                                        class="badge badge-danger  bg-danger text-white">{{this.status}}</span>
+                                </td>
+                                {{/ifEquals}}
+                                {{#ifEquals this.status 'pending'}}
+                                <td>
+                                    <span id="status{{this._id}}"
+                                        class="badge badge-info  bg-info text-white">{{this.status}}</span>
+                                </td>
+                                {{/ifEquals}}
+                                {{#ifEquals this.status 'delivered'}}
+                                <td>
+                                    <span id="status{{this._id}}"
+                                        class="badge badge-success  bg-success text-white">{{this.status}}</span>
+                                </td>
+                                {{/ifEquals}}
+                                {{#ifEquals this.status 'approved'}}
+                                <td>
+                                    <span id="status{{this._id}}"
+                                        class="badge badge-success  bg-success text-white">{{this.status}}</span>
+                                </td>
+                                {{/ifEquals}}
+                                <td>
+                                    {{prettifyDate this.time}}
+                                </td>
+                                <td>
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-primary" data-mdb-toggle="modal"
+                                        data-mdb-target="#tables{{this._id}}">
+                                        Items
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="tables{{this._id}}" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                                    <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    {{#each this.tables}}
+                                                    <span
+                                                        style="min-width: 60px;min-height: 30px;display: flex;justify-content: center;align-items: center;"
+                                                        class="me-2 badge rounded-pill badge-primary">{{this.table_number}}
+                                                        <span class="badge badge-danger ms-2">{{this.quantity}}</span>
+                                                    </span>
+                                                    {{/each}}
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-mdb-dismiss="modal">Close</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -89,21 +126,21 @@
                                     {{#ifEquals this.status "pending"}}
                                     <div class="d-flex-column justify-content-center align-items-center">
                                         <button type="button" onclick="rejectOrder('{{this._id}}')"
-                                            class="btn btn-primary mr-1 w-100">reject</button>
+                                            class="btn btn-primary mr-1">reject</button>
                                         <button onclick="approveOrder('{{this._id}}')" type="button"
-                                            class="btn btn-danger w-100 mt-2">approve</button>
+                                            class="btn btn-danger mt-2 ">approve</button>
                                     </div>
                                     {{/ifEquals}}
                                     {{#ifEquals this.status "canceled"}}
-                                    <div class="d-flex justify-content-center align-items-center w-100">
+                                    <div class="d-flex justify-content-center align-items-center">
                                         <button onclick="approveOrder('{{this._id}}')" type="button"
-                                            class="btn btn-danger w-100">approve</button>
+                                            class="btn btn-danger">approve</button>
                                     </div>
                                     {{/ifEquals}}
                                     {{#ifEquals this.status "approved"}}
-                                    <div class="d-flex justify-content-center align-items-center w-100">
+                                    <div class="d-flex justify-content-center align-items-center ">
                                         <button type="button" onclick="rejectOrder('{{this._id}}')"
-                                            class="btn btn-primary mr-1 w-100">reject</button>
+                                            class="btn btn-primary ">reject</button>
                                     </div>
                                     {{/ifEquals}}
                                 </td>
@@ -111,7 +148,6 @@
                             {{/each}}
                         </tbody>
                     </table>
-                    <hr>
                 </div>
             </div>
         </div>
@@ -140,9 +176,11 @@
                         icon: "success",
                     }).then(() => {
                         document.getElementById("status" + orderId).innerText = "Approved"
+                        document.getElementById("status" + orderId).classList.add("bg-success", "text-white")
+                        document.getElementById("status" + orderId).classList.remove("bg-danger")
                         document.getElementById("actions" + orderId).innerHTML = ` <div class="d-flex justify-content-center align-items-center w-100">
-                                        <button type="button" onclick="rejectOrder('{{this._id}}')"
-                                            class="btn btn-primary mr-1 w-100">reject</button>
+                                        <button type="button" onclick="rejectOrder('${orderId}')"
+                                            class="btn btn-primary mr-1">reject</button>
                                     </div>`
 
                     })
@@ -171,9 +209,10 @@
                         icon: "success",
                     }).then(() => {
                         document.getElementById("status" + orderId).innerText = "canceled"
+                        document.getElementById("status" + orderId).classList.add("bg-danger", "text-white")
                         document.getElementById("actions" + orderId).innerHTML = `<div class="d-flex justify-content-center align-items-center w-100">
-                                        <button onclick="approveOrder('{{this._id}}')" type="button"
-                                            class="btn btn-danger w-100">approve</button>
+                                        <button onclick="approveOrder('${orderId}')" type="button"
+                                            class="btn btn-danger">approve</button>
                                     </div>`
                     })
                 })

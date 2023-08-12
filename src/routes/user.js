@@ -6,6 +6,7 @@ const router = require('express').Router()
 
 router.get('/', userSessionManagement, userController.homePageGet)
 router.get('/get_all_restaurants', userSessionManagement, userController.allRestaurantGet)
+router.get('/restaurant-near-you', userSessionManagement, userController.restaurantNearYou)
 router.get('/search', userSessionManagement, userController.searchGet)
 router.get('/:restaurant_id/buy-products', userSessionManagement, userController.buyProductGet)
 

@@ -1,4 +1,4 @@
-<section>
+{{!-- <section>
     <div class="restaurant_login_page d-flex w-100 vh-100 justify-content-center align-items-center">
         <div class="restaurant_login_header">
             <h4 class="d-flex justify-content-center align-items-center">login</h4>
@@ -82,4 +82,102 @@
         }
         error.innerText = ""
     }
+</script> --}}
+
+<section class="login_page  vh-">
+    <div class="bg-primary text-white w-100">
+        <h4 class="p-2 text-center">Foodzone</h4>
+    </div>
+    <div class="vh-100 d-flex justify-content-center align-items-center">
+        <form id="form" class="" action="/restaurant/login" method="post" style="max-width: 500px; min-width: 500px">
+            <h4 class="text-center">Login</h4>
+            <div class=" mb-4" id="error">
+                {{#if err}}
+                <div class="alert alert-danger" role="alert" data-mdb-color="danger">
+                    <i class="fas fa-times-circle me-3"></i>{{err}}
+                </div>
+                {{/if}}
+            </div>
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+                <input type="email" name="email" id="email" class="form-control" />
+                <label class="form-label" for="email">Email address</label>
+            </div>
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+                <input type="password" name="password" id="password" class="form-control" />
+                <label class="form-label" for="password">Password</label>
+            </div>
+            <!-- 2 column grid layout for inline styling -->
+            <div class="row mb-4">
+
+                <div class="col">
+                    <!-- Simple link -->
+                    <a href="/forgot-password">Forgot password?</a>
+                </div>
+            </div>
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+            <!-- Register buttons -->
+            <div class="text-center">
+                <p>Not a member? <a href="/signup">Register</a></p>
+                <p>or sign up with:</p>
+                <button type="button" class="btn btn-link btn-floating ">
+                    <i class="fab fa-facebook-f"></i>
+                </button>
+
+                <button type="button" class="btn btn-link btn-floating ">
+                    <i class="fab fa-google"></i>
+                </button>
+
+                <button type="button" class="btn btn-link btn-floating ">
+                    <i class="fab fa-twitter"></i>
+                </button>
+
+                <button type="button" class="btn btn-link btn-floating ">
+                    <i class="fab fa-github"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script type="text/javascript">
+    function generateError(Text) {
+        return ` <div class="alert alert-danger" role="alert" data-mdb-color="danger">
+                    <i class="fas fa-times-circle me-3"></i>${Text}
+                </div>`
+    }
+    const error = document.getElementById('error')
+    const form = document.getElementById('form')
+    const inputs = document.querySelectorAll('input')
+    form.addEventListener("submit", (e) => {
+        console.log(inputs)
+        if (inputs[0].value?.length <= 0) {
+            e.preventDefault()
+            error.innerHTML = generateError("Please enter the email")
+            return false
+        }
+        const regx = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/
+        if (!regx.test(inputs[0].value)) {
+            e.preventDefault()
+            error.innerHTML = generateError("Please enter valid email")
+            return false
+        }
+        if (inputs[1].value?.length <= 0) {
+            e.preventDefault()
+            error.innerHTML = generateError("Please enter the password")
+            return false
+        }
+        if (inputs[1].value?.length >= 10) {
+            e.preventDefault()
+            error.innerHTML = generateError("Please enter the password between 5 - 10")
+            return false
+        }
+        if ((inputs[1].value?.length <= 5)) {
+            e.preventDefault()
+            error.innerHTML = generateError("Please enter the password between 5 - 10")
+            return false
+        }
+    })
 </script>

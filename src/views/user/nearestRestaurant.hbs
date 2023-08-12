@@ -1,0 +1,42 @@
+ <section class="vh-100 mt-5 pt-5">
+        <div class="container">
+            <div class="w-100 d-flex justify-content-between align-items-center">
+                <h4 class="mt-5">Restaurnat near you</h4>
+            </div>
+            {{#checkLength nearestRestaurant 0}}
+            {{else}}
+            <div class="w-100 alert alert-primary" role="alert" data-mdb-color="primary">
+                <i class="fas fa-info-circle me-3"></i>No restaurants available near you <a href="/profile"
+                    class="text-danger">Update Location</a>
+            </div>
+            {{/checkLength}}
+            <div class="row py-5" id="cards">
+                <div class="col-12 col-md-4 ">
+                    <div class="row justify-content-center mb-3">
+                        <div class="col-lg-3 col-md-6 col-sm-6" style="width: 20rem;">
+                            {{#each nearestRestaurant}}
+                            <div class="card my-2 shadow-5">
+                                <a href="/restaurant-details/{{this._id}}" class="img-wrap">
+                                    <img src="{{this.profile_pic.0.url}}" class="card-img-top"
+                                        style="aspect-ratio: 1 / .7">
+                                    <div class="card-body p-3 text-dark ">
+                                        <h5 class="card-title">{{this.restaurant_name}}</h5>
+                                        <p class="card-text mb-0">Opening Time : {{prettifyDate this.opening_time}}</p>
+                                        <p class="card-text mb-0">Closing Time : {{prettifyDate this.closing_time}}</p>
+                                        <p class="text-muted">
+                                            Model: X-200
+                                        </p>
+                                    </div>
+                                </a>
+                                <div class="card-body p-3">
+                                    <button class="btn btn-primary p-3 w-100"
+                                        onclick="addToWishlst('{{this._id}}')">Add to wishlist</button>
+                                </div>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>

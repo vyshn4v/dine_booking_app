@@ -1,4 +1,4 @@
-{{!-- nav bar source= bootsrap --}}
+{{!-- nav bar source= bootsrap
 
 <nav class="navbar fixed-top navbar-expand-sm navbar-light bg-light" >
     <a class="navbar-brand font-weight-bold" href="/admin/dashboard">Food Zone<small
@@ -60,4 +60,36 @@
     .nav-link:hover {
         background-color: rgb(241, 241, 241);
     }
-</style>
+</style> --}}
+
+<section class="header" >
+    <header class="fixed-top" style="z-index: 999;">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">FOOD ZONE</a>
+                <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/orders">Orders ⛱</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/wishlist">Whishlist🍀</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/profile">Profile🌞</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Logout⏳</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Navbar -->
+    </header>
+</section>

@@ -1,0 +1,187 @@
+{{!-- update tables --}}
+
+<body class="container-fluid w-100">
+    <div class="container tm-mt-big tm-mb-big" style="min-height: 85vh;">
+        <div class="row service">
+            <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
+                <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+                    <div class="d-flex justify-content-between align-items-center mb-">
+                        <h4 class="text-right mt-5">add category</h4>
+                    </div>
+                    <form action="/admin/add-categories" method="post">
+                        <div class="card w-100">
+                            <div class="card-body row ">
+                                <div class="col-md-8 ">
+                                    <input type="text" class="form-control m-3" value=""
+                                        onkeyup="validateCategory(this.value)" id="category" name="category"
+                                        placeholder="Enter the category">
+                                    <p style="color: red;" id="error"></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="submit" class="btn btn-primary form-control w-100 m-3"
+                                        value="add category">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <table class="table-responsive-md" id="myTable">
+                        <thead class="thead-dark mt-5">
+                            <tr>
+                                <th>No</th>
+                                <th>category</th>
+                                <th>visibility</th>
+                                <th>Handle</th>
+                            </tr>
+                        </thead>
+                        <tbody class="">
+                            {{#each categories}}
+                            <tr id="category{{this._id}}" class=" ">
+                                <th scope="row">{{inc @index}}</th>
+                                <td>{{this.category}}</td>
+                                <td id="visibility{{this._id}}">
+                                    {{#if this.visibility}}
+                                    visible
+                                    {{else}}
+                                    hidden
+                                    {{/if}}
+                                </td>
+                                <td class="d-flex">
+                                    <div id="visibility_button{{this._id}}">
+                                        {{#if this.visibility}}
+                                        <div class="mr-5" style="cursor: pointer;"
+                                            onclick="hideCategory('{{this._id}}')">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </div>
+                                        {{else}}
+                                        <div class="mr-5" style="cursor: pointer;"
+                                            onclick="showCategory('{{this._id}}')">
+                                            <i class="fa-regular fa-eye-slash"></i>
+                                        </div>
+                                        {{/if}}
+                                    </div>
+                                    <div onclick="delteCategory('{{this._id}}')">
+                                        <button type="button" class="btn btn-danger">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    const form = document.querySelector('form')
+    form.onsubmit = (e) => {
+        const value = document.getElementById('category').value
+        const status = validateCategory(value)
+        console.log(status)
+        if (!status) {
+            e.preventDefault()
+        } else {
+            form.submit()
+        }
+    }
+    function validateCategory(value) {
+        const regx = /[a-zA-Z]+[a-zA-Z ]+[a-zA-Z]$/;
+        if (!regx.test(value)) {
+            document.getElementById('error').innerText = "enter the category properly eg:veg biriyani"
+            return false
+        } else {
+            document.getElementById('error').innerText = ""
+            return true
+        }
+    }
+    function showCategory(id) {
+        const url = window.location.origin;
+        fetch(`${url}/admin/categories/change-visibility/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                visibility: true
+            })
+        }).then((res) => res.json()).then((response) => {
+            new Toastify({
+                text: response.message,
+                duration: 500,
+                gravity: "top", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: "orange",
+                },
+            }).showToast();
+            setTimeout(() => {
+                document.getElementById('visibility_button' + id).innerHTML =
+                    `<div class="mr-5" style="cursor: pointer;" onclick="hideCategory('${id}')">
+                        <i class="fa-solid fa-eye"></i>
+                    </div>`
+                document.getElementById('visibility' + id).innerHTML = "visible"
+            }, 550)
+        })
+    }
+    function hideCategory(id) {
+        const url = window.location.origin;
+        console.log(url)
+        fetch(`${url}/admin/categories/change-visibility/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                visibility: false
+            })
+        }).then((res) => res.json()).then((response) => {
+            new Toastify({
+                text: response.message,
+                duration: 500,
+                gravity: "top", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: "orange",
+                },
+            }).showToast();
+            setTimeout(() => {
+                document.getElementById('visibility_button' + id).innerHTML =
+                    `<div class="mr-5" style="cursor: pointer;" onclick="showCategory('${id}')">
+                        <i class="fa-regular fa-eye-slash"></i>
+                    </div>`
+                document.getElementById('visibility' + id).innerHTML = "hidden"
+            }, 550)
+
+        })
+    }
+    function delteCategory(id) {
+        const url = window.location.origin;
+        console.log(url)
+        swal({
+            title: "Delete Category",
+            text: "are you sure",
+            icon: "warning",
+            buttons: ["cancel", "confirm"]
+        }).then((status) => {
+            if (status) {
+                fetch(`${url}/admin/categories/delete-category/${id}`, {
+                    method: "DELETE"
+                }).then((res) => res.json()).then((response) => {
+                    setTimeout(() => {
+                        document.getElementById('category' + id).remove()
+                    }, 500)
+                })
+            }
+        })
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        $('#myTable').dataTable();
+    });
+</script>

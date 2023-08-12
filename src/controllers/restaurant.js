@@ -213,10 +213,17 @@ module.exports = {
                             })
 
                         }
+                        const opening_time = new Date()
+                        opening_time.setHours(rest.opening_time.split(":")[0])
+                        opening_time.setMinutes(rest.opening_time.split(":")[1])
+                        const closing_time = new Date()
+                        closing_time.setHours(rest.closing_time.split(":")[0])
+                        closing_time.setMinutes(rest.closing_time.split(":")[1])
+                        rest.opening_time = opening_time
+                        rest.closing_time = closing_time
                         console.log(rest);
-                        rest.opening_time = new Date(rest.opening_time)
-                        rest.closing_time = new Date(rest.closing_time)
                         restaurant.findByIdAndUpdate({ _id: req.session.restaurant.restaurantId }, { $set: { ...rest, profile_completed: true } }).then(async (updatedData) => {
+                            req.session.restaurant.profile_verified= true
                             res.redirect("/restaurant/profile")
                         })
 

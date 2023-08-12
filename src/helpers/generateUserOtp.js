@@ -2,7 +2,6 @@ const sendOtpViaMail = require("./sendOtpMail")
 const bcrypt = require('bcrypt');
 const user = require("../models/user");
 const generateUserOtp = (userId) => {
-    console.log("userId" + userId);
     return new Promise(async (resolve, reject) => {
         try {
             const OTP = `${Math.floor((1000 + Math.random() * 9000))}`
